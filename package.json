@@ -10,6 +10,8 @@
     "fmt": "prettier --write ."
   },
   "workspaces": [
-    "packages/*"
+    "common/*",
+    "contract/*",
+    "integrations/*"
   ]
 }
