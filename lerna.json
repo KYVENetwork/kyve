@@ -4,5 +4,12 @@
   ],
   "version": "independent",
   "npmClient": "yarn",
-  "useWorkspaces": true
+  "useWorkspaces": true,
+  "command": {
+    "version": {
+      "message": "chore: version bump %s",
+      "conventionalCommits": true,
+      "conventionalPrerelease": true
+    }
+  }
 }
