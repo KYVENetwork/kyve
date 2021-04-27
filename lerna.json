@@ -7,9 +7,12 @@
   "useWorkspaces": true,
   "command": {
     "version": {
-      "message": "chore: version bump %s",
       "conventionalCommits": true,
-      "conventionalPrerelease": true
+      "conventionalPrerelease": true,
+      "allowBranch": "master",
+      "createRelease": "github",
+      "exact": true,
+      "message": "chore(release): %s"
     }
   }
 }
