@@ -4,8 +4,7 @@
     "strict": true,
     "outDir": "dist",
     "declaration": true,
-    "esModuleInterop": true,
-    "target": "ES6"
+    "esModuleInterop": true
   },
   "files": ["src/index.ts"]
 }

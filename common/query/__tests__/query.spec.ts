@@ -15,7 +15,7 @@ describe("Test query", () => {
 
     //const ids = await query(0, limit);
     const q = new Query(0, arweaveClient);
-    const ids = (await q.search().limit(limit).find());
+    const ids = await q.search().limit(limit).find();
     expect(ids.length).to.equal(limit);
   }).timeout(60 * 1000);
 

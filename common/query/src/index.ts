@@ -19,8 +19,8 @@ export class Query extends ArDB {
     this.poolID = poolID;
   }
 
-  find(): Promise<GQLEdgeTransactionInterface[]>
-  find(): Promise<TransactionID[]>
+  find(): Promise<GQLEdgeTransactionInterface[]>;
+  find(): Promise<TransactionID[]>;
   async find(): Promise<TransactionID[] | GQLEdgeTransactionInterface[]> {
     super.tag("Application", APP_NAME);
     super.tag("Pool", this.poolID.toString());
