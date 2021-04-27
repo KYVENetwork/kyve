@@ -6,7 +6,10 @@
   },
   "scripts": {
     "build": "lerna run build",
-    "test": "lerna run test"
+    "test": "lerna run test",
+    "fmt": "prettier --write ."
   },
-  "workspaces": ["packages/*"]
+  "workspaces": [
+    "packages/*"
+  ]
 }

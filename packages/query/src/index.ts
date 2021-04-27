@@ -1,7 +1,7 @@
 import ArDB from "ardb";
-import {APP_NAME, getData} from "@kyve/core";
-import {arweaveClient} from "@kyve/core/dist/extensions";
-import {GQLEdgeTransactionInterface} from "ardb/lib/faces/gql";
+import { APP_NAME, getData } from "@kyve/core";
+import { arweaveClient } from "@kyve/core/dist/extensions";
+import { GQLEdgeTransactionInterface } from "ardb/lib/faces/gql";
 import Arweave from "arweave";
 
 export const arDB = new ArDB(arweaveClient);
@@ -9,29 +9,26 @@ export const arDB = new ArDB(arweaveClient);
 type TransactionID = string;
 type TransactionData = string;
 
-
 export class Query extends ArDB {
-
-  private poolID: number
+  private poolID: number;
 
   constructor(poolID: number, arweave: Arweave) {
     super(arweave);
     // default tags
-    super.only(["id"])
-    this.poolID = poolID
+    super.only(["id"]);
+    this.poolID = poolID;
   }
 
   async find(): Promise<any> {
-    super.tag("Application", APP_NAME)
-    super.tag("Pool", this.poolID.toString())
-    const res = await super.find() as GQLEdgeTransactionInterface[]
-    const ret: string[] = []
-    for (let {node} of res) {
-      ret.push(node.id)
+    super.tag("Application", APP_NAME);
+    super.tag("Pool", this.poolID.toString());
+    const res = (await super.find()) as GQLEdgeTransactionInterface[];
+    const ret: string[] = [];
+    for (let { node } of res) {
+      ret.push(node.id);
     }
-    return ret
+    return ret;
   }
-
 }
 
 export const query = async (
@@ -51,7 +48,7 @@ export const query = async (
 
   for (let transaction of result) {
     const txID = transaction.node.id;
-    console.log(transaction.node.block.height)
+    console.log(transaction.node.block.height);
     if (deRef) {
       const data = await getData(txID);
       ids.push(data);

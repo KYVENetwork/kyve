@@ -5,8 +5,7 @@ const chaiAsPromised = require("chai-as-promised");
 
 chai.use(chaiAsPromised);
 
-export const {assert, expect} = chai;
-
+export const { assert, expect } = chai;
 
 describe("Test logic", () => {
   it("Initiate a KYVE Instance", async () => {
