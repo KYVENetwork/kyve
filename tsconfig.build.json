@@ -1,14 +1,10 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "noEmitOnError": true,
+    "strict": true,
     "declaration": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
-    "types": [],
-    "lib": [
-      "es2015"
-    ]
+    "types": ["@types/mocha"]
   },
   "exclude": [
     "node_modules",

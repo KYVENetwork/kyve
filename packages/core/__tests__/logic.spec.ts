@@ -5,11 +5,12 @@ const chaiAsPromised = require("chai-as-promised");
 
 chai.use(chaiAsPromised);
 
-export const { assert, expect } = chai;
+export const {assert, expect} = chai;
 
-/*
+
 describe("Test logic", () => {
   it("Initiate a KYVE Instance", async () => {
+    /*
     const instance = new KYVE(
       {
         pool: 0,
@@ -18,7 +19,6 @@ describe("Test logic", () => {
       },
       () => true,
       () => true
-    );
+    );*/
   }).timeout(60 * 1000);
 });
-*/

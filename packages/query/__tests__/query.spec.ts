@@ -1,5 +1,5 @@
-import { next, query, Query } from "../query";
-import {arweaveClient} from "../extensions";
+import {next, query, Query} from "../src";
+import {arweaveClient} from "@kyve/core/dist/extensions";
 import {GQLEdgeTransactionInterface} from "ardb/lib/faces/gql";
 
 const chai = require("chai");
@@ -7,7 +7,7 @@ const chaiAsPromised = require("chai-as-promised");
 
 chai.use(chaiAsPromised);
 
-export const { assert, expect } = chai;
+export const {assert, expect} = chai;
 
 describe("Test query", () => {
 

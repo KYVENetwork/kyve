@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc",
     "fmt": "prettier --write .",
-    "test": "nyc --reporter=text mocha -r ts-node/register src/__tests__/**/*.spec.ts"
+    "test": "nyc --reporter=text mocha -r ts-node/register ./__tests__/**/*.spec.ts"
   },
   "publishConfig": {
     "access": "public"
