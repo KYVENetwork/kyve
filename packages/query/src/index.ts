@@ -19,7 +19,9 @@ export class Query extends ArDB {
     this.poolID = poolID;
   }
 
-  async find(): Promise<any> {
+  find(): Promise<GQLEdgeTransactionInterface[]>
+  find(): Promise<TransactionID[]>
+  async find(): Promise<TransactionID[] | GQLEdgeTransactionInterface[]> {
     super.tag("Application", APP_NAME);
     super.tag("Pool", this.poolID.toString());
     const res = (await super.find()) as GQLEdgeTransactionInterface[];
@@ -48,7 +50,6 @@ export const query = async (
 
   for (let transaction of result) {
     const txID = transaction.node.id;
-    console.log(transaction.node.block.height);
     if (deRef) {
       const data = await getData(txID);
       ids.push(data);
