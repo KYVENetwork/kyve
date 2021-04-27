@@ -10,7 +10,6 @@
       "conventionalCommits": true,
       "conventionalPrerelease": true,
       "allowBranch": "master",
-      "createRelease": "github",
       "exact": true,
       "message": "chore(release): %s"
     }
