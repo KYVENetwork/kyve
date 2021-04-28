@@ -7,7 +7,8 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc",
-    "fmt": "prettier --write ."
+    "fmt": "prettier --write .",
+    "clean": "rimraf dist"
   },
   "publishConfig": {
     "access": "public"

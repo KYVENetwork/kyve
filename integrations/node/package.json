@@ -4,7 +4,8 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
-    "fmt": "prettier --write ."
+    "fmt": "prettier --write .",
+    "clean": "rimraf dist"
   },
   "publishConfig": {
     "access": "private"
