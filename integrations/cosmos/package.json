@@ -1,0 +1,28 @@
+{
+  "name": "@kyve/cosmos",
+  "description": "The official KYVE node for Cosmos",
+  "version": "0.0.0-alpha.2",
+  "author": "John Letey <john@kyve.network>, Fabian Riewe <fabian@kyve.network>",
+  "repository": "https://github.com/KYVENetwork/cosmos",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "fmt": "prettier --write ."
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "dist/index",
+  "types": "dist/index",
+  "dependencies": {
+    "@kyve/logic": "^0.0.0-alpha.15",
+    "node-fetch": "^2.6.1",
+    "object-hash": "^2.1.1"
+  },
+  "devDependencies": {
+    "@types/node-fetch": "^2.5.8",
+    "@types/object-hash": "^2.1.0",
+    "prettier": "^2.2.1",
+    "typescript": "^4.2.3"
+  }
+}
