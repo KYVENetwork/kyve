@@ -4,9 +4,9 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@kyve/integration-*": ["integrations/*/src"],
-      "@kyve/contract-*": ["contract/*/src"],
-      "@kyve/*": ["common/*/src"]
+      // "@kyve/integration-*": ["integrations/*/src"],
+      // "@kyve/contract-*": ["contract/*/src"],
+      "@kyve/*": ["common/*/src", "contract/*/src", "integrations/*/src"]
     }
   }
 }

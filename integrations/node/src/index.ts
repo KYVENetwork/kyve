@@ -1,5 +1,5 @@
 require("dotenv").config();
-import KYVE from "@kyve/logic";
+import KYVE from "@kyve/core";
 import Contract from "@kyve/contract-lib";
 import Arweave from "arweave";
 import AvalancheInstance from "@kyve/avalanche";
