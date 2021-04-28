@@ -16,7 +16,7 @@
   "main": "dist/index",
   "types": "dist/index",
   "dependencies": {
-    "@kyve/logic": "^0.0.0-alpha.15",
+    "@kyve/core": "^0.0.0-alpha.0",
     "node-fetch": "^2.6.1",
     "object-hash": "^2.1.1"
   },

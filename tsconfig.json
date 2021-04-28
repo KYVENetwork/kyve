@@ -1,12 +1,15 @@
 {
-  "extends": "./tsconfig.build.json",
-
   "compilerOptions": {
+    "strict": true,
+    "outDir": "dist",
+    "declaration": true,
+    "esModuleInterop": true,
     "baseUrl": ".",
     "paths": {
       // "@kyve/integration-*": ["integrations/*/src"],
       // "@kyve/contract-*": ["contract/*/src"],
-      "@kyve/*": ["common/*/src", "contract/*/src", "integrations/*/src"]
+      // "@kyve/*": ["common/*/src", "contract/*/src", "integrations/*/src"]
     }
-  }
+  },
+  "exclude": ["node_modules", "dist"]
 }

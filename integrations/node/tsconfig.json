@@ -3,7 +3,8 @@
   "compilerOptions": {
     "strict": true,
     "outDir": "dist",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "skipLibCheck": true
   },
   "files": ["src/index.ts"]
 }
