@@ -20,8 +20,6 @@
     "web3": "^1.3.4"
   },
   "devDependencies": {
-    "@types/object-hash": "^2.1.0",
-    "prettier": "^2.2.1",
-    "typescript": "^4.2.3"
+    "@types/object-hash": "^2.1.0"
   }
 }
