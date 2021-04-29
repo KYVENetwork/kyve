@@ -5,7 +5,7 @@
   "scripts": {
     "build": "tsc",
     "node:build": "docker build -t kyve-node:latest .",
-    "node:run": "docker run --name kyve-node kyve-node:latest",
+    "node:run": "docker run kyve-node:latest",
     "start": "node dist/index.js",
     "fmt": "prettier --write .",
     "clean": "rimraf dist"

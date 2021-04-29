@@ -7,6 +7,6 @@ RUN yarn install
 
 COPY . .
 
-RUN yarn build -- -p tsconfig.docker.json
+RUN yarn build -p tsconfig.docker.json
 
 CMD ["yarn", "start"]
