@@ -9,7 +9,7 @@
       "conventionalPrerelease": true,
       "allowBranch": "master",
       "exact": true,
-      "message": "chore(release): %s"
+      "message": "chore(release): new version"
     }
   }
 }
