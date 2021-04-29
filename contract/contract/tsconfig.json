@@ -1,6 +1,9 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "emitDeclarationOnly": true
-  }
+    "strict": false,
+    "outDir": "./dist"
+  },
+  "files": ["src/index.ts"],
+  "exclude": ["*.spec.ts"]
 }

@@ -36,6 +36,7 @@ class Contract {
   }
 
   write = async (input: any): Promise<string> => {
+    //@ts-ignore
     return await interactWrite(this.arweave, this.keyfile, this.ID, input)
   }
 
