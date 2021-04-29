@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "build": "tsc",
+    "node:build": "docker build -t kyve-node:latest .",
+    "node:run": "docker run --name kyve-node kyve-node:latest",
     "start": "node dist/index.js",
     "fmt": "prettier --write .",
     "clean": "rimraf dist"
@@ -23,5 +25,8 @@
     "@kyve/solana": "0.0.0-alpha.2",
     "arweave": "^1.10.13",
     "dotenv": "^8.2.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.2.4"
   }
 }
