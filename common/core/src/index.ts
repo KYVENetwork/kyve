@@ -24,6 +24,7 @@ export default class KYVE {
 
   public uploadFunc: UploadFunction;
   public validateFunc: ValidateFunction;
+  private buffer: UploadFunctionReturn[] = [];
 
   // TODO: Write interface for contract.
   // TODO: Refetch!!!
@@ -163,36 +164,49 @@ export default class KYVE {
     );
 
     node.subscribe((data) => {
-      this.pushToArweave(data);
+      this.buffer.push(data);
+      this.bundleAndUpload();
     });
   }
 
-  private async pushToArweave(input: UploadFunctionReturn) {
-    const transaction = await this.arweave.createTransaction(
-      {
-        data: JSON.stringify(input.data),
-      },
-      this.keyfile
-    );
+  private async bundleAndUpload() {
+    const bundleSize = this.pool.bundleSize;
+    console.log(`\nBuffer size is now: ${this.buffer.length}`);
 
-    const tags = [
-      { name: "Application", value: APP_NAME },
-      { name: "Pool", value: this.poolID.toString() },
-      { name: "Architecture", value: this.pool.architecture },
-      ...(input.tags || []),
-    ];
-    for (const { name, value } of tags) {
-      transaction.addTag(name, value);
+    if (this.buffer.length >= bundleSize) {
+      const buffer = this.buffer;
+      this.buffer = [];
+
+      const transaction = await this.arweave.createTransaction(
+        {
+          data: JSON.stringify(buffer.map((item) => item.data)),
+        },
+        this.keyfile
+      );
+
+      const tags = [
+        { name: "Application", value: APP_NAME },
+        { name: "Pool", value: this.poolID.toString() },
+        { name: "Architecture", value: this.pool.architecture },
+      ];
+      for (const { name, value } of tags) {
+        transaction.addTag(name, value);
+      }
+      buffer.forEach((item) => {
+        for (const { name, value } of item.tags || []) {
+          transaction.addTag(name, value);
+        }
+      });
+
+      await this.arweave.transactions.sign(transaction, this.keyfile);
+      await this.arweave.transactions.post(transaction);
+
+      console.log(
+        `\nSent a transaction\n  txID = ${
+          transaction.id
+        }\n  cost = ${this.arweave.ar.winstonToAr(transaction.reward)} AR`
+      );
     }
-
-    await this.arweave.transactions.sign(transaction, this.keyfile);
-    await this.arweave.transactions.post(transaction);
-
-    console.log(
-      `\nSent a transaction\n  txID = ${
-        transaction.id
-      }\n  cost = ${this.arweave.ar.winstonToAr(transaction.reward)} AR`
-    );
   }
 
   private validator() {
