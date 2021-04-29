@@ -10,6 +10,9 @@
     "fmt": "prettier --write .",
     "clean": "rimraf dist"
   },
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "access": "public"
   },

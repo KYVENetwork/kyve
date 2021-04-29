@@ -8,6 +8,9 @@
     "fmt": "prettier --write .",
     "clean": "rimraf dist"
   },
+  "files": [
+    "dist"
+  ],
   "main": "dist/index.js",
   "license": "MIT",
   "dependencies": {
