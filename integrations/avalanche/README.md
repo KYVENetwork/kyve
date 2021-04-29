@@ -24,13 +24,16 @@ AvalancheInstance(poolID, stake, jwk).run();
 ```
 
 ## Config
+
 The config is pool specific. You can find a list of pool [here](https://kyve.network/gov/pools).
 For this integration the config should look like this:
+
 ```json
 {
   "endpoint": "wss://...."
 }
 ```
-The Avalanche integration uses the websocket endpoint to listen to 
+
+The Avalanche integration uses the websocket endpoint to listen to
 the latest block data. For more information have a look at their
 [documentation](https://docs.avax.network/build/avalanchego-apis/issuing-api-calls).
