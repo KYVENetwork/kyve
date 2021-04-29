@@ -14,7 +14,7 @@ export const untilMined = async (txID: string, arweave: Arweave) => {
 
     if (status === 200 || status === 202) {
       // mined / pending
-      console.log(`\nWaiting for TX ${txID} to be mined.`);
+      console.log(`Waiting for TX ${txID} to be mined.`);
     } else {
       throw Error(`Transaction ${txID} was not mined.`);
     }

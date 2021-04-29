@@ -85,6 +85,14 @@ export default class KYVE {
       );
       await untilMined(id, this.arweave);
       console.log("Successfully staked tokens");
+    } else if (diff < 0) {
+      throw new Error(
+        `Please unlock your tokens in pool ${this.poolID} and start again.`
+      );
+    } else {
+      console.log(
+        `Already staked with ${this.stake} $KYVE in pool ${this.poolID}.`
+      );
     }
 
     if (address === this.pool.uploader) {
