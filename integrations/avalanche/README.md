@@ -13,10 +13,24 @@ The KYVE + Avalanche node allows you to bridge any data stream from an Avalanche
 ## Usage
 
 There are two ways to run the node. You can either run the integration itself or
-run a prebuilt version if the KYVE Node.
+run a prebuilt version of the [KYVE Node](../node/README.md).
 
 ```js
 import AvalancheInstance from "@kyve/avalanche";
+const poolID = ...
+const stake = ...
 
-AvalancheInstance("Avalanche // C-Chain", jwk).run();
+AvalancheInstance(poolID, stake, jwk).run();
 ```
+
+## Config
+The config is pool specific. You can find a list of pool [here](https://kyve.network/gov/pools).
+For this integration the config should look like this:
+```json
+{
+  "endpoint": "wss://...."
+}
+```
+The Avalanche integration uses the websocket endpoint to listen to 
+the latest block data. For more information have a look at their
+[documentation](https://docs.avax.network/build/avalanchego-apis/issuing-api-calls).
