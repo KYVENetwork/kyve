@@ -10,9 +10,8 @@
     "access": "public"
   },
   "scripts": {
-    "build": "yarn run clean && yarn run compile",
-    "clean": "rimraf -rf ./dist",
-    "compile": "tsc -p tsconfig.build.json",
+    "build": "tsc",
+    "clean": "rimraf dist",
     "prepublishOnly": "yarn run build",
     "test": "yarn run build"
   },

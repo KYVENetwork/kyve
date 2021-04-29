@@ -7,10 +7,9 @@
     "dist"
   ],
   "scripts": {
-    "build": "yarn run compile && node scripts/build.js",
+    "build": "tsc && node scripts/build.js",
     "test:scenario": "nyc --reporter=text mocha -r ts-node/register tests/**/*.spec.ts",
-    "clean": "rimraf -rf ./dist",
-    "compile": "tsc",
+    "clean": "rimraf dist",
     "prepublishOnly": "yarn run build",
     "test": "yarn run build"
   },
