@@ -4,77 +4,57 @@ import { arweaveClient } from "@kyve/core/dist/extensions";
 import { GQLEdgeTransactionInterface } from "ardb/lib/faces/gql";
 import Arweave from "arweave";
 
-export const arDB = new ArDB(arweaveClient);
-
 type TransactionID = string;
 type TransactionData = string;
 
 export class Query extends ArDB {
   private poolID: number;
+  public deRef: boolean;
 
-  constructor(poolID: number, arweave: Arweave) {
+  constructor(
+    poolID: number,
+    deRef: boolean = true,
+    arweave: Arweave = arweaveClient
+  ) {
     super(arweave);
     // default tags
     super.only(["id"]);
+    super.limit(10);
     this.poolID = poolID;
+    this.deRef = deRef;
   }
 
-  find(): Promise<GQLEdgeTransactionInterface[]>;
-  find(): Promise<TransactionID[]>;
-  async find(): Promise<TransactionID[] | GQLEdgeTransactionInterface[]> {
+  async find() {
     super.tag("Application", APP_NAME);
     super.tag("Pool", this.poolID.toString());
     const res = (await super.find()) as GQLEdgeTransactionInterface[];
-    const ret: string[] = [];
+    const ret: any[] = [];
+
     for (let { node } of res) {
-      ret.push(node.id);
+      const txID = node.id;
+      if (this.deRef) {
+        const data = await getData(txID);
+        ret.push(data);
+      } else {
+        ret.push(txID);
+      }
+    }
+    return ret;
+  }
+
+  async next() {
+    const res = (await super.next()) as GQLEdgeTransactionInterface[];
+    const ret: any[] = [];
+
+    for (let { node } of res) {
+      const txID = node.id;
+      if (this.deRef) {
+        const data = await getData(txID);
+        ret.push(data);
+      } else {
+        ret.push(txID);
+      }
     }
     return ret;
   }
 }
-
-export const query = async (
-  poolID: number,
-  limit: number = 100,
-  deRef: boolean = false
-): Promise<TransactionID[]> => {
-  const ids: TransactionID[] | TransactionData[] = [];
-
-  const result = (await arDB
-    .search()
-    .tag("Application", APP_NAME)
-    .tag("Pool", poolID.toString())
-    .limit(limit)
-    .only(["id", "block.height"])
-    .find()) as GQLEdgeTransactionInterface[];
-
-  for (let transaction of result) {
-    const txID = transaction.node.id;
-    if (deRef) {
-      const data = await getData(txID);
-      ids.push(data);
-    } else {
-      ids.push(txID);
-    }
-  }
-
-  return ids;
-};
-
-export const next = async (deRef: boolean = false) => {
-  const ids: TransactionID[] | TransactionData[] = [];
-
-  const result = (await arDB.next()) as GQLEdgeTransactionInterface[];
-
-  for (let transaction of result) {
-    const txID = transaction.node.id;
-    if (deRef) {
-      const data = await getData(txID);
-      ids.push(data);
-    } else {
-      ids.push(txID);
-    }
-  }
-
-  return ids;
-};
