@@ -7,10 +7,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 **Note:** Version bump only for package @kyve/query
 
-
-
-
-
 # 0.0.0-alpha.2 (2021-04-29)
 
 **Note:** Version bump only for package @kyve/query

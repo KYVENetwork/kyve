@@ -7,21 +7,12 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 **Note:** Version bump only for package @kyve/contract
 
-
-
-
-
 # [0.1.0-alpha.1](https://github.com/KYVENetwork/contract/compare/@kyve/contract@0.1.0-alpha.0...@kyve/contract@0.1.0-alpha.1) (2021-04-23)
 
 **Note:** Version bump only for package @kyve/contract
 
-
-
-
-
 # 0.1.0-alpha.0 (2021-04-23)
-
 
 ### Features
 
-* added register to lib ([6a80150](https://github.com/KYVENetwork/contract/commit/6a80150c14999069aa5d6907e59e52c3f0f18266))
+- added register to lib ([6a80150](https://github.com/KYVENetwork/contract/commit/6a80150c14999069aa5d6907e59e52c3f0f18266))
