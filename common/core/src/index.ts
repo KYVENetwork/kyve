@@ -100,13 +100,17 @@ export default class KYVE {
       console.log("\nRunning as an uploader ...");
       this.uploader();
     } else {
-      // register validator
-      const id = await this.contract.register(this.poolID);
-      console.log(
-        `Registering in pool ${this.poolID} as validator.\n Transaction: ${id}`
-      );
-      await untilMined(id, this.arweave);
-      console.log("Successfully registered");
+      if (!state.pools[this.poolID].registered.includes(address)) {
+        // register validator
+        const id = await this.contract.register(this.poolID);
+        console.log(
+          `Registering in pool ${this.poolID} as validator.\n Transaction: ${id}`
+        );
+        await untilMined(id, this.arweave);
+        console.log("Successfully registered");
+      } else {
+        console.log("Already registered")
+      }
 
       console.log("\nRunning as a validator ...");
       this.validator();
