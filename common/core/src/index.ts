@@ -109,7 +109,7 @@ export default class KYVE {
         await untilMined(id, this.arweave);
         console.log("Successfully registered");
       } else {
-        console.log("Already registered")
+        console.log("Already registered");
       }
 
       console.log("\nRunning as a validator ...");
@@ -168,48 +168,88 @@ export default class KYVE {
     );
 
     node.subscribe((data) => {
-      this.buffer.push(data);
-      this.bundleAndUpload();
+      this.bundleAndUpload(data);
     });
   }
 
-  private async bundleAndUpload() {
-    const bundleSize = this.pool.bundleSize;
-    console.log(`\nBuffer size is now: ${this.buffer.length}`);
+  private async bundleAndUpload(data: UploadFunctionReturn) {
+    const buffer = this.buffer;
+    this.buffer = [];
 
-    if (this.buffer.length >= bundleSize) {
-      const buffer = this.buffer;
-      this.buffer = [];
+    const transaction = await this.arweave.createTransaction(
+      {
+        data: JSON.stringify(buffer.map((item) => item.data)),
+      },
+      this.keyfile
+    );
 
-      const transaction = await this.arweave.createTransaction(
-        {
-          data: JSON.stringify(buffer.map((item) => item.data)),
-        },
-        this.keyfile
-      );
-
-      const tags = [
-        { name: "Application", value: APP_NAME },
-        { name: "Pool", value: this.poolID.toString() },
-        { name: "Architecture", value: this.pool.architecture },
-      ];
-      for (const { name, value } of tags) {
+    const tags = [
+      { name: "Application", value: APP_NAME },
+      { name: "Pool", value: this.poolID.toString() },
+      { name: "Architecture", value: this.pool.architecture },
+    ];
+    for (const { name, value } of tags) {
+      transaction.addTag(name, value);
+    }
+    buffer.forEach((item) => {
+      for (const { name, value } of item.tags || []) {
         transaction.addTag(name, value);
       }
-      buffer.forEach((item) => {
-        for (const { name, value } of item.tags || []) {
-          transaction.addTag(name, value);
+    });
+
+    const sizeBefore = new TextEncoder().encode(
+      JSON.stringify(transaction.tags)
+    ).length;
+
+    const newTransaction = await this.arweave.createTransaction(
+      {
+        data: JSON.stringify([...buffer, data].map((item) => item.data)),
+      },
+      this.keyfile
+    );
+
+    for (const { name, value } of tags) {
+      newTransaction.addTag(name, value);
+    }
+    buffer.forEach((item) => {
+      for (const { name, value } of item.tags || []) {
+        newTransaction.addTag(name, value);
+      }
+    });
+    for (const { name, value } of data.tags || []) {
+      newTransaction.addTag(name, value);
+    }
+
+    const sizeAfter = new TextEncoder().encode(
+      JSON.stringify(newTransaction.tags)
+    ).length;
+
+    if (sizeBefore < 2048) {
+      if (sizeAfter > 2048) {
+        await this.arweave.transactions.sign(transaction, this.keyfile);
+        await this.arweave.transactions.post(transaction);
+
+        console.log(
+          `\nSent a transaction\n  txID = ${
+            transaction.id
+          }\n  cost = ${this.arweave.ar.winstonToAr(transaction.reward)} AR`
+        );
+      } else {
+        if (buffer > this.pool.bundleSize) {
+          await this.arweave.transactions.sign(newTransaction, this.keyfile);
+          await this.arweave.transactions.post(newTransaction);
+
+          console.log(
+            `\nSent a transaction\n  txID = ${
+              newTransaction.id
+            }\n  cost = ${this.arweave.ar.winstonToAr(
+              newTransaction.reward
+            )} AR`
+          );
+        } else {
+          this.buffer = [...buffer, data, ...this.buffer];
         }
-      });
-
-      await this.arweave.transactions.sign(transaction, this.keyfile);
-      await this.arweave.transactions.post(transaction);
-
-      console.log(
-        `\nSent a transaction\n  txID = ${
-          transaction.id
-        }\n  cost = ${this.arweave.ar.winstonToAr(transaction.reward)} AR`
-      );
+      }
     }
   }
 
