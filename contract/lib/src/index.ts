@@ -6,6 +6,7 @@ import {
   FinalizeInterface,
   FundPoolInterface,
   LockInterface,
+  PayoutInterface,
   ProposeInterface,
   RegisterInterface,
   StateInterface,
@@ -152,6 +153,14 @@ class Contract {
   dispense = async (): Promise<string> => {
     const input: DispenseInterface = {
       function: "dispense",
+    };
+    return await this.write(input);
+  };
+
+  payout = async (poolID: number): Promise<string> => {
+    const input: PayoutInterface = {
+      function: "payout",
+      id: poolID,
     };
     return await this.write(input);
   };
