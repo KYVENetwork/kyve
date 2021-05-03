@@ -1,7 +1,8 @@
 import {
   UploadFunctionSubscriber,
   ListenFunctionObservable,
-  ValidateFunctionSubscriber, ListenFunctionReturn
+  ValidateFunctionSubscriber,
+  ListenFunctionReturn,
 } from "@kyve/core/dist/faces";
 import Web3 from "web3";
 import hash from "object-hash";
