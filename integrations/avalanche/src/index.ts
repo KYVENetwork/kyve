@@ -46,9 +46,7 @@ const validate = async (
 
     const block = await client.eth.getBlock(height, true);
     const localHash = hash(block);
-
-    const data = await getData(res.id);
-    const compareHash = hash(JSON.parse(data.toString()));
+    const compareHash = hash(res.data);
 
     validator.next({ valid: localHash === compareHash, id: res.id });
   });
