@@ -1,6 +1,6 @@
 dist
 node_modules
 .env
-arweave.json
+*arweave*.json
 config.json
 .idea
