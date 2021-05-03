@@ -147,11 +147,17 @@ export default class KYVE {
             console.log(
               `\n[listener] Parsing transaction.\n  txID = ${node.id}`
             );
-            subscriber.next({
-              id: node.id,
-              transaction: node,
-              block: node.block.height,
-            });
+
+            const data: any[] = JSON.parse(await getData(node.id));
+
+            for (const entry of data) {
+              subscriber.next({
+                id: node.id,
+                data: entry,
+                transaction: node,
+                block: node.block.height,
+              });
+            }
           }
         }
 

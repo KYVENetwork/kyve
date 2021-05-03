@@ -19,6 +19,7 @@ export type UploadFunction = (
 
 export interface ListenFunctionReturn {
   id: string;
+  data: any;
   transaction: GQLTransactionInterface;
   block: number;
 }

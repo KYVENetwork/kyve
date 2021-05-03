@@ -39,9 +39,11 @@ const validate = async (
   );
 
   listener.subscribe(async (res) => {
-    const height = parseFloat(
-      res.transaction.tags.find((tag) => tag.name === "Height")?.value!
-    );
+    const index = res.transaction.tags.indexOf({
+      name: "Block",
+      value: res.data.hash,
+    });
+    const height = res.transaction.tags[index + 1].value;
 
     const block = await client.eth.getBlock(height, true);
     const localHash = hash(block);
