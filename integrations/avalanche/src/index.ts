@@ -1,7 +1,7 @@
 import {
   UploadFunctionSubscriber,
   ListenFunctionObservable,
-  ValidateFunctionSubscriber,
+  ValidateFunctionSubscriber, ListenFunctionReturn
 } from "@kyve/core/dist/faces";
 import Web3 from "web3";
 import hash from "object-hash";
@@ -38,7 +38,7 @@ const validate = async (
     new Web3.providers.WebsocketProvider(config.endpoint)
   );
 
-  listener.subscribe(async (res) => {
+  listener.subscribe(async (res: ListenFunctionReturn) => {
     const index = res.transaction.tags.findIndex(
       (tag) => tag.name === "Block" && tag.value === res.data.hash
     );
