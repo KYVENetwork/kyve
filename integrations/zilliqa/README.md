@@ -1,7 +1,5 @@
 <p align="center">
-  <a href="https://kyve.network">
-    <img src="https://user-images.githubusercontent.com/62398724/111903348-c5b9f700-8a39-11eb-9549-49b92072b16e.png" height="250">
-  </a>
+  <a href="https://kyve.network">Kyve</a>
   <h3 align="center"><code>@kyve/zilliqa</code></h3>
   <p align="center">The official KYVE node for Zilliqa.</p>
 </p>
@@ -30,7 +28,17 @@ For this integration the config should look like this:
 
 ```json
 {
-  "endpoint": "wss://...."
+  "endpoint": "wss://....",
+  "api": "https://...."
+}
+```
+
+Default zilliqa mainnet 
+
+```json
+{
+  "endpoint" : "wss://api-ws.zilliqa.com",
+  "api" : "https://api.zilliqa.com/"
 }
 ```
 
