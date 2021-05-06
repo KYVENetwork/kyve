@@ -1,4 +1,4 @@
-require("dotenv").config();
+require("dotenv").config({silent: true});
 import KYVE from "@kyve/core";
 import Contract from "@kyve/contract-lib";
 import Arweave from "arweave";
