@@ -28,7 +28,7 @@ Your config should look like this:
   "pools": {
     "0": 1,
     "2": 10,
-    ....
+    // add further pool ids here
   }
 }
 ```
