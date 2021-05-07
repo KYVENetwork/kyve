@@ -23,6 +23,7 @@
     "@kyve/polkadot": "0.0.0-alpha.6",
     "@kyve/smartweave": "0.0.0-alpha.2",
     "@kyve/solana": "0.0.0-alpha.2",
+    "@kyve/zilliqa": "0.0.0-alpha.0",
     "arweave": "^1.10.13",
     "dotenv": "^8.2.0"
   },

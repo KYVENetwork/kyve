@@ -7,6 +7,7 @@ import CosmosInstance from "@kyve/cosmos";
 import PolkadotInstance from "@kyve/polkadot";
 import SmartWeaveInstance from "@kyve/smartweave";
 import SolanaInstance from "@kyve/solana";
+import ZilliqaInstance from "@kyve/zilliqa";
 import fs from "fs";
 
 const client = new Arweave({
@@ -44,21 +45,24 @@ if (process.env.WALLET) {
 
     const architecture = pools[poolID].architecture;
 
-    switch (architecture) {
-      case "Avalanche":
+    switch (architecture.toLowerCase()) {
+      case "avalanche":
         instances.push(AvalancheInstance(poolID, stake, wallet));
         break;
-      case "Cosmos":
+      case "cosmos":
         instances.push(CosmosInstance(poolID, stake, wallet));
         break;
-      case "Polkadot":
+      case "polkadot":
         instances.push(PolkadotInstance(poolID, stake, wallet));
         break;
-      case "SmartWeave":
+      case "smartweave":
         instances.push(SmartWeaveInstance(poolID, stake, wallet));
         break;
-      case "Solana":
+      case "solana":
         instances.push(SolanaInstance(poolID, stake, wallet));
+        break;
+      case "zilliqa":
+        instances.push(ZilliqaInstance(poolID, stake, wallet));
         break;
       default:
         throw new Error(
