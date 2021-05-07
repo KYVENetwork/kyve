@@ -13,12 +13,14 @@ import {JWKInterface} from "arweave/node/lib/wallet";
 
 import {Zilliqa} from "@zilliqa-js/zilliqa";
 
-import {TransactionObj, TxBlockObj} from "@zilliqa-js/core/src/types";
+// import {TransactionObj, TxBlockObj} from "@zilliqa-js/core/src/types";
 
 // overload default block
+/*
 export interface ZilliqaBlock extends TxBlockObj{
   transactions: TransactionObj[]
 }
+*/
 
 const upload = async (uploader: UploadFunctionSubscriber, config: any) => {
   const zilliqa = new Zilliqa(config.api);
@@ -30,10 +32,17 @@ const upload = async (uploader: UploadFunctionSubscriber, config: any) => {
     const hash = event.value.TxBlock.body.BlockHash;
     const BlockNum = event.value.TxBlock.header.BlockNum.toString();
 
+    /*
     let block = (await zilliqa.blockchain.getTxBlock(BlockNum)).result as ZilliqaBlock;
     block.transactions = (await zilliqa.blockchain.getTxnBodiesForTxBlock(
       BlockNum
     )).result as TransactionObj[];
+     */
+
+    let block = (await zilliqa.blockchain.getTxBlock(BlockNum)).result as any;
+    block.transactions = (await zilliqa.blockchain.getTxnBodiesForTxBlock(
+      BlockNum
+    )).result as any[];
 
     const tags = [
       { name: "Block", value: hash },
@@ -63,10 +72,17 @@ const validate = async (
     );
     const BlockNum = parseInt(res.transaction.tags[index + 1].value);
 
+    /*
     let block = (await zilliqa.blockchain.getTxBlock(BlockNum)).result as ZilliqaBlock;
     block.transactions = (await zilliqa.blockchain.getTxnBodiesForTxBlock(
       BlockNum
     )).result as TransactionObj[];
+     */
+
+    let block = (await zilliqa.blockchain.getTxBlock(BlockNum)).result as any;
+    block.transactions = (await zilliqa.blockchain.getTxnBodiesForTxBlock(
+      BlockNum
+    )).result as any[];
 
     const localHash = hash(block);
     const compareHash = hash(res.data);
