@@ -4,7 +4,8 @@
     "strict": true,
     "outDir": "dist",
     "declaration": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "skipLibCheck": true,
   },
-  "files": ["src/index.ts"]
+  "files": ["src/index.ts"],
 }

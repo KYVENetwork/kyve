@@ -33,12 +33,12 @@ For this integration the config should look like this:
 }
 ```
 
-Default zilliqa mainnet 
+Default zilliqa mainnet
 
 ```json
 {
-  "endpoint" : "wss://api-ws.zilliqa.com",
-  "api" : "https://api.zilliqa.com/"
+  "endpoint": "wss://api-ws.zilliqa.com",
+  "api": "https://api.zilliqa.com/"
 }
 ```
 
