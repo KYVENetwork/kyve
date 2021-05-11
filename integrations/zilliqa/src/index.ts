@@ -5,13 +5,13 @@ import {
   ValidateFunctionSubscriber,
 } from "@kyve/core/dist/faces";
 
-import {GQLTagInterface} from "ardb/lib/faces/gql"
+import { GQLTagInterface } from "ardb/lib/faces/gql";
 
 import hash from "object-hash";
 import KYVE from "@kyve/core";
-import {JWKInterface} from "arweave/node/lib/wallet";
+import { JWKInterface } from "arweave/node/lib/wallet";
 
-import {Zilliqa} from "@zilliqa-js/zilliqa";
+import { Zilliqa } from "@zilliqa-js/zilliqa";
 
 // import {TransactionObj, TxBlockObj} from "@zilliqa-js/core/src/types";
 
@@ -40,9 +40,9 @@ const upload = async (uploader: UploadFunctionSubscriber, config: any) => {
      */
 
     let block = (await zilliqa.blockchain.getTxBlock(BlockNum)).result as any;
-    block.transactions = (await zilliqa.blockchain.getTxnBodiesForTxBlock(
-      BlockNum
-    )).result as any[];
+    block.transactions = (
+      await zilliqa.blockchain.getTxnBodiesForTxBlock(BlockNum)
+    ).result as any[];
 
     const tags = [
       { name: "Block", value: hash },
@@ -68,7 +68,8 @@ const validate = async (
 
   listener.subscribe(async (res: ListenFunctionReturn) => {
     const index = res.transaction.tags.findIndex(
-      (tag: GQLTagInterface) => tag.name === "Block" && tag.value === res.data.body.BlockHash
+      (tag: GQLTagInterface) =>
+        tag.name === "Block" && tag.value === res.data.body.BlockHash
     );
     const BlockNum = parseInt(res.transaction.tags[index + 1].value);
 
@@ -80,9 +81,9 @@ const validate = async (
      */
 
     let block = (await zilliqa.blockchain.getTxBlock(BlockNum)).result as any;
-    block.transactions = (await zilliqa.blockchain.getTxnBodiesForTxBlock(
-      BlockNum
-    )).result as any[];
+    block.transactions = (
+      await zilliqa.blockchain.getTxnBodiesForTxBlock(BlockNum)
+    ).result as any[];
 
     const localHash = hash(block);
     const compareHash = hash(res.data);
