@@ -30,6 +30,7 @@ export const Propose = (state: StateInterface, action: ActionInterface) => {
       };
       break;
     case "updatePool":
+      // todo fix 0 issue
       if (!(input.id && input.pool)) {
         throw new ContractError("Please add 'id' and 'pool' information");
       }
