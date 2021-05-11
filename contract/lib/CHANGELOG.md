@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.7](https://github.com/KYVENetwork/kyve/compare/@kyve/contract-lib@0.1.0-alpha.6...@kyve/contract-lib@0.1.0-alpha.7) (2021-05-11)
+
+
+### Bug Fixes
+
+* added payout method ([cdd5ff7](https://github.com/KYVENetwork/kyve/commit/cdd5ff7ef8d6b4f2b89fd57b9ff7493962fd2654))
+
+
+
+
+
 # [0.1.0-alpha.6](https://github.com/KYVENetwork/kyve/compare/@kyve/contract-lib@0.1.0-alpha.5...@kyve/contract-lib@0.1.0-alpha.6) (2021-04-29)
 
 **Note:** Version bump only for package @kyve/contract-lib

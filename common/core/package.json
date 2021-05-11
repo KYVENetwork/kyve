@@ -1,6 +1,6 @@
 {
   "name": "@kyve/core",
-  "version": "0.0.0-alpha.4",
+  "version": "0.0.0-alpha.5",
   "author": "John Letey <john@kyve.network>, Fabian Riewe <fabian@kyve.network>",
   "repository": "https://github.com/KYVENetwork/logic",
   "license": "MIT",
@@ -19,7 +19,7 @@
   "main": "dist/index",
   "types": "dist/index",
   "dependencies": {
-    "@kyve/contract-lib": "0.1.0-alpha.6",
+    "@kyve/contract-lib": "0.1.0-alpha.7",
     "ardb": "^1.0.8",
     "arweave": "^1.10.11",
     "arweave-bundles": "^1.0.3",
