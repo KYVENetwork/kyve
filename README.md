@@ -26,6 +26,7 @@ To run the node, follow the guide [here](integrations/node/README.md)
 - Polkadot
 - SmartWeave
 - Solana
+- Zilliqa
 
 ### Creating a custom integration
 
