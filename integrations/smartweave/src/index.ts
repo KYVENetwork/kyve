@@ -15,7 +15,10 @@ const client = new Arweave({
   protocol: "https",
 });
 
-const upload = async (uploader: UploadFunctionSubscriber, config: any) => {
+export const upload = async (
+  uploader: UploadFunctionSubscriber,
+  config: any
+) => {
   let state: { [id: string]: any } = {};
 
   const main = async (latest: number) => {
@@ -51,7 +54,7 @@ const upload = async (uploader: UploadFunctionSubscriber, config: any) => {
   main((await client.network.getInfo()).height);
 };
 
-const validate = async (
+export const validate = async (
   listener: ListenFunctionObservable,
   validator: ValidateFunctionSubscriber,
   config: any
