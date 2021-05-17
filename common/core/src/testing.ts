@@ -1,25 +1,31 @@
 import KYVE from "./index";
-import {UploadFunction, ValidateFunction} from "./faces";
-import {JWKInterface} from "arweave/node/lib/wallet";
+import { UploadFunction, ValidateFunction } from "./faces";
+import { JWKInterface } from "arweave/node/lib/wallet";
 import Arweave from "arweave";
 
 class TestInstance extends KYVE {
+  constructor(
+    options: {
+      // todo add pool face
+      pool: any;
+      jwk: JWKInterface;
+      arweave?: Arweave;
+    },
+    uploadFunc: UploadFunction,
+    validateFunc: ValidateFunction
+  ) {
+    super(
+      {
+        pool: -1,
+        stake: 0,
+        jwk: options.jwk,
+        arweave: options.arweave,
+      },
+      uploadFunc,
+      validateFunc
+    );
 
-  constructor(options: {
-    // todo add pool face
-    pool: any;
-    jwk: JWKInterface;
-    arweave?: Arweave;
-  }, uploadFunc: UploadFunction, validateFunc: ValidateFunction) {
-
-    super({
-      pool: -1,
-      stake: 0,
-      jwk: options.jwk,
-      arweave: options.arweave
-    }, uploadFunc, validateFunc);
-
-    this.pool = options.pool
+    this.pool = options.pool;
     this.dryRun = true;
     this.APP_NAME = "KYVE - TEST";
     console.log("DRY RUNNING!");
