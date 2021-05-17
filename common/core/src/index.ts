@@ -21,6 +21,7 @@ export default class KYVE {
   public arweave: Arweave = arweaveClient;
   public ardb: ArDB;
   public contract: Contract;
+  public APP_NAME: string = APP_NAME;
 
   public uploadFunc: UploadFunction;
   public validateFunc: ValidateFunction;
@@ -32,7 +33,9 @@ export default class KYVE {
   public poolID: number;
   public stake: number;
 
-  private readonly keyfile: JWKInterface;
+  protected readonly keyfile: JWKInterface;
+
+  protected dryRun: boolean = false;
 
   constructor(
     options: {
@@ -136,7 +139,7 @@ export default class KYVE {
             .min(latest)
             .max(height)
             .from(this.pool.uploader)
-            .tag("Application", APP_NAME)
+            .tag("Application", this.APP_NAME)
             .tag("Pool", this.poolID.toString())
             .tag("Architecture", this.pool.architecture)
             .findAll()) as GQLEdgeTransactionInterface[];
@@ -168,7 +171,7 @@ export default class KYVE {
     });
   }
 
-  private uploader() {
+  protected uploader(dryRun: boolean = false) {
     const node = new Observable<UploadFunctionReturn>((subscriber) =>
       this.uploadFunc(subscriber, this.pool.config)
     );
@@ -190,7 +193,7 @@ export default class KYVE {
     );
 
     const tags = [
-      { name: "Application", value: APP_NAME },
+      { name: "Application", value: this.APP_NAME },
       { name: "Pool", value: this.poolID.toString() },
       { name: "Architecture", value: this.pool.architecture },
     ];
@@ -233,7 +236,14 @@ export default class KYVE {
     if (sizeBefore < 2048) {
       if (sizeAfter > 2048) {
         await this.arweave.transactions.sign(transaction, this.keyfile);
-        await this.arweave.transactions.post(transaction);
+
+        // only send when not in dry-run
+        if (!this.dryRun) {
+          await this.arweave.transactions.post(transaction);
+        } else {
+          console.log(transaction);
+          console.log(transaction.tags);
+        }
 
         console.log(
           `\nSent a transaction\n  txID = ${
@@ -243,7 +253,10 @@ export default class KYVE {
       } else {
         if (buffer > this.pool.bundleSize) {
           await this.arweave.transactions.sign(newTransaction, this.keyfile);
-          await this.arweave.transactions.post(newTransaction);
+          // only send when not in dry-run
+          if (!this.dryRun) {
+            await this.arweave.transactions.post(newTransaction);
+          }
 
           console.log(
             `\nSent a transaction\n  txID = ${
@@ -259,7 +272,7 @@ export default class KYVE {
     }
   }
 
-  private validator() {
+  protected validator() {
     const node = new Observable<ValidateFunctionReturn>((subscriber) =>
       this.validateFunc(this.listener(), subscriber, this.pool.config)
     );
@@ -275,8 +288,11 @@ export default class KYVE {
   }
 
   private async raiseConcern() {
-    const id = await this.contract.deny(this.poolID);
-    console.log(`\nRaised a dispute in the DAO.\n  txID = ${id}`);
+    console.log(`\nRaising a dispute in the DAO...`);
+    if (!this.dryRun) {
+      const id = await this.contract.deny(this.poolID);
+      console.log(`\t txID = ${id}`);
+    }
   }
 }
 
