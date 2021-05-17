@@ -251,7 +251,7 @@ export default class KYVE {
           }\n  cost = ${this.arweave.ar.winstonToAr(transaction.reward)} AR`
         );
       } else {
-        if (buffer > this.pool.bundleSize) {
+        if (buffer.length >= this.pool.bundleSize) {
           await this.arweave.transactions.sign(newTransaction, this.keyfile);
           // only send when not in dry-run
           if (!this.dryRun) {
