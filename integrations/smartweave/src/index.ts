@@ -19,39 +19,49 @@ export const upload = async (
   uploader: UploadFunctionSubscriber,
   config: any
 ) => {
-  let state: { [id: string]: any } = {};
+  // mapping contract address to state
+  let states: { [id: string]: any } = {};
 
   const main = async (latest: number) => {
     const height = (await client.network.getInfo()).height;
+    console.log("Height:", height, "Latest:", latest);
 
     if (latest !== height) {
       for (const id of config.contracts) {
         const res = await readContract(client, id, latest, true);
+        const state = res.state
 
-        if (state.id) {
-          const currentHash = hash(state.id);
-          const latestHash = hash(res);
+        if (states[id]) {
+          const previousHash = hash(states[id]);
+          const latestHash = hash(state);
 
-          if (currentHash === latestHash) {
+          if (previousHash === latestHash) {
+            // no change, can continue
             continue;
+          } else {
+            console.log("Contract updated, uploading new state...")
           }
         }
 
+        console.log("Uploading...")
         uploader.next({
-          data: res,
+          data: state,
           tags: [
             { name: "Contract", value: id },
             { name: "Block", value: latest },
           ],
         });
-        state.id = res;
+
+        states[id] = state;
       }
     }
 
-    setTimeout(main, 600000, height);
+    //refetch every 10 minutes
+    setTimeout(main, 10 * 60 * 1000, height);
   };
 
-  main((await client.network.getInfo()).height);
+  // start with latest block of 0
+  main(0);
 };
 
 export const validate = async (
