@@ -7,7 +7,7 @@ class TestInstance extends KYVE {
   constructor(
     options: {
       // todo add pool face
-      pool: any;
+      pool: { id: number; pool: any };
       jwk: JWKInterface;
       arweave?: Arweave;
     },
@@ -25,7 +25,9 @@ class TestInstance extends KYVE {
       validateFunc
     );
 
-    this.pool = options.pool;
+    this.pool = options.pool.pool;
+    this.poolID = options.pool.id;
+
     this.dryRun = true;
     this.APP_NAME = "KYVE - TEST";
     console.log("DRY RUNNING!");
@@ -33,6 +35,7 @@ class TestInstance extends KYVE {
 
   public async run() {
     const address = await this.arweave.wallets.getAddress(this.keyfile);
+    console.log(address);
 
     if (address === this.pool.uploader) {
       console.log("\nRunning as an uploader ...");
@@ -43,3 +46,5 @@ class TestInstance extends KYVE {
     }
   }
 }
+
+export default TestInstance;

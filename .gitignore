@@ -299,3 +299,5 @@ $RECYCLE.BIN/
 # .pnp.*
 
 # End of https://www.toptal.com/developers/gitignore/api/webstorm+all,vscode,node,yarn,macos,windows,mocha
+
+**/*/*arweave*.json
