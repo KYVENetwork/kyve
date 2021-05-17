@@ -1,6 +1,7 @@
 import {
-  UploadFunctionSubscriber,
   ListenFunctionObservable,
+  ListenFunctionReturn,
+  UploadFunctionSubscriber,
   ValidateFunctionSubscriber,
 } from "@kyve/core/dist/faces";
 import Arweave from "arweave";
@@ -8,6 +9,7 @@ import { readContract } from "smartweave";
 import hash from "object-hash";
 import KYVE, { getData } from "@kyve/core";
 import { JWKInterface } from "arweave/node/lib/wallet";
+import { GQLTagInterface } from "smartweave/lib/interfaces/gqlResult";
 
 const client = new Arweave({
   host: "arweave.net",
@@ -20,7 +22,7 @@ export const upload = async (
   config: any
 ) => {
   // mapping contract address to state
-  let states: { [id: string]: any } = {};
+  let contracts: { [id: string]: any } = {};
 
   const main = async (latest: number) => {
     const height = (await client.network.getInfo()).height;
@@ -29,30 +31,28 @@ export const upload = async (
     if (latest !== height) {
       for (const id of config.contracts) {
         const res = await readContract(client, id, latest, true);
-        const state = res.state
 
-        if (states[id]) {
-          const previousHash = hash(states[id]);
-          const latestHash = hash(state);
+        if (contracts[id]) {
+          const previousHash = hash(contracts[id]);
+          const latestHash = hash(res);
 
           if (previousHash === latestHash) {
             // no change, can continue
             continue;
           } else {
-            console.log("Contract updated, uploading new state...")
+            console.log("Contract updated, uploading new result...");
           }
         }
 
-        console.log("Uploading...")
         uploader.next({
-          data: state,
+          data: res,
           tags: [
             { name: "Contract", value: id },
             { name: "Block", value: latest },
           ],
         });
 
-        states[id] = state;
+        contracts[id] = res;
       }
     }
 
@@ -69,15 +69,17 @@ export const validate = async (
   validator: ValidateFunctionSubscriber,
   config: any
 ) => {
-  listener.subscribe(async (res) => {
-    const contract = res.transaction.tags.find((tag) => tag.name === "Contract")
-      ?.value!;
+  listener.subscribe(async (res: ListenFunctionReturn) => {
+    const contract = res.transaction.tags.find(
+      (tag: GQLTagInterface) => tag.name === "Contract"
+    )?.value!;
     const block = parseFloat(
-      res.transaction.tags.find((tag) => tag.name === "Block")?.value!
+      res.transaction.tags.find((tag: GQLTagInterface) => tag.name === "Block")
+        ?.value!
     );
 
     const state = await readContract(client, contract, block, true);
-    const localHash = hash(state);
+    const localHash = hash(state.state);
 
     const data = await getData(res.id);
     const compareHash = hash(JSON.parse(data.toString()));
