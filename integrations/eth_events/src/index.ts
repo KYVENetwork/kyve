@@ -6,21 +6,23 @@ import {
 } from "@kyve/core/dist/faces";
 import Web3 from "web3";
 import hash from "object-hash";
-import KYVE from "@kyve/core";
+import KYVE, { getData } from "@kyve/core";
 import { JWKInterface } from "arweave/node/lib/wallet";
 
-const upload = async (uploader: UploadFunctionSubscriber, config: any) => {
+export const upload = async (
+  uploader: UploadFunctionSubscriber,
+  config: any
+) => {
   const client = new Web3(
     new Web3.providers.WebsocketProvider(config.endpoint)
   );
 
   const contract = new client.eth.Contract(
-    // TODO: Change this, we don't want to store it in the pool.
-    config.abi,
+    JSON.parse(await getData(config.abi)),
     config.address
   );
 
-  contract.events.allEvents.on("data", async (res: any) => {
+  contract.events.allEvents().on("data", async (res: any) => {
     uploader.next({
       data: res,
       tags: [
@@ -34,7 +36,7 @@ const upload = async (uploader: UploadFunctionSubscriber, config: any) => {
   });
 };
 
-const validate = async (
+export const validate = async (
   listener: ListenFunctionObservable,
   validator: ValidateFunctionSubscriber,
   config: any
@@ -44,8 +46,7 @@ const validate = async (
   );
 
   const contract = new client.eth.Contract(
-    // TODO: Change this, we don't want to store it in the pool.
-    config.abi,
+    JSON.parse(await getData(config.abi)),
     config.address
   );
 
@@ -58,9 +59,9 @@ const validate = async (
       fromBlock: block,
       toBlock: block,
     });
-    const data = events.find((event) => event.transactionHash === transaction);
+    const data = events.find((event) => event.transactionHash === transaction)!;
 
-    const localHash = hash(block);
+    const localHash = hash(data);
     const compareHash = hash(res.data);
 
     validator.next({ valid: localHash === compareHash, id: res.id });
