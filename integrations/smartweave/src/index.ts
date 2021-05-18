@@ -1,6 +1,7 @@
 import {
-  UploadFunctionSubscriber,
   ListenFunctionObservable,
+  ListenFunctionReturn,
+  UploadFunctionSubscriber,
   ValidateFunctionSubscriber,
 } from "@kyve/core/dist/faces";
 import Arweave from "arweave";
@@ -8,6 +9,7 @@ import { readContract } from "smartweave";
 import hash from "object-hash";
 import KYVE, { getData } from "@kyve/core";
 import { JWKInterface } from "arweave/node/lib/wallet";
+import { GQLTagInterface } from "smartweave/lib/interfaces/gqlResult";
 
 const client = new Arweave({
   host: "arweave.net",
@@ -15,22 +17,30 @@ const client = new Arweave({
   protocol: "https",
 });
 
-const upload = async (uploader: UploadFunctionSubscriber, config: any) => {
-  let state: { [id: string]: any } = {};
+export const upload = async (
+  uploader: UploadFunctionSubscriber,
+  config: any
+) => {
+  // mapping contract address to state
+  let contracts: { [id: string]: any } = {};
 
   const main = async (latest: number) => {
     const height = (await client.network.getInfo()).height;
+    console.log("Height:", height, "Latest:", latest);
 
     if (latest !== height) {
       for (const id of config.contracts) {
         const res = await readContract(client, id, latest, true);
 
-        if (state.id) {
-          const currentHash = hash(state.id);
+        if (contracts[id]) {
+          const previousHash = hash(contracts[id]);
           const latestHash = hash(res);
 
-          if (currentHash === latestHash) {
+          if (previousHash === latestHash) {
+            // no change, can continue
             continue;
+          } else {
+            console.log("Contract updated, uploading new result...");
           }
         }
 
@@ -41,30 +51,35 @@ const upload = async (uploader: UploadFunctionSubscriber, config: any) => {
             { name: "Block", value: latest },
           ],
         });
-        state.id = res;
+
+        contracts[id] = res;
       }
     }
 
-    setTimeout(main, 600000, height);
+    //refetch every 10 minutes
+    setTimeout(main, 10 * 60 * 1000, height);
   };
 
-  main((await client.network.getInfo()).height);
+  // start with latest block of 0
+  main(0);
 };
 
-const validate = async (
+export const validate = async (
   listener: ListenFunctionObservable,
   validator: ValidateFunctionSubscriber,
   config: any
 ) => {
-  listener.subscribe(async (res) => {
-    const contract = res.transaction.tags.find((tag) => tag.name === "Contract")
-      ?.value!;
+  listener.subscribe(async (res: ListenFunctionReturn) => {
+    const contract = res.transaction.tags.find(
+      (tag: GQLTagInterface) => tag.name === "Contract"
+    )?.value!;
     const block = parseFloat(
-      res.transaction.tags.find((tag) => tag.name === "Block")?.value!
+      res.transaction.tags.find((tag: GQLTagInterface) => tag.name === "Block")
+        ?.value!
     );
 
     const state = await readContract(client, contract, block, true);
-    const localHash = hash(state);
+    const localHash = hash(state.state);
 
     const data = await getData(res.id);
     const compareHash = hash(JSON.parse(data.toString()));

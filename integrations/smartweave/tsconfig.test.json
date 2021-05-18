@@ -2,9 +2,9 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "strict": true,
-    "outDir": "dist",
+    "outDir": "__tests__/dist",
     "declaration": true,
     "esModuleInterop": true
   },
-  "files": ["src/index.ts", "src/testing.ts"]
+  "files": ["__tests__/instance.ts"]
 }
