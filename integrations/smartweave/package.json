@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc",
-    "build:test": "tsc -p tsconfig.test.json",
+    "build:test": "rimraf __tests__/dist && tsc -p tsconfig.test.json",
     "fmt": "prettier --write .",
     "clean": "rimraf dist",
     "test": "node __tests__/dist/__tests__/instance.js"
