@@ -39,11 +39,10 @@ export const upload = async (
           if (previousHash === latestHash) {
             // no change, can continue
             continue;
-          } else {
-            console.log("Contract updated, uploading new result...");
           }
         }
 
+        console.log("Contract changed, uploading new result...");
         uploader.next({
           data: res,
           tags: [

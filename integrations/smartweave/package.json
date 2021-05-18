@@ -1,13 +1,13 @@
 {
   "name": "@kyve/smartweave",
   "description": "The official KYVE node for SmartWeave",
-  "version": "0.0.0-alpha.3",
+  "version": "0.0.0-alpha.4",
   "author": "John Letey <john@kyve.network>, Fabian Riewe <fabian@kyve.network>",
   "repository": "https://github.com/KYVENetwork/smartweave",
   "license": "MIT",
   "scripts": {
     "build": "tsc",
-    "build:test": "tsc -p tsconfig.test.json",
+    "build:test": "rimraf __tests__/dist && tsc -p tsconfig.test.json",
     "fmt": "prettier --write .",
     "clean": "rimraf dist",
     "test": "node __tests__/dist/__tests__/instance.js"
@@ -21,7 +21,7 @@
   "main": "dist/index",
   "types": "dist/index",
   "dependencies": {
-    "@kyve/core": "0.0.0-alpha.5",
+    "@kyve/core": "0.0.0-alpha.6",
     "arweave": "^1.10.13",
     "object-hash": "^2.1.1",
     "smartweave": "^0.4.27"

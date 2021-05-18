@@ -3,9 +3,9 @@ import { upload, validate } from "../src";
 import fs from "fs";
 
 const pool = {
-  id: 4,
+  id: 400,
   pool: {
-    name: "KOI_Pool",
+    name: "TestPool",
     architecture: "SmartWeave",
     config: {
       contracts: ["-NpR1D0UzGTNuLzG4XN4ZfKKnVOceHMpiDvtHBJ3MXo"],
