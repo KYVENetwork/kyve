@@ -1,6 +1,6 @@
 {
   "name": "@kyve/node",
-  "version": "0.0.0-alpha.5",
+  "version": "0.0.0-alpha.6",
   "private": true,
   "scripts": {
     "build": "tsc",
@@ -23,7 +23,7 @@
     "@kyve/polkadot": "0.0.0-alpha.8",
     "@kyve/smartweave": "0.0.0-alpha.4",
     "@kyve/solana": "0.0.0-alpha.4",
-    "@kyve/zilliqa": "0.0.0-alpha.2",
+    "@kyve/zilliqa": "0.0.0-alpha.3",
     "arweave": "^1.10.13",
     "dotenv": "^8.2.0"
   },

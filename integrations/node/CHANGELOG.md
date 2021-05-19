@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.6](https://github.com/KYVENetwork/kyve/compare/@kyve/node@0.0.0-alpha.5...@kyve/node@0.0.0-alpha.6) (2021-05-19)
+
+
+### Bug Fixes
+
+* added required tool for sodium ([d531efc](https://github.com/KYVENetwork/kyve/commit/d531efccede62b1b93544635b362f396b0ccce35))
+
+
+
+
+
 # [0.0.0-alpha.5](https://github.com/KYVENetwork/kyve/compare/@kyve/node@0.0.0-alpha.4...@kyve/node@0.0.0-alpha.5) (2021-05-18)
 
 **Note:** Version bump only for package @kyve/node
