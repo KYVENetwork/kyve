@@ -22,7 +22,10 @@ export interface ZilliqaBlock extends TxBlockObj{
 }
 */
 
-const upload = async (uploader: UploadFunctionSubscriber, config: any) => {
+export const upload = async (
+  uploader: UploadFunctionSubscriber,
+  config: any
+) => {
   const zilliqa = new Zilliqa(config.api);
   const subscriber = zilliqa.subscriptionBuilder.buildNewBlockSubscriptions(
     config.endpoint
@@ -38,11 +41,14 @@ const upload = async (uploader: UploadFunctionSubscriber, config: any) => {
       BlockNum
     )).result as TransactionObj[];
      */
-
     let block = (await zilliqa.blockchain.getTxBlock(BlockNum)).result as any;
-    block.transactions = (
-      await zilliqa.blockchain.getTxnBodiesForTxBlock(BlockNum)
-    ).result as any[];
+
+    const transactions = await zilliqa.blockchain.getTxnBodiesForTxBlock(
+      BlockNum
+    );
+
+    // use empty-array in case of no transactions
+    block.transactions = transactions.result || ([] as any[]);
 
     const tags = [
       { name: "Block", value: hash },
@@ -59,7 +65,7 @@ const upload = async (uploader: UploadFunctionSubscriber, config: any) => {
   subscriber.start();
 };
 
-const validate = async (
+export const validate = async (
   listener: ListenFunctionObservable,
   validator: ValidateFunctionSubscriber,
   config: any
