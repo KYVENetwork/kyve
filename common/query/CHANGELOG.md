@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.8](https://github.com/KYVENetwork/logic/compare/@kyve/query@0.0.0-alpha.7...@kyve/query@0.0.0-alpha.8) (2021-05-20)
+
+
+### Bug Fixes
+
+* changed build target ([d3ba93c](https://github.com/KYVENetwork/logic/commit/d3ba93c35de902dea764c4f21e6ef6fb2060c71e))
+
+
+
+
+
 # [0.0.0-alpha.7](https://github.com/KYVENetwork/logic/compare/@kyve/query@0.0.0-alpha.6...@kyve/query@0.0.0-alpha.7) (2021-05-20)
 
 **Note:** Version bump only for package @kyve/query
