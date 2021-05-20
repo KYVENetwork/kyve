@@ -4,3 +4,4 @@ node_modules
 *arweave*.json
 config.json
 .idea
+config*.json
