@@ -42,13 +42,23 @@ export const upload = async (
       BlockNum
     )).result as TransactionObj[];
      */
-    let block = (await zilliqa.blockchain.getTxBlock(BlockNum)).result as any;
+
+    let block: any;
+    try {
+      block = (await zilliqa.blockchain.getTxBlock(BlockNum)).result as any;
+    } catch (error) {
+      // in case of an error don't send any data
+      console.log(error);
+      return;
+    }
 
     let transactions: any;
     try {
       transactions = await zilliqa.blockchain.getTxnBodiesForTxBlock(BlockNum);
     } catch (error) {
+      // in case of an error don't send any data
       console.log(error);
+      return;
     }
 
     // use empty-array in case of no transactions
@@ -59,6 +69,7 @@ export const upload = async (
       { name: "BlockNum", value: BlockNum.toString() },
     ];
 
+    // todo re-enable transactions when MAX_TAG_SIZE issue is fixed
     //block.transactions.map((transaction: any) =>
     //  tags.push({ name: "Transaction", value: transaction.ID })
     //);
