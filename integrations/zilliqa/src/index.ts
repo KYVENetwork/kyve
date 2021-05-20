@@ -34,6 +34,7 @@ export const upload = async (
   subscriber.emitter.on("NewBlock", async (event: any) => {
     const hash = event.value.TxBlock.body.BlockHash;
     const BlockNum = event.value.TxBlock.header.BlockNum.toString();
+    console.log("Hash", hash, "BlockNum", BlockNum);
 
     /*
     let block = (await zilliqa.blockchain.getTxBlock(BlockNum)).result as ZilliqaBlock;
@@ -43,21 +44,24 @@ export const upload = async (
      */
     let block = (await zilliqa.blockchain.getTxBlock(BlockNum)).result as any;
 
-    const transactions = await zilliqa.blockchain.getTxnBodiesForTxBlock(
-      BlockNum
-    );
+    let transactions: any;
+    try {
+      transactions = await zilliqa.blockchain.getTxnBodiesForTxBlock(BlockNum);
+    } catch (error) {
+      console.log(error);
+    }
 
     // use empty-array in case of no transactions
-    block.transactions = transactions.result || ([] as any[]);
+    block.transactions = transactions!.result || ([] as any[]);
 
     const tags = [
       { name: "Block", value: hash },
       { name: "BlockNum", value: BlockNum.toString() },
     ];
 
-    block.transactions.map((transaction: any) =>
-      tags.push({ name: "Transaction", value: transaction.ID })
-    );
+    //block.transactions.map((transaction: any) =>
+    //  tags.push({ name: "Transaction", value: transaction.ID })
+    //);
 
     uploader.next({ data: block, tags });
   });
