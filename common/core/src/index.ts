@@ -9,7 +9,7 @@ import {
 } from "./faces";
 import { JWKInterface } from "arweave/node/lib/wallet";
 import { Observable } from "rxjs";
-import { arweaveClient } from "./extensions";
+import { arweaveBundles as bundles, arweaveClient } from "./extensions";
 
 import Contract from "@kyve/contract-lib";
 import { GQLEdgeTransactionInterface } from "ardb/lib/faces/gql";
@@ -177,97 +177,84 @@ export default class KYVE {
     );
 
     node.subscribe((data) => {
-      this.bundleAndUpload(data);
+      this.buffer.push(data);
+      this.bundleAndUpload();
     });
   }
 
-  private async bundleAndUpload(data: UploadFunctionReturn) {
-    const buffer = this.buffer;
-    this.buffer = [];
+  private async bundleAndUpload() {
+    const bundleSize = this.pool.bundleSize;
 
-    const transaction = await this.arweave.createTransaction(
-      {
-        data: JSON.stringify(buffer.map((item) => item.data)),
-      },
-      this.keyfile
-    );
+    if (bundleSize === 1) {
+      const buffer = this.buffer;
+      this.buffer = [];
 
-    const tags = [
-      { name: "Application", value: this.APP_NAME },
-      { name: "Pool", value: this.poolID.toString() },
-      { name: "Architecture", value: this.pool.architecture },
-    ];
-    for (const { name, value } of tags) {
-      transaction.addTag(name, value);
-    }
-    buffer.forEach((item) => {
-      for (const { name, value } of item.tags || []) {
+      const transaction = await this.arweave.createTransaction(
+        {
+          data: JSON.stringify(buffer[0].data),
+        },
+        this.keyfile
+      );
+
+      const tags = [
+        { name: "Application", value: APP_NAME },
+        { name: "Pool", value: this.poolID.toString() },
+        { name: "Architecture", value: this.pool.architecture },
+        ...(buffer[0].tags || []),
+      ];
+      for (const { name, value } of tags) {
         transaction.addTag(name, value);
       }
-    });
 
-    const sizeBefore = new TextEncoder().encode(
-      JSON.stringify(transaction.tags)
-    ).length;
+      await this.arweave.transactions.sign(transaction, this.keyfile);
+      await this.arweave.transactions.post(transaction);
 
-    const newTransaction = await this.arweave.createTransaction(
-      {
-        data: JSON.stringify([...buffer, data].map((item) => item.data)),
-      },
-      this.keyfile
-    );
+      console.log(
+        `\nSent a transaction.\n  txID = ${
+          transaction.id
+        }\n  cost = ${this.arweave.ar.winstonToAr(transaction.reward)} AR`
+      );
+    } else {
+      console.log(`\nBuffer size is now: ${this.buffer.length}`);
+      if (this.buffer.length >= bundleSize) {
+        const buffer = this.buffer;
+        this.buffer = [];
 
-    for (const { name, value } of tags) {
-      newTransaction.addTag(name, value);
-    }
-    buffer.forEach((item) => {
-      for (const { name, value } of item.tags || []) {
-        newTransaction.addTag(name, value);
-      }
-    });
-    for (const { name, value } of data.tags || []) {
-      newTransaction.addTag(name, value);
-    }
-
-    const sizeAfter = new TextEncoder().encode(
-      JSON.stringify(newTransaction.tags)
-    ).length;
-
-    if (sizeBefore < 2048) {
-      if (sizeAfter > 2048) {
-        await this.arweave.transactions.sign(transaction, this.keyfile);
-
-        // only send when not in dry-run
-        if (!this.dryRun) {
-          await this.arweave.transactions.post(transaction);
-        } else {
-          console.log(transaction);
-          console.log(transaction.tags);
+        const items = [];
+        for (const entry of buffer) {
+          const item = await bundles.createData(
+            {
+              data: JSON.stringify(entry.data),
+              tags: [
+                { name: "Application", value: APP_NAME },
+                { name: "Pool", value: this.poolID.toString() },
+                { name: "Architecture", value: this.pool.architecture },
+                ...(entry.tags || []),
+              ],
+            },
+            this.keyfile
+          );
+          items.push(await bundles.sign(item, this.keyfile));
         }
 
+        const bundle = await bundles.bundleData(items);
+        const transaction = await this.arweave.createTransaction(
+          { data: JSON.stringify(bundle) },
+          this.keyfile
+        );
+
+        transaction.addTag("Bundle-Format", "json");
+        transaction.addTag("Bundle-Version", "1.0.0");
+        transaction.addTag("Content-Type", "application/json");
+
+        await this.arweave.transactions.sign(transaction, this.keyfile);
+        await this.arweave.transactions.post(transaction);
+
         console.log(
-          `\nSent a transaction\n  txID = ${
+          `\nSent a bundle with ${items.length} items.\n  txID = ${
             transaction.id
           }\n  cost = ${this.arweave.ar.winstonToAr(transaction.reward)} AR`
         );
-      } else {
-        if (buffer.length >= this.pool.bundleSize) {
-          await this.arweave.transactions.sign(newTransaction, this.keyfile);
-          // only send when not in dry-run
-          if (!this.dryRun) {
-            await this.arweave.transactions.post(newTransaction);
-          }
-
-          console.log(
-            `\nSent a transaction\n  txID = ${
-              newTransaction.id
-            }\n  cost = ${this.arweave.ar.winstonToAr(
-              newTransaction.reward
-            )} AR`
-          );
-        } else {
-          this.buffer = [...buffer, data, ...this.buffer];
-        }
       }
     }
   }
