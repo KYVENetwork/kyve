@@ -12,6 +12,7 @@
     "typescript": "^4.2.4"
   },
   "scripts": {
+    "setup": "yarn --ignore-engines && yarn build && lerna bootstrap && yarn fmt",
     "build": "yarn clean && lerna run build",
     "build:changed": "lerna run --since origin/master --include-dependents build",
     "test": "lerna run test",
