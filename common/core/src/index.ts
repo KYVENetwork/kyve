@@ -189,9 +189,12 @@ export default class KYVE {
       const buffer = this.buffer;
       this.buffer = [];
 
-      const transaction = await this.arweave.createTransaction({
-        data: JSON.stringify(buffer[0].data)
-      }, this.keyfile);
+      const transaction = await this.arweave.createTransaction(
+        {
+          data: JSON.stringify(buffer[0].data),
+        },
+        this.keyfile
+      );
 
       const tags = [
         { name: "Application", value: APP_NAME },
