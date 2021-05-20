@@ -3,12 +3,15 @@
 ## Getting Started
 
 ### Clone the repository and install dependencies
+
 1.  Clone the repository
+
     ```
     git clone https://github.com/KYVENetwork/kyve.git
     ```
 
-2. Install and link dependencies
+2.  Install and link dependencies
+
     ```
     yarn setup
     ```

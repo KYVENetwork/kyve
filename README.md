@@ -36,6 +36,7 @@ You can find a detailed explanation [here](/common/core/README.md).
 ## Contributing
 
 To contribute to this repository please follow these steps:
+
 1.  Clone the repository
     ```
     https://github.com/KYVENetwork/kyve.git
@@ -44,4 +45,3 @@ To contribute to this repository please follow these steps:
     ```
     yarn setup
     ```
-
