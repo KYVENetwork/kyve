@@ -52,58 +52,64 @@ export const upload = async (
       return;
     }
 
-    let transactions: any[] = [];
-    if(block.header.NumTxns>0){
-      try {
-        transactions = (await zilliqa.blockchain.getTxnBodiesForTxBlock(BlockNum)).result as any;
-      } catch (error) {
-        // in case of an error don't send any data
-        console.log(error);
-        return;
-      }
-    }
+    // use empty-array in case of no transactions
+    block.transactions = [] as any[];
 
-    let i,j, page = 1,chunk = 50;
-    let maxPages = Math.ceil(transactions.length / chunk);
-    maxPages = maxPages == 0 ? 1 : maxPages;
-    for (i=0,j=transactions.length; i<j; i+=chunk) {
-      // use empty-array in case of no transactions
-      block.transactions = ([] as any[]);
-      if(transactions != null && transactions.length>0){
-        transactions.slice(i,i+chunk).map((transaction) =>
-          block.transactions[transaction.ID] = transaction
-        );
-      }
-
-      // upload chunk
-      const tags = [
-        { name: "Block", value: hash },
-        { name: "BlockNum", value: BlockNum.toString() },
-        { name: "Page", value: page.toString() },
-        { name: "Max-Pages", value: maxPages.toString() },
-      ];
-
-      block.transactions.map((transaction: any) =>
-        tags.push({ name: "Transaction", value: transaction.ID })
-      );
-
-      uploader.next({ data: block, tags });
-
-      page += 1;
-    }
-
-    // if there are no transactions page will be still 1 want there was nothing uploaden. but we always want to upload a block
-    if(page == 1){
+    if (block.header.NumTxns === 0) {
+      // If there are no transactions page will be 1.
+      // We always want to upload a block.
       const tags = [
         { name: "Block", value: hash },
         { name: "BlockNum", value: BlockNum.toString() },
         { name: "Page", value: "1" },
         { name: "Max-Pages", value: "1" },
       ];
-      block.transactions = ([] as any[]);
-      uploader.next({ data: block, tags });
-    }
 
+      uploader.next({ data: block, tags });
+    } else {
+
+      let transactions: any[] = [];
+      // fetch transactions
+      try {
+        transactions = (
+          await zilliqa.blockchain.getTxnBodiesForTxBlock(BlockNum)
+        ).result as any;
+      } catch (error) {
+        // in case of an error don't send any data
+        console.log(error);
+        return;
+      }
+
+      let page = 1;
+
+      const chunkSize = 50;
+      const maxPages = Math.ceil(transactions.length / chunkSize);
+
+      for (let i = 0; i < transactions.length; i += chunkSize) {
+        // slice transactions into chunks and map them into the block
+        transactions
+          .slice(i, i + chunkSize)
+          .map(
+            (transaction) => (block.transactions[transaction.ID] = transaction)
+          );
+
+        // upload chunk
+        const tags = [
+          { name: "Block", value: hash },
+          { name: "BlockNum", value: BlockNum.toString() },
+          { name: "Page", value: page.toString() },
+          { name: "Max-Pages", value: maxPages.toString() },
+        ];
+
+        block.transactions.map((transaction: any) =>
+          tags.push({ name: "Transaction", value: transaction.ID })
+        );
+
+        uploader.next({ data: block, tags });
+
+        page += 1;
+      }
+    }
   });
 
   subscriber.start();
@@ -134,10 +140,12 @@ export const validate = async (
     let block = (await zilliqa.blockchain.getTxBlock(BlockNum)).result as any;
     block.transactions = [] as any[];
 
-    if(block.header.NumTxns>0){
+    if (block.header.NumTxns > 0) {
       let transactions: any[] = [];
       try {
-        transactions = (await zilliqa.blockchain.getTxnBodiesForTxBlock(BlockNum)).result as any;
+        transactions = (
+          await zilliqa.blockchain.getTxnBodiesForTxBlock(BlockNum)
+        ).result as any;
       } catch (error) {
         // in case of an error don't send any data
         console.log(error);
@@ -145,13 +153,15 @@ export const validate = async (
       }
 
       let chunk = 50;
-      let i = (page-1) * chunk;
+      let i = (page - 1) * chunk;
       let maxPages = Math.ceil(transactions.length / chunk);
       maxPages = maxPages == 0 ? 1 : maxPages;
-      if(transactions != null && transactions.length>0){
-        transactions.slice(i,i+chunk).map((transaction) =>
-          block.transactions[transaction.ID] = transaction
-        );
+      if (transactions != null && transactions.length > 0) {
+        transactions
+          .slice(i, i + chunk)
+          .map(
+            (transaction) => (block.transactions[transaction.ID] = transaction)
+          );
       }
     }
 
