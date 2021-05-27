@@ -4,11 +4,13 @@ import { JWKInterface } from "arweave/node/lib/wallet";
 import Arweave from "arweave";
 
 class TestInstance extends KYVE {
+  private readonly isUploader: boolean;
+
   constructor(
     options: {
       // todo add pool face
       pool: { id: number; pool: any };
-      jwk: JWKInterface;
+      uploader: boolean;
       arweave?: Arweave;
     },
     uploadFunc: UploadFunction,
@@ -18,7 +20,7 @@ class TestInstance extends KYVE {
       {
         pool: -1,
         stake: 0,
-        jwk: options.jwk,
+        jwk: {} as JWKInterface,
         arweave: options.arweave,
       },
       uploadFunc,
@@ -30,14 +32,18 @@ class TestInstance extends KYVE {
 
     this.dryRun = true;
     this.APP_NAME = "KYVE - TEST";
+    this.isUploader = options.uploader;
+
     console.log("DRY RUNNING!");
   }
 
   public async run() {
-    const address = await this.arweave.wallets.getAddress(this.keyfile);
-    console.log(address);
+    this.keyfile = await this.arweave.wallets.generate();
 
-    if (address === this.pool.uploader) {
+    const address = await this.arweave.wallets.getAddress(this.keyfile);
+    console.log("Address:", address);
+
+    if (this.isUploader) {
       console.log("\nRunning as an uploader ...");
       this.uploader();
     } else {
