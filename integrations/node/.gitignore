@@ -2,6 +2,6 @@ dist
 node_modules
 .env
 *arweave*.json
-config.json
+*config*.json
 .idea
-config*.json
+/deploy-on-heroku.sh

@@ -2,17 +2,24 @@
 
 ## Getting Started
 
-### Clone the repository
+### Clone the repository and install dependencies
 
-```
-git clone https://github.com/KYVENetwork/kyve.git
-```
+1.  Clone the repository
 
-and `cd` into the node folder
+    ```
+    git clone https://github.com/KYVENetwork/kyve.git
+    ```
 
-```
-cd integrations/node
-```
+2.  Install and link dependencies
+
+    ```
+    yarn setup
+    ```
+
+3.  Switch into the node folder
+    ```
+    cd integrations/node
+    ```
 
 ### Create a config.json
 
@@ -54,6 +61,9 @@ CONFIG=config.json
 WALLET=arweave.json
 ```
 
+_Note: If your keyfile or config-file have different names, change them
+accordingly_
+
 ## Running the node
 
 ### Using Docker (recommended)
@@ -85,19 +95,7 @@ docker run --name kyve-node kyve-node:latest
 ### Using NodeJS
 
 To run the KYVE node using NodeJS simply,
-install the dependencies:
-
-```
-yarn install
-```
-
-build the code:
-
-```
-yarn build
-```
-
-and start it:
+start the script:
 
 ```
 yarn start

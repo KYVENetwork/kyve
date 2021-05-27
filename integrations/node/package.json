@@ -1,6 +1,6 @@
 {
   "name": "@kyve/node",
-  "version": "0.0.0-alpha.6",
+  "version": "0.0.0-alpha.8",
   "private": true,
   "scripts": {
     "build": "tsc",
@@ -16,14 +16,14 @@
   "main": "dist/index.js",
   "license": "MIT",
   "dependencies": {
-    "@kyve/avalanche": "0.0.0-alpha.20",
+    "@kyve/avalanche": "0.0.0-alpha.21",
     "@kyve/contract-lib": "0.1.0-alpha.7",
-    "@kyve/core": "0.0.0-alpha.6",
-    "@kyve/cosmos": "0.0.0-alpha.7",
-    "@kyve/polkadot": "0.0.0-alpha.8",
-    "@kyve/smartweave": "0.0.0-alpha.4",
-    "@kyve/solana": "0.0.0-alpha.4",
-    "@kyve/zilliqa": "0.0.0-alpha.3",
+    "@kyve/core": "0.0.0-alpha.7",
+    "@kyve/cosmos": "0.0.0-alpha.8",
+    "@kyve/polkadot": "0.0.0-alpha.9",
+    "@kyve/smartweave": "0.0.0-alpha.5",
+    "@kyve/solana": "0.0.0-alpha.5",
+    "@kyve/zilliqa": "0.0.0-alpha.4",
     "arweave": "^1.10.13",
     "dotenv": "^8.2.0"
   },

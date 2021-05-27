@@ -33,7 +33,7 @@ export default class KYVE {
   public poolID: number;
   public stake: number;
 
-  protected readonly keyfile: JWKInterface;
+  protected keyfile: JWKInterface;
 
   protected dryRun: boolean = false;
 

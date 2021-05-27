@@ -32,3 +32,16 @@ To run the node, follow the guide [here](integrations/node/README.md)
 
 To create a new integration, follow the steps described in `@kyve/core`.
 You can find a detailed explanation [here](/common/core/README.md).
+
+## Contributing
+
+To contribute to this repository please follow these steps:
+
+1.  Clone the repository
+    ```
+    https://github.com/KYVENetwork/kyve.git
+    ```
+2.  Install and link dependencies
+    ```
+    yarn setup
+    ```

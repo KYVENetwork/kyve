@@ -1,6 +1,5 @@
 import TestInstance from "@kyve/core/dist/testing";
 import { upload, validate } from "../src";
-import fs from "fs";
 
 const pool = {
   id: 400,
@@ -19,12 +18,10 @@ const pool = {
   },
 };
 
-const jwk = JSON.parse(fs.readFileSync("./arweave-uploader.json").toString());
-
 const instance = new TestInstance(
   {
     pool: pool,
-    jwk,
+    uploader: true,
   },
   upload,
   validate
