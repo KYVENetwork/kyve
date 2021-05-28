@@ -87,11 +87,8 @@ export const upload = async (
 
       for (let i = 0; i < transactions.length; i += chunkSize) {
         // slice transactions into chunks and map them into the block
-        transactions
-          .slice(i, i + chunkSize)
-          .map(
-            (transaction) => (block.transactions[transaction.ID] = transaction)
-          );
+        block.transactions = transactions
+          .slice(i, i + chunkSize);
 
         // upload chunk
         const tags = [
@@ -157,11 +154,8 @@ export const validate = async (
       let maxPages = Math.ceil(transactions.length / chunk);
       maxPages = maxPages == 0 ? 1 : maxPages;
       if (transactions != null && transactions.length > 0) {
-        transactions
-          .slice(i, i + chunk)
-          .map(
-            (transaction) => (block.transactions[transaction.ID] = transaction)
-          );
+        block.transactions = transactions
+          .slice(i, i + chunk);
       }
     }
 
