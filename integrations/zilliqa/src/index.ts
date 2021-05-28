@@ -149,13 +149,13 @@ export const validate = async (
         return;
       }
 
-      let chunk = 50;
-      let i = (page - 1) * chunk;
-      let maxPages = Math.ceil(transactions.length / chunk);
+      const chunkSize = 50;
+      let i = (page - 1) * chunkSize;
+      let maxPages = Math.ceil(transactions.length / chunkSize);
       maxPages = maxPages == 0 ? 1 : maxPages;
       if (transactions != null && transactions.length > 0) {
         block.transactions = transactions
-          .slice(i, i + chunk);
+          .slice(i, i + chunkSize);
       }
     }
 
