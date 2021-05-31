@@ -1,7 +1,14 @@
-import KYVE from "./index";
-import { UploadFunction, ValidateFunction } from "./faces";
+import KYVE, { getData } from "./index";
+import {
+  ListenFunctionReturn,
+  UploadFunction,
+  ValidateFunction,
+  ValidateFunctionReturn,
+} from "./faces";
 import { JWKInterface } from "arweave/node/lib/wallet";
 import Arweave from "arweave";
+import { Observable } from "rxjs";
+import { GQLEdgeTransactionInterface } from "ardb/lib/faces/gql";
 
 class TestInstance extends KYVE {
   private readonly isUploader: boolean;
@@ -50,6 +57,39 @@ class TestInstance extends KYVE {
       console.log("\nRunning as a validator ...");
       this.validator();
     }
+  }
+
+  public async validateTx(id: string) {
+    const listener = new Observable<ListenFunctionReturn>((subscriber) => {
+      (async () => {
+        const res = (await this.ardb
+          .search()
+          .id(id)
+          .findOne()) as GQLEdgeTransactionInterface[];
+
+        if (res.length) {
+          const node = res[0].node;
+          const data: any[] = JSON.parse(await getData(node.id));
+
+          for (const entry of data) {
+            subscriber.next({
+              id: node.id,
+              data: entry,
+              transaction: node,
+              block: node.block.height,
+            });
+          }
+        }
+      })();
+    });
+
+    const node = new Observable<ValidateFunctionReturn>((subscriber) =>
+      this.validateFunc(listener, subscriber, this.pool.config)
+    );
+
+    node.subscribe((res) => {
+      if (res.id === id) return res.valid;
+    });
   }
 }
 
