@@ -81,12 +81,18 @@ class TestInstance extends KYVE {
       })();
     });
 
-    const node = new Observable<ValidateFunctionReturn>((subscriber) =>
-      this.validateFunc(listener, subscriber, this.pool.config)
-    );
+    const node = new Observable<ValidateFunctionReturn>((subscriber) => {
+      this.validateFunc(listener, subscriber, this.pool.config);
+    });
 
     node.subscribe((res) => {
-      if (res.id === id) return res.valid;
+      if (res.id === id) {
+        console.log("Valid");
+        return res.valid;
+      } else {
+        console.log("Invalid");
+        process.exit(1);
+      }
     });
   }
 }
