@@ -152,15 +152,12 @@ export default class KYVE {
             );
 
             const data: any[] = JSON.parse(await getData(node.id));
-
-            for (const entry of data) {
-              subscriber.next({
-                id: node.id,
-                data: entry,
-                transaction: node,
-                block: node.block.height,
-              });
-            }
+            subscriber.next({
+              id: node.id,
+              data,
+              transaction: node,
+              block: node.block.height,
+            });
           }
         }
 
