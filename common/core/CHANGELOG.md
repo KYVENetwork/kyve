@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.8](https://github.com/KYVENetwork/logic/compare/@kyve/core@0.0.0-alpha.7...@kyve/core@0.0.0-alpha.8) (2021-05-31)
+
+
+### Bug Fixes
+
+* improved function return ([759f836](https://github.com/KYVENetwork/logic/commit/759f8367153b7ffc216b272642a8575633f2df76))
+* improved testing class, no jwk required ([75d260f](https://github.com/KYVENetwork/logic/commit/75d260f0753d53ada6bc41138b8ccf809b9b3cd2))
+
+
+### Features
+
+* add a testing function for validation ([13ac17f](https://github.com/KYVENetwork/logic/commit/13ac17fcf3a54af6f7e0b549e08885a7f1e08681))
+
+
+
+
+
 # [0.0.0-alpha.7](https://github.com/KYVENetwork/logic/compare/@kyve/core@0.0.0-alpha.6...@kyve/core@0.0.0-alpha.7) (2021-05-20)
 
 **Note:** Version bump only for package @kyve/core

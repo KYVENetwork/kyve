@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.6](https://github.com/KYVENetwork/smartweave/compare/@kyve/smartweave@0.0.0-alpha.5...@kyve/smartweave@0.0.0-alpha.6) (2021-05-31)
+
+
+### Bug Fixes
+
+* improved testing class, no jwk required ([75d260f](https://github.com/KYVENetwork/smartweave/commit/75d260f0753d53ada6bc41138b8ccf809b9b3cd2))
+* updated tests and fixed validator ([0edeaf8](https://github.com/KYVENetwork/smartweave/commit/0edeaf8cc8010eb9927095d18507ff35b8cba3d2))
+
+
+
+
+
 # [0.0.0-alpha.5](https://github.com/KYVENetwork/smartweave/compare/@kyve/smartweave@0.0.0-alpha.4...@kyve/smartweave@0.0.0-alpha.5) (2021-05-20)
 
 **Note:** Version bump only for package @kyve/smartweave
