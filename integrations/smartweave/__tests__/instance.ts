@@ -27,4 +27,10 @@ const instance = new TestInstance(
   validate
 );
 
-instance.run();
+(async () => {
+  const res = await instance.validateTx(
+    "RsJdbDLEDwGk8HQawTN8N6UX7V0mFHx_xChE98sDAx0"
+  );
+  console.log(res);
+})();
+// instance.run();

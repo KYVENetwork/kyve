@@ -78,7 +78,7 @@ export const validate = async (
     );
 
     const state = await readContract(client, contract, block, true);
-    const localHash = hash(state.state);
+    const localHash = hash(state);
 
     const data = await getData(res.id);
     const compareHash = hash(JSON.parse(data.toString()));
