@@ -48,7 +48,7 @@ export const upload = async (
       block = (await zilliqa.blockchain.getTxBlock(BlockNum)).result as any;
     } catch (error) {
       // in case of an error don't send any data
-      console.log(error);
+      console.log("block", error);
       return;
     }
 
@@ -76,7 +76,7 @@ export const upload = async (
         ).result as any;
       } catch (error) {
         // in case of an error don't send any data
-        console.log(error);
+        console.log("transactions", error);
         return;
       }
 
@@ -145,7 +145,7 @@ export const validate = async (
         ).result as any;
       } catch (error) {
         // in case of an error don't send any data
-        console.log(error);
+        console.log("transactions", error);
         return;
       }
 
