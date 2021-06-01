@@ -59,10 +59,11 @@ Create your `.env` file and add the following
 ```
 CONFIG=config.json
 WALLET=arweave.json
+SEND_STATISTICS=true
 ```
 
 _Note: If your keyfile or config-file have different names, change them
-accordingly_
+accordingly. If you don't want to send errors or statistics, remove the line_
 
 ## Running the node
 

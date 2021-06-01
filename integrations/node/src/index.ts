@@ -10,6 +10,38 @@ import SolanaInstance from "@kyve/solana";
 import ZilliqaInstance from "@kyve/zilliqa";
 import fs from "fs";
 
+import * as Sentry from "@sentry/node";
+import { RewriteFrames } from "@sentry/integrations";
+
+// This allows TypeScript to detect our global value
+declare global {
+  namespace NodeJS {
+    interface Global {
+      __rootdir__: string;
+    }
+  }
+}
+
+global.__rootdir__ = __dirname || process.cwd();
+
+if (process.env.SEND_STATISTICS) {
+  // configure sentry
+  Sentry.init({
+    dsn: "https://2981701aaf29478fb7d397dca2c7f8bc@o768982.ingest.sentry.io/5794635",
+    release: "node@" + process.env.npm_package_version,
+    integrations: [
+      new RewriteFrames({
+        root: global.__rootdir__,
+      }),
+    ],
+
+    // Set tracesSampleRate to 1.0 to capture 100%
+    // of transactions for performance monitoring.
+    // We recommend adjusting this value in production
+    tracesSampleRate: 1.0,
+  });
+}
+
 const client = new Arweave({
   host: "arweave.net",
   port: 443,

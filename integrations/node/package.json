@@ -24,6 +24,9 @@
     "@kyve/smartweave": "0.0.0-alpha.6",
     "@kyve/solana": "0.0.0-alpha.6",
     "@kyve/zilliqa": "0.0.0-alpha.5",
+    "@sentry/integrations": "^6.5.0",
+    "@sentry/node": "^6.5.0",
+    "@sentry/tracing": "^6.5.0",
     "arweave": "^1.10.13",
     "dotenv": "^8.2.0"
   },
