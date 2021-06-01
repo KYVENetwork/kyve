@@ -39,7 +39,7 @@ export const upload = async (
     const BlockNum = event.value.TxBlock.header.BlockNum.toString();
     console.log("Hash", hash, "BlockNum", BlockNum);
 
-    await sleep(0.5);
+    await sleep(500);
 
     /*
     let block = (await zilliqa.blockchain.getTxBlock(BlockNum)).result as ZilliqaBlock;
@@ -73,7 +73,7 @@ export const upload = async (
       uploader.next({ data: block, tags });
     } else {
 
-      await sleep(0.5);
+      await sleep(500);
 
       let transactions: any[] = [];
       // fetch transactions
