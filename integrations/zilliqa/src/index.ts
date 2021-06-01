@@ -21,6 +21,9 @@ export interface ZilliqaBlock extends TxBlockObj{
   transactions: TransactionObj[]
 }
 */
+function sleep(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 export const upload = async (
   uploader: UploadFunctionSubscriber,
@@ -35,6 +38,8 @@ export const upload = async (
     const hash = event.value.TxBlock.body.BlockHash;
     const BlockNum = event.value.TxBlock.header.BlockNum.toString();
     console.log("Hash", hash, "BlockNum", BlockNum);
+
+    sleep(0.5);
 
     /*
     let block = (await zilliqa.blockchain.getTxBlock(BlockNum)).result as ZilliqaBlock;
@@ -67,6 +72,8 @@ export const upload = async (
 
       uploader.next({ data: block, tags });
     } else {
+      
+      sleep(0.5);
 
       let transactions: any[] = [];
       // fetch transactions
