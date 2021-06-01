@@ -39,7 +39,7 @@ export const upload = async (
     const BlockNum = event.value.TxBlock.header.BlockNum.toString();
     console.log("Hash", hash, "BlockNum", BlockNum);
 
-    await sleep(500);
+    //await sleep(500);
 
     /*
     let block = (await zilliqa.blockchain.getTxBlock(BlockNum)).result as ZilliqaBlock;
@@ -50,7 +50,13 @@ export const upload = async (
 
     let block: any;
     try {
-      block = (await zilliqa.blockchain.getTxBlock(BlockNum)).result as any;
+      let resBlock = (await zilliqa.blockchain.getTxBlock(BlockNum)) as any;
+      if(resBlock.result === undefined){
+        console.log("block error", resBlock.error);
+        return;
+      }else{
+        block = resBlock.result;
+      }
     } catch (error) {
       // in case of an error don't send any data
       console.log("block", error);
@@ -73,14 +79,20 @@ export const upload = async (
       uploader.next({ data: block, tags });
     } else {
 
-      await sleep(500);
+      //await sleep(500);
 
       let transactions: any[] = [];
       // fetch transactions
       try {
-        transactions = (
+        let resTransactions = (
           await zilliqa.blockchain.getTxnBodiesForTxBlock(BlockNum)
-        ).result as any;
+        ) as any;
+        if(resTransactions.result === undefined){
+          console.log("transaction error",resTransactions.error);
+          return;
+        }else{
+          transactions = resTransactions.result;
+        }
       } catch (error) {
         // in case of an error don't send any data
         console.log("transactions", error);
