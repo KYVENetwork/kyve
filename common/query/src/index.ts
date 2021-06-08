@@ -31,12 +31,11 @@ export class Query extends ArDB {
     const ret: any[] = [];
 
     for (let { node } of res) {
-      const txID = node.id;
       if (this.deRef) {
-        const data = await getData(txID);
+        const data = await getData(node.id);
         ret.push(data);
       } else {
-        ret.push(txID);
+        ret.push(node);
       }
     }
     return ret;
