@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.11](https://github.com/KYVENetwork/logic/compare/@kyve/query@0.0.0-alpha.10...@kyve/query@0.0.0-alpha.11) (2021-06-08)
+
+
+### Bug Fixes
+
+* return all data from GQL when not dereferencing data ([9a0748f](https://github.com/KYVENetwork/logic/commit/9a0748fec0b93fe0f03a4ef8fe66dcae01b18649))
+
+
+
+
+
 # [0.0.0-alpha.10](https://github.com/KYVENetwork/logic/compare/@kyve/query@0.0.0-alpha.9...@kyve/query@0.0.0-alpha.10) (2021-05-31)
 
 **Note:** Version bump only for package @kyve/query
