@@ -10,7 +10,10 @@ import hash from "object-hash";
 import KYVE, { getData } from "@kyve/core";
 import { JWKInterface } from "arweave/node/lib/wallet";
 
-const upload = async (uploader: UploadFunctionSubscriber, config: any) => {
+export const upload = async (
+  uploader: UploadFunctionSubscriber,
+  config: any
+) => {
   const provider = new WsProvider(config.endpoint);
   const api = await ApiPromise.create({ provider });
 
@@ -24,7 +27,7 @@ const upload = async (uploader: UploadFunctionSubscriber, config: any) => {
   });
 };
 
-const validate = async (
+export const validate = async (
   listener: ListenFunctionObservable,
   validator: ValidateFunctionSubscriber,
   config: any

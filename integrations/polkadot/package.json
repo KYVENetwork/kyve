@@ -8,7 +8,9 @@
   "scripts": {
     "build": "tsc",
     "fmt": "prettier --write .",
-    "clean": "rimraf dist"
+    "build:test": "rimraf __tests__/dist && tsc -p tsconfig.test.json",
+    "clean": "rimraf dist",
+    "test": "node __tests__/dist/__tests__/instance.js"
   },
   "files": [
     "dist"
@@ -20,7 +22,7 @@
   "types": "dist/index",
   "dependencies": {
     "@kyve/core": "0.0.0-alpha.8",
-    "@polkadot/api": "^4.3.1",
+    "@polkadot/api": "^4.13.1",
     "object-hash": "^2.1.1"
   },
   "devDependencies": {
