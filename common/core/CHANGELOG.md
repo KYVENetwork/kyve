@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.10](https://github.com/KYVENetwork/logic/compare/@kyve/core@0.0.0-alpha.9...@kyve/core@0.0.0-alpha.10) (2021-06-09)
+
+
+### Bug Fixes
+
+* fixed compare error ([aac9da3](https://github.com/KYVENetwork/logic/commit/aac9da3f4007b222ac73980ed35c765ac48ecca2))
+
+
+
+
+
 # [0.0.0-alpha.9](https://github.com/KYVENetwork/logic/compare/@kyve/core@0.0.0-alpha.8...@kyve/core@0.0.0-alpha.9) (2021-06-09)
 
 

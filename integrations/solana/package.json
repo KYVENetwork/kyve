@@ -1,7 +1,7 @@
 {
   "name": "@kyve/solana",
   "description": "The official KYVE node for Solana",
-  "version": "0.0.0-alpha.7",
+  "version": "0.0.0-alpha.8",
   "author": "John Letey <john@kyve.network>, Fabian Riewe <fabian@kyve.network>",
   "repository": "https://github.com/KYVENetwork/solana",
   "license": "MIT",
@@ -19,7 +19,7 @@
   "main": "dist/index",
   "types": "dist/index",
   "dependencies": {
-    "@kyve/core": "0.0.0-alpha.9",
+    "@kyve/core": "0.0.0-alpha.10",
     "node-fetch": "^2.6.1",
     "object-hash": "^2.1.1"
   },
