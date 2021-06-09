@@ -100,10 +100,12 @@ export default class KYVE {
       await untilMined(id, this.arweave);
       console.log("Successfully staked tokens");
     } else {
-      console.log("Reducing stake...")
+      console.log("Reducing stake...");
       // unregister node
       let id = await this.contract.unregister(this.poolID);
-      console.log(`Unregistering from pool ${this.poolID}.\n Transaction: ${id}`);
+      console.log(
+        `Unregistering from pool ${this.poolID}.\n Transaction: ${id}`
+      );
       await untilMined(id, this.arweave);
 
       // unlock tokens
