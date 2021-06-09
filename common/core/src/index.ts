@@ -75,28 +75,51 @@ export default class KYVE {
       );
     }
 
+    // shut down if no uploader is selected
+    if (!this.pool.uploader) {
+      throw new Error(
+        "No uploader specified in pool. Please create a vote to elect an uploader."
+      );
+    }
+
     const address = await this.arweave.wallets.getAddress(this.keyfile);
 
-    // check if validator has enough stake
+    // check if node has enough stake
     const currentStake = state.pools[this.poolID].vault[address] || 0;
     const diff = this.stake - currentStake;
 
-    // todo handle case if desired stake is smaller than current stake
-    if (diff > 0) {
+    if (this.stake === currentStake) {
+      console.log(
+        `Already staked with ${this.stake} $KYVE in pool ${this.poolID}.`
+      );
+    } else if (this.stake < currentStake) {
       const id = await this.contract.lock(this.poolID, diff);
       console.log(
         `Staking ${diff} $KYVE in pool ${this.poolID}.\n Transaction: ${id}`
       );
       await untilMined(id, this.arweave);
       console.log("Successfully staked tokens");
-    } else if (diff < 0) {
-      throw new Error(
-        `Please unlock your tokens in pool ${this.poolID} and start again.`
-      );
     } else {
+      console.log("Reducing stake...")
+      // unregister node
+      let id = await this.contract.unregister(this.poolID);
+      console.log(`Unregistering from pool ${this.poolID}.\n Transaction: ${id}`);
+      await untilMined(id, this.arweave);
+
+      // unlock tokens
+      id = await this.contract.unlock(this.poolID);
       console.log(
-        `Already staked with ${this.stake} $KYVE in pool ${this.poolID}.`
+        `Unlocking tokens from pool ${this.poolID}.\n Transaction: ${id}`
       );
+      await untilMined(id, this.arweave);
+
+      // stake tokens
+      id = await this.contract.lock(this.poolID, this.stake);
+      console.log(
+        `Staking ${this.stake} $KYVE in pool ${this.poolID}.\n Transaction: ${id}`
+      );
+      await untilMined(id, this.arweave);
+      console.log("Successfully staked tokens");
     }
 
     if (address === this.pool.uploader) {
