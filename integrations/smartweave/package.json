@@ -1,7 +1,7 @@
 {
   "name": "@kyve/smartweave",
   "description": "The official KYVE node for SmartWeave",
-  "version": "0.0.0-alpha.6",
+  "version": "0.0.0-alpha.7",
   "author": "John Letey <john@kyve.network>, Fabian Riewe <fabian@kyve.network>",
   "repository": "https://github.com/KYVENetwork/smartweave",
   "license": "MIT",
@@ -21,7 +21,7 @@
   "main": "dist/index",
   "types": "dist/index",
   "dependencies": {
-    "@kyve/core": "0.0.0-alpha.8",
+    "@kyve/core": "0.0.0-alpha.9",
     "arweave": "^1.10.13",
     "object-hash": "^2.1.1",
     "smartweave": "^0.4.27"

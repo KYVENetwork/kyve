@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.9](https://github.com/KYVENetwork/logic/compare/@kyve/core@0.0.0-alpha.8...@kyve/core@0.0.0-alpha.9) (2021-06-09)
+
+
+### Bug Fixes
+
+* reducing stake is now possible ([e595eec](https://github.com/KYVENetwork/logic/commit/e595eec15379c2f2645778d2ed24eff785b7a9b1))
+
+
+
+
+
 # [0.0.0-alpha.8](https://github.com/KYVENetwork/logic/compare/@kyve/core@0.0.0-alpha.7...@kyve/core@0.0.0-alpha.8) (2021-05-31)
 
 
