@@ -92,7 +92,7 @@ export default class KYVE {
       console.log(
         `Already staked with ${this.stake} $KYVE in pool ${this.poolID}.`
       );
-    } else if (this.stake < currentStake) {
+    } else if (this.stake > currentStake) {
       const id = await this.contract.lock(this.poolID, diff);
       console.log(
         `Staking ${diff} $KYVE in pool ${this.poolID}.\n Transaction: ${id}`
