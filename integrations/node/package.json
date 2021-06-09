@@ -1,6 +1,6 @@
 {
   "name": "@kyve/node",
-  "version": "0.0.0-alpha.10",
+  "version": "0.0.0-alpha.11",
   "private": true,
   "scripts": {
     "build": "tsc",
@@ -20,7 +20,7 @@
     "@kyve/contract-lib": "0.1.0-alpha.7",
     "@kyve/core": "0.0.0-alpha.8",
     "@kyve/cosmos": "0.0.0-alpha.9",
-    "@kyve/polkadot": "0.0.0-alpha.10",
+    "@kyve/polkadot": "0.0.0-alpha.11",
     "@kyve/smartweave": "0.0.0-alpha.6",
     "@kyve/solana": "0.0.0-alpha.6",
     "@kyve/zilliqa": "0.0.0-alpha.5",
