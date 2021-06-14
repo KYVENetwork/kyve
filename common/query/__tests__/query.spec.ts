@@ -1,5 +1,4 @@
 import { Query } from "../src";
-import { GQLEdgeTransactionInterface } from "ardb/lib/faces/gql";
 
 const chai = require("chai");
 const chaiAsPromised = require("chai-as-promised");
