@@ -3,11 +3,11 @@ import { Query } from "./index";
 import { getData } from "@kyve/core";
 import { arweaveClient } from "@kyve/core/dist/extensions";
 import ArDB from "ardb";
-import {ContractInteraction, execute} from "smartweave/lib/contract-step";
-import {InteractionTx} from "smartweave/lib/interaction-tx";
-import {arrayToHex, formatTags} from "smartweave/lib/utils";
-import {GQLEdgeTransactionInterface} from "ardb/lib/faces/gql";
-import {loadContract} from "smartweave";
+import { ContractInteraction, execute } from "smartweave/lib/contract-step";
+import { InteractionTx } from "smartweave/lib/interaction-tx";
+import { arrayToHex, formatTags } from "smartweave/lib/utils";
+import { GQLEdgeTransactionInterface } from "ardb/lib/faces/gql";
+import { loadContract } from "smartweave";
 
 export const readContract = async (
   poolID: number,
@@ -23,8 +23,9 @@ export const readContract = async (
     .only(["id", "tags", "tags.name", "tags.value"])
     .limit(1)
     .find();
+
   if (!result) {
-    throw new Error("No mtaching transactions in pool found.");
+    throw new Error("No matching transactions in pool found.");
   }
 
   const transaction = result[0];
@@ -37,25 +38,33 @@ export const readContract = async (
   );
 
   const data: { state: object } = JSON.parse(await getData(transaction.id));
-  let state = data.state
+  let state = data.state;
 
-  // find txs from
-  const ardb = new ArDB(arweave)
-  const missingTXs = await ardb
+  // find txs which have not been added to state
+
+  // get latest network height
+  const networkInfo = await arweave.network.getInfo();
+  const height = networkInfo.height;
+
+  const ardb = new ArDB(arweave);
+  const missingTXs = (await ardb
     .sort("HEIGHT_ASC")
     .min(latestArchivedBlock + 1)
+    .max(height)
     .tags([
       { name: "App-Name", values: ["SmartWeaveAction"] },
       { name: "Contract", values: [contractID] },
     ])
-    .findAll() as GQLEdgeTransactionInterface[];
+    .findAll()) as GQLEdgeTransactionInterface[];
+
+  console.log(missingTXs);
 
   // from https://github.com/ArweaveTeam/SmartWeave/blob/master/src/contract-read.ts#L56
   console.log(`Replaying ${missingTXs.length} confirmed interactions`);
 
   await sortTransactions(arweave, missingTXs);
 
-  const contractInfo = await loadContract(arweave, contractID)
+  const contractInfo = await loadContract(arweave, contractID);
   const { handler, swGlobal } = contractInfo;
 
   const validity: Record<string, boolean> = {};
@@ -84,7 +93,9 @@ export const readContract = async (
     }
 
     if (!input) {
-      console.log(`Skipping tx with missing or invalid Input tag - ${currentTx.id}`);
+      console.log(
+        `Skipping tx with missing or invalid Input tag - ${currentTx.id}`
+      );
       continue;
     }
 
@@ -97,23 +108,24 @@ export const readContract = async (
 
     const result = await execute(handler, interaction, state);
 
-    if (result.type === 'exception') {
-      console.warn(`Executing of interaction: ${currentTx.id} threw exception.`);
+    if (result.type === "exception") {
+      console.warn(
+        `Executing of interaction: ${currentTx.id} threw exception.`
+      );
       console.warn(`${result.result}`);
     }
-    if (result.type === 'error') {
+    if (result.type === "error") {
       console.warn(`Executing of interaction: ${currentTx.id} returned error.`);
       console.warn(`${result.result}`);
     }
 
-    validity[currentTx.id] = result.type === 'ok';
+    validity[currentTx.id] = result.type === "ok";
 
     state = result.state;
   }
 
   return returnValidity ? { state, validity } : state;
 };
-
 
 // Sort the transactions based on the sort key generated in addSortKey()
 async function sortTransactions(arweave: Arweave, txInfos: any[]) {
