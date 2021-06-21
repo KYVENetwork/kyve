@@ -5,6 +5,7 @@ import {
   ListenFunctionReturn,
 } from "@kyve/core/dist/faces";
 import Web3 from "web3";
+import { EventData } from "web3-eth-contract";
 import hash from "object-hash";
 import KYVE, { getData } from "@kyve/core";
 import { JWKInterface } from "arweave/node/lib/wallet";
@@ -22,15 +23,19 @@ export const upload = async (
     config.address
   );
 
-  contract.events.allEvents().on("data", async (res: any) => {
+  contract.events.allEvents().on("data", async (res: EventData) => {
     uploader.next({
       data: res,
       tags: [
         { name: "Contract", value: res.address },
         { name: "Event", value: res.event },
         { name: "Transaction", value: res.transactionHash },
-        { name: "Block", value: res.blockNumber },
+        { name: "Block", value: res.blockNumber.toString() },
         { name: "BlockHash", value: res.blockHash },
+        ...Object.entries(res.returnValues).map(([key, value]) => ({
+          name: key,
+          value,
+        })),
       ],
     });
   });
