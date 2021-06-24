@@ -3,6 +3,7 @@ import { Deposit } from "./modules/deposit";
 import { Fund } from "./modules/fund";
 import { Stake } from "./modules/stake";
 import { Submit } from "./modules/submit";
+import { Unstake } from "./modules/unstake";
 import { Withdraw } from "./modules/withdraw";
 
 export async function handle(state: StateInterface, action: ActionInterface) {
@@ -15,6 +16,8 @@ export async function handle(state: StateInterface, action: ActionInterface) {
       return { state: Fund(state, action) };
     case "stake":
       return { state: Stake(state, action) };
+    case "unstake":
+      return { state: Unstake(state, action) };
 
     case "submit":
       return { state: await Submit(state, action) };

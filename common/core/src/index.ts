@@ -74,7 +74,7 @@ export default class KYVE {
 
     // check if node has enough stake
     const currentStake = state.credit[address].stake;
-    const diff = this.stake - currentStake;
+    const diff = Math.abs(this.stake - currentStake);
 
     if (this.stake === currentStake) {
       console.log(
@@ -88,26 +88,12 @@ export default class KYVE {
       await untilMined(id, this.arweave);
       console.log("Successfully staked tokens");
     } else {
-      // console.log("Reducing stake...");
-      // // unregister node
-      // let id = await this.contract.unregister(this.poolID);
-      // console.log(
-      //   `Unregistering from pool ${this.poolID}.\n Transaction: ${id}`
-      // );
-      // await untilMined(id, this.arweave);
-      // // unlock tokens
-      // id = await this.contract.unlock(this.poolID);
-      // console.log(
-      //   `Unlocking tokens from pool ${this.poolID}.\n Transaction: ${id}`
-      // );
-      // await untilMined(id, this.arweave);
-      // // stake tokens
-      // id = await this.contract.lock(this.poolID, this.stake);
-      // console.log(
-      //   `Staking ${this.stake} $KYVE in pool ${this.poolID}.\n Transaction: ${id}`
-      // );
-      // await untilMined(id, this.arweave);
-      // console.log("Successfully staked tokens");
+      const id = await this.contract.unstake(diff);
+      console.log(
+        `Unstaking ${diff} $KYVE in pool ${this.poolID}.\n Transaction: ${id}`
+      );
+      await untilMined(id, this.arweave);
+      console.log("Successfully unstaked tokens");
     }
 
     if (address === state.settings.uploader) {

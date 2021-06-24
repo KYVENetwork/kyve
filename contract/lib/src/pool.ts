@@ -61,6 +61,15 @@ export class Pool {
     return await this.interactWithPool(input);
   }
 
+  async unstake(qty: number): Promise<string> {
+    const input: CreditInterface = {
+      function: "unstake",
+      qty,
+    };
+
+    return await this.interactWithPool(input);
+  }
+
   // === Private Functions ===
 
   private async interactWithGovernance(
