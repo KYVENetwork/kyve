@@ -16,7 +16,7 @@ class TestInstance extends KYVE {
   constructor(
     options: {
       // todo add pool face
-      pool: { id: number; pool: any };
+      pool: { id: string; pool: any };
       uploader: boolean;
       arweave?: Arweave;
     },
@@ -25,7 +25,7 @@ class TestInstance extends KYVE {
   ) {
     super(
       {
-        pool: -1,
+        pool: "abc",
         stake: 0,
         jwk: {} as JWKInterface,
         arweave: options.arweave,

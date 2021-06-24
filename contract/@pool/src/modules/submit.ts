@@ -16,34 +16,39 @@ export const Submit = async (
     .map(([key, value]) => key);
   const caller = action.caller;
 
-  const input: SubmitInterface = action.input;
-  const txID = input.txID;
-  const valid = input.valid;
-
   ContractAssert(voters.includes(caller), "Caller has no stake in the pool.");
 
-  if (txID in txs) {
-    ContractAssert(
-      SmartWeave.block.height <= txs[txID].closesAt,
-      "Grace period has ended."
-    );
-    ContractAssert(
-      !(txs[txID].yays.includes(caller) || txs[txID].nays.includes(caller)),
-      "Caller has already voted."
-    );
+  const data: { txID: string; valid: boolean }[] = JSON.parse(
+    await SmartWeave.unsafeClient.transactions.getData(
+      SmartWeave.transaction.id,
+      { decode: true, string: true }
+    )
+  );
 
-    if (valid) txs[txID].yays.push(caller);
-    else txs[txID].nays.push(caller);
-    txs[txID].voters = voters;
-  } else {
-    txs[txID] = {
-      status: "pending",
-      closesAt: SmartWeave.block.height + settings.gracePeriod,
+  for (const { txID, valid } of data) {
+    if (txID in txs) {
+      ContractAssert(
+        SmartWeave.block.height <= txs[txID].closesAt,
+        "Grace period has ended."
+      );
+      ContractAssert(
+        !(txs[txID].yays.includes(caller) || txs[txID].nays.includes(caller)),
+        "Caller has already voted."
+      );
 
-      yays: valid ? [caller] : [],
-      nays: valid ? [] : [caller],
-      voters,
-    };
+      if (valid) txs[txID].yays.push(caller);
+      else txs[txID].nays.push(caller);
+      txs[txID].voters = voters;
+    } else {
+      txs[txID] = {
+        status: "pending",
+        closesAt: SmartWeave.block.height + settings.gracePeriod,
+
+        yays: valid ? [caller] : [],
+        nays: valid ? [] : [caller],
+        voters,
+      };
+    }
   }
 
   // Finalize any previous transactions

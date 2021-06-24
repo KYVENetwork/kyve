@@ -62,8 +62,6 @@ export interface CreditInterface {
 
 export interface SubmitInterface {
   function: "submit";
-  txID: string;
-  valid: boolean;
 }
 
 export interface UpdateContractsInterface {

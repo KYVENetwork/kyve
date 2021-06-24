@@ -11,7 +11,7 @@ import { JWKInterface } from "arweave/node/lib/wallet";
 import { Observable } from "rxjs";
 import { arweaveBundles as bundles, arweaveClient } from "./extensions";
 
-import Contract from "@kyve/contract-lib";
+import { Pool } from "@kyve/contract-lib";
 import { GQLEdgeTransactionInterface } from "ardb/lib/faces/gql";
 import { untilMined } from "./helper";
 
@@ -20,17 +20,15 @@ export const APP_NAME = "KYVE - DEV";
 export default class KYVE {
   public arweave: Arweave = arweaveClient;
   public ardb: ArDB;
-  public contract: Contract;
+  public contract: Pool;
   public APP_NAME: string = APP_NAME;
 
   public uploadFunc: UploadFunction;
   public validateFunc: ValidateFunction;
-  private buffer: UploadFunctionReturn[] = [];
+  private uploaderBuffer: UploadFunctionReturn[] = [];
+  private validatorBuffer: ValidateFunctionReturn[] = [];
 
-  // TODO: Write interface for contract.
-  // TODO: Refetch!!!
-  public pool: any;
-  public poolID: number;
+  public poolID: string;
   public stake: number;
 
   protected keyfile: JWKInterface;
@@ -39,7 +37,7 @@ export default class KYVE {
 
   constructor(
     options: {
-      pool: number;
+      pool: string;
       stake: number;
       jwk: JWKInterface;
       arweave?: Arweave;
@@ -59,24 +57,14 @@ export default class KYVE {
     }
 
     this.ardb = new ArDB(this.arweave);
-    this.contract = new Contract(this.arweave, this.keyfile);
+    this.contract = new Pool(this.arweave, this.keyfile, options.pool);
   }
 
   public async run() {
     const state = await this.contract.getState();
-    if (this.poolID >= 0 && this.poolID < state.pools.length) {
-      this.pool = state.pools[this.poolID];
-      console.log(
-        `\nFound pool with name "${this.pool.name}" in the KYVE contract.\n  architecture = ${this.pool.architecture}`
-      );
-    } else {
-      throw Error(
-        `No pool with id "${this.poolID}" was found in the KYVE contract.`
-      );
-    }
 
     // shut down if no uploader is selected
-    if (!this.pool.uploader) {
+    if (!state.settings.uploader) {
       throw new Error(
         "No uploader specified in pool. Please create a vote to elect an uploader."
       );
@@ -85,7 +73,7 @@ export default class KYVE {
     const address = await this.arweave.wallets.getAddress(this.keyfile);
 
     // check if node has enough stake
-    const currentStake = state.pools[this.poolID].vault[address] || 0;
+    const currentStake = state.credit[address].stake;
     const diff = this.stake - currentStake;
 
     if (this.stake === currentStake) {
@@ -93,61 +81,41 @@ export default class KYVE {
         `Already staked with ${this.stake} $KYVE in pool ${this.poolID}.`
       );
     } else if (this.stake > currentStake) {
-      const id = await this.contract.lock(this.poolID, diff);
+      const id = await this.contract.stake(diff);
       console.log(
         `Staking ${diff} $KYVE in pool ${this.poolID}.\n Transaction: ${id}`
       );
       await untilMined(id, this.arweave);
       console.log("Successfully staked tokens");
     } else {
-      console.log("Reducing stake...");
-      // unregister node
-      let id = await this.contract.unregister(this.poolID);
-      console.log(
-        `Unregistering from pool ${this.poolID}.\n Transaction: ${id}`
-      );
-      await untilMined(id, this.arweave);
-
-      // unlock tokens
-      id = await this.contract.unlock(this.poolID);
-      console.log(
-        `Unlocking tokens from pool ${this.poolID}.\n Transaction: ${id}`
-      );
-      await untilMined(id, this.arweave);
-
-      // stake tokens
-      id = await this.contract.lock(this.poolID, this.stake);
-      console.log(
-        `Staking ${this.stake} $KYVE in pool ${this.poolID}.\n Transaction: ${id}`
-      );
-      await untilMined(id, this.arweave);
-      console.log("Successfully staked tokens");
+      // console.log("Reducing stake...");
+      // // unregister node
+      // let id = await this.contract.unregister(this.poolID);
+      // console.log(
+      //   `Unregistering from pool ${this.poolID}.\n Transaction: ${id}`
+      // );
+      // await untilMined(id, this.arweave);
+      // // unlock tokens
+      // id = await this.contract.unlock(this.poolID);
+      // console.log(
+      //   `Unlocking tokens from pool ${this.poolID}.\n Transaction: ${id}`
+      // );
+      // await untilMined(id, this.arweave);
+      // // stake tokens
+      // id = await this.contract.lock(this.poolID, this.stake);
+      // console.log(
+      //   `Staking ${this.stake} $KYVE in pool ${this.poolID}.\n Transaction: ${id}`
+      // );
+      // await untilMined(id, this.arweave);
+      // console.log("Successfully staked tokens");
     }
 
-    if (address === this.pool.uploader) {
+    if (address === state.settings.uploader) {
       console.log("\nRunning as an uploader ...");
       this.uploader();
     } else {
-      if (!state.pools[this.poolID].registered.includes(address)) {
-        // register validator
-        const id = await this.contract.register(this.poolID);
-        console.log(
-          `Registering in pool ${this.poolID} as validator.\n Transaction: ${id}`
-        );
-        await untilMined(id, this.arweave);
-        console.log("Successfully registered");
-      } else {
-        console.log("Already registered");
-      }
-
       console.log("\nRunning as a validator ...");
       this.validator();
-
-      process.on("SIGINT", async () => {
-        await this.contract.unregister(this.poolID);
-        console.log("\nUnregistered");
-        process.exit();
-      });
     }
   }
 
@@ -163,10 +131,9 @@ export default class KYVE {
             .search()
             .min(latest)
             .max(height)
-            .from(this.pool.uploader)
+            .from(this.contract.state!.settings.uploader)
             .tag("Application", this.APP_NAME)
-            .tag("Pool", this.poolID.toString())
-            .tag("Architecture", this.pool.architecture)
+            .tag("Pool", this.poolID)
             .findAll()) as GQLEdgeTransactionInterface[];
 
           console.log(`\n[listener] Found ${res.length} new transactions.`);
@@ -195,21 +162,21 @@ export default class KYVE {
 
   protected uploader(dryRun: boolean = false) {
     const node = new Observable<UploadFunctionReturn>((subscriber) =>
-      this.uploadFunc(subscriber, this.pool.config)
+      this.uploadFunc(subscriber, this.contract.state!.config)
     );
 
     node.subscribe((data) => {
-      this.buffer.push(data);
+      this.uploaderBuffer.push(data);
       this.bundleAndUpload();
     });
   }
 
   private async bundleAndUpload() {
-    const bundleSize = this.pool.bundleSize;
+    const bundleSize = this.contract.state!.settings.bundleSize;
 
     if (bundleSize === 1) {
-      const buffer = this.buffer;
-      this.buffer = [];
+      const buffer = this.uploaderBuffer;
+      this.uploaderBuffer = [];
 
       const transaction = await this.arweave.createTransaction(
         {
@@ -221,7 +188,6 @@ export default class KYVE {
       const tags = [
         { name: "Application", value: APP_NAME },
         { name: "Pool", value: this.poolID.toString() },
-        { name: "Architecture", value: this.pool.architecture },
         ...(buffer[0].tags || []),
       ];
       for (const { name, value } of tags) {
@@ -237,10 +203,10 @@ export default class KYVE {
         }\n  cost = ${this.arweave.ar.winstonToAr(transaction.reward)} AR`
       );
     } else {
-      console.log(`\nBuffer size is now: ${this.buffer.length}`);
-      if (this.buffer.length >= bundleSize) {
-        const buffer = this.buffer;
-        this.buffer = [];
+      console.log(`\nBuffer size is now: ${this.uploaderBuffer.length}`);
+      if (this.uploaderBuffer.length >= bundleSize) {
+        const buffer = this.uploaderBuffer;
+        this.uploaderBuffer = [];
 
         const items = [];
         for (const entry of buffer) {
@@ -250,7 +216,6 @@ export default class KYVE {
               tags: [
                 { name: "Application", value: APP_NAME },
                 { name: "Pool", value: this.poolID.toString() },
-                { name: "Architecture", value: this.pool.architecture },
                 ...(entry.tags || []),
               ],
             },
@@ -283,24 +248,49 @@ export default class KYVE {
 
   protected validator() {
     const node = new Observable<ValidateFunctionReturn>((subscriber) =>
-      this.validateFunc(this.listener(), subscriber, this.pool.config)
+      this.validateFunc(
+        this.listener(),
+        subscriber,
+        this.contract.state!.config
+      )
     );
 
     node.subscribe((res) => {
-      if (res.valid) {
-        console.log(`\nSuccessfully validated a block.\n  txID = ${res.id}`);
-      } else {
-        console.log(`\nFound an invalid block.\n  txID = ${res.id}`);
-        this.raiseConcern();
-      }
+      this.validatorBuffer.push(res);
+      this.bundleAndSubmit();
     });
   }
 
-  private async raiseConcern() {
-    console.log(`\nRaising a dispute in the DAO...`);
-    if (!this.dryRun) {
-      const id = await this.contract.deny(this.poolID);
-      console.log(`\t txID = ${id}`);
+  private async bundleAndSubmit() {
+    const bundleSize = this.contract.state!.settings.bundleSize;
+    console.log(`\nBuffer size is now: ${this.validatorBuffer.length}`);
+
+    if (this.validatorBuffer.length >= bundleSize) {
+      const buffer = this.validatorBuffer;
+      this.validatorBuffer = [];
+
+      const transaction = await this.arweave.createTransaction(
+        {
+          data: JSON.stringify(
+            buffer.map((item) => ({ txID: item.id, valid: item.valid }))
+          ),
+        },
+        this.keyfile
+      );
+
+      transaction.addTag("App-Name", "SmartWeaveAction");
+      transaction.addTag("App-Version", "0.3.0");
+      transaction.addTag("Contract", this.poolID);
+      transaction.addTag("Input", JSON.stringify({ function: "submit" }));
+
+      await this.arweave.transactions.sign(transaction, this.keyfile);
+      await this.arweave.transactions.post(transaction);
+
+      console.log(
+        `\nSent a bundle with ${buffer.length} items.\n  txID = ${
+          transaction.id
+        }\n  cost = ${this.arweave.ar.winstonToAr(transaction.reward)} AR`
+      );
     }
   }
 }

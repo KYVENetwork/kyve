@@ -19,6 +19,8 @@ import { interactWrite, readContract } from "smartweave";
 import Arweave from "arweave";
 import { JWKInterface } from "arweave/web/lib/wallet";
 
+export { Pool } from "./pool";
+
 type Keyfile = JWKInterface | "use_wallet" | undefined;
 
 class Contract {
