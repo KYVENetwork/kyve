@@ -1,0 +1,21 @@
+{
+  "name": "@kyve/contract-pool",
+  "version": "1.0.0-alpha",
+  "main": "dist/index",
+  "types": "dist/**.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc && node scripts/build.js",
+    "clean": "rimraf dist",
+    "prepublishOnly": "yarn run build",
+    "test": "yarn run build"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "esbuild": "^0.11.2"
+  }
+}
