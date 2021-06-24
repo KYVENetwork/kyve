@@ -79,22 +79,22 @@ if (process.env.WALLET) {
 
     switch (architecture.toLowerCase()) {
       case "avalanche":
-        instances.push(AvalancheInstance(poolID, stake, wallet));
+        instances.push(AvalancheInstance(poolID.toString(), stake, wallet));
         break;
       case "cosmos":
-        instances.push(CosmosInstance(poolID, stake, wallet));
+        instances.push(CosmosInstance(poolID.toString(), stake, wallet));
         break;
       case "polkadot":
-        instances.push(PolkadotInstance(poolID, stake, wallet));
+        instances.push(PolkadotInstance(poolID.toString(), stake, wallet));
         break;
       case "smartweave":
-        instances.push(SmartWeaveInstance(poolID, stake, wallet));
+        instances.push(SmartWeaveInstance(poolID.toString(), stake, wallet));
         break;
       case "solana":
-        instances.push(SolanaInstance(poolID, stake, wallet));
+        instances.push(SolanaInstance(poolID.toString(), stake, wallet));
         break;
       case "zilliqa":
-        instances.push(ZilliqaInstance(poolID, stake, wallet));
+        instances.push(ZilliqaInstance(poolID.toString(), stake, wallet));
         break;
       default:
         throw new Error(

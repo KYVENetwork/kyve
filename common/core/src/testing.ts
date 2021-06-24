@@ -34,7 +34,6 @@ class TestInstance extends KYVE {
       validateFunc
     );
 
-    this.pool = options.pool.pool;
     this.poolID = options.pool.id;
 
     this.dryRun = true;
@@ -82,7 +81,7 @@ class TestInstance extends KYVE {
     });
 
     const node = new Observable<ValidateFunctionReturn>((subscriber) => {
-      this.validateFunc(listener, subscriber, this.pool.config);
+      this.validateFunc(listener, subscriber, this.contract.state?.config);
     });
 
     node.subscribe((res) => {

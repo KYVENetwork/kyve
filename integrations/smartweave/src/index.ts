@@ -87,7 +87,7 @@ export const validate = async (
   });
 };
 
-export default function main(pool: number, stake: number, jwk: JWKInterface) {
+export default function main(pool: string, stake: number, jwk: JWKInterface) {
   const instance = new KYVE(
     {
       pool,
