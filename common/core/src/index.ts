@@ -139,7 +139,7 @@ export default class KYVE {
           }
         }
 
-        setTimeout(main, 150000, height);
+        setTimeout(main, 10000, height);
       };
 
       this.arweave.network.getInfo().then((res) => main(res.height));

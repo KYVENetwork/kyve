@@ -10,7 +10,7 @@
     "build:test": "rimraf __tests__/dist && tsc -p tsconfig.test.json",
     "fmt": "prettier --write .",
     "clean": "rimraf dist",
-    "test": "node __tests__/dist/__tests__/instance.js"
+    "test": "node __tests__/dist/__tests__/e2e.js"
   },
   "files": [
     "dist"
@@ -27,6 +27,9 @@
     "smartweave": "^0.4.27"
   },
   "devDependencies": {
-    "@types/object-hash": "^2.1.0"
+    "@textury/arlocal": "^1.0.14",
+    "@types/object-hash": "^2.1.0",
+    "arweave": "^1.10.14",
+    "smartweave": "^0.4.31"
   }
 }

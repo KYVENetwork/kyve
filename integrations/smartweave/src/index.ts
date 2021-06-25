@@ -12,9 +12,9 @@ import { JWKInterface } from "arweave/node/lib/wallet";
 import { GQLTagInterface } from "smartweave/lib/interfaces/gqlResult";
 
 const client = new Arweave({
-  host: "arweave.net",
-  port: 443,
-  protocol: "https",
+  host: "localhost",
+  port: 1984,
+  protocol: "http",
 });
 
 export const upload = async (
@@ -48,6 +48,7 @@ export const upload = async (
           tags: [
             { name: "Contract", value: id },
             { name: "Block", value: latest },
+            { name: "Content-Type", value: "application/json" },
           ],
         });
 
@@ -56,7 +57,7 @@ export const upload = async (
     }
 
     //refetch every 10 minutes
-    setTimeout(main, 10 * 60 * 1000, height);
+    setTimeout(main, 5000, height);
   };
 
   // start with latest block of 0
@@ -93,6 +94,7 @@ export default function main(pool: string, stake: number, jwk: JWKInterface) {
       pool,
       stake,
       jwk,
+      arweave: client,
     },
     upload,
     validate

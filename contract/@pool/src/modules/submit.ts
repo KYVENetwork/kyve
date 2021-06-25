@@ -52,10 +52,12 @@ export const Submit = async (
   }
 
   // Finalize any previous transactions
-  const unhandledTxs = Object.entries(txs).filter(
-    ([key, value]) =>
-      value.status === "pending" && SmartWeave.block.height > value.closesAt
-  );
+  const unhandledTxs = Object.entries(txs)
+    .sort((a, b) => a[1].closesAt - b[1].closesAt)
+    .filter(
+      ([key, value]) =>
+        value.status === "pending" && SmartWeave.block.height > value.closesAt
+    );
 
   for (const [txID, data] of unhandledTxs) {
     if (data.yays.length + data.nays.length > 0.5 * data.voters.length) {
