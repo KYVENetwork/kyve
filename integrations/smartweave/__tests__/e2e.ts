@@ -2,7 +2,12 @@
 import ArLocal from "@textury/arlocal";
 import Arweave from "arweave";
 import fs from "fs";
-import { createContract, interactWrite } from "smartweave";
+import {
+  createContract,
+  interactWrite,
+  interactWriteDryRun,
+  readContract,
+} from "smartweave";
 import SmartWeaveInstance from "../src/index";
 
 const gateway = new ArLocal(undefined, false, "db");
@@ -31,27 +36,49 @@ const gateway = new ArLocal(undefined, false, "db");
   const addrValidator = await client.wallets.jwkToAddress(walletValidator);
 
   // Deploy the governance contract.
-  const governanceSrc = (
-    await client.api.get(
-      "https://arweave.net/ngMml4jmlxu0umpiQCsHgPX2pb_Yz6YDB8f7G6j-tpI"
-    )
-  ).data;
+  // const governanceSrc = (
+  //   await client.api.get(
+  //     "https://arweave.net/ngMml4jmlxu0umpiQCsHgPX2pb_Yz6YDB8f7G6j-tpI"
+  //   )
+  // ).data;
+  const governanceSrc = fs.readFileSync("./cXYZ.js", "utf-8");
   const governanceState = {
     name: "KYVE Testnet",
     ticker: "KYVE",
     balances: {
-      [addrValidator]: 100,
+      [addrValidator]: 5000000010,
     },
-    vault: {},
+    vault: {
+      [addrUploader]: [
+        {
+          balance: 100,
+          end: 10,
+          start: 0,
+        },
+      ],
+      [addrValidator]: [
+        {
+          balance: 100,
+          end: 10,
+          start: 0,
+        },
+      ],
+    },
     votes: [],
     roles: {},
     settings: [
       ["quorum", 0.5],
       ["support", 0.5],
-      ["voteLength", 2000],
+      ["voteLength", 2],
       ["lockMinLength", 5],
       ["lockMaxLength", 720],
     ],
+    trusted: {
+      contracts: [],
+      sources: [],
+    },
+    invocations: [],
+    foreignCalls: [],
   };
 
   const governance = await createContract(
@@ -77,28 +104,31 @@ const gateway = new ArLocal(undefined, false, "db");
       },
       foriegnContracts: {
         governance,
+        treasury: "kyveKYVEkyve",
       },
       uploader: addrUploader,
-      bundleSize: 1,
+      bundleSize: 2,
     },
     config: {
       contracts: [governance],
     },
     credit: {
       [addrUploader]: {
-        amount: 50,
+        amount: 0,
         stake: 25,
-        fund: 1000000000,
+        fund: 0,
         points: 0,
       },
       [addrValidator]: {
-        amount: 50,
+        amount: 0,
         stake: 25,
-        fund: 1000000000,
+        fund: 0,
         points: 0,
       },
     },
     txs: {},
+    invocations: [],
+    foreignCalls: [],
   };
 
   const contract = await createContract(
@@ -109,27 +139,102 @@ const gateway = new ArLocal(undefined, false, "db");
   );
   await mine();
 
-  // Test deposit from governance to pool.
-  // await interactWrite(
-  //   client,
-  //   walletValidator,
-  //   governance,
-  //   {
-  //     function: "transfer",
-  //     target: contract,
-  //     qty: 100,
-  //   },
-  //   [
-  //     { name: "Contract", value: contract },
-  //     { name: "Input", value: JSON.stringify({ function: "deposit" }) },
-  //   ]
-  // );
-  // await mine();
+  //
+  const res = await client.api.post(
+    "graphql",
+    {
+      query: `
+      query($contract: ID!) {
+        transactions(ids: [$contract]) {
+          edges {
+            node {
+              tags {
+                name
+                value
+              }
+            }
+          }
+        }
+      }
+  `,
+      variables: { contract },
+    },
+    { headers: { "content-type": "application/json" } }
+  );
+  const tags: { name: string; value: string }[] =
+    res.data.data.transactions.edges[0].node.tags;
+  const sourceTag = tags.find((tag) => tag.name === "Contract-Src");
 
-  // Test funding and staking inside the pool contract.
+  await interactWrite(client, walletUploader, governance, {
+    function: "propose",
+    type: "addTrustedSource",
+    source: sourceTag?.value!,
+    note: "",
+  });
+  await mine();
+
+  await interactWrite(client, walletUploader, governance, {
+    function: "vote",
+    id: 0,
+    cast: "yay",
+  });
+  await mine();
+  await mine();
+
+  await interactWrite(client, walletUploader, governance, {
+    function: "finalize",
+    id: 0,
+  });
+  await mine();
+
+  // Test deposit and withdraw functionality.
+  await interactWrite(
+    client,
+    walletValidator,
+    governance,
+    {
+      function: "transfer",
+      target: contract,
+      qty: 1000000010,
+    },
+    [
+      { name: "Contract", value: contract },
+      { name: "Input", value: JSON.stringify({ function: "deposit" }) },
+    ]
+  );
+  await mine();
+
+  await interactWrite(
+    client,
+    walletValidator,
+    contract,
+    {
+      function: "withdraw",
+      qty: 10,
+    },
+    [
+      { name: "Contract", value: governance },
+      {
+        name: "Input",
+        value: JSON.stringify({ function: "readOutbox", contract }),
+      },
+    ]
+  );
+  await mine();
+
+  await interactWrite(client, walletValidator, contract, {
+    function: "fund",
+    qty: 1000000000,
+  });
+  await mine();
 
   // Turn auto mining on.
   setInterval(async () => {
+    await mine();
+    await interactWrite(client, walletUploader, governance, {
+      function: "readOutbox",
+      contract,
+    });
     await mine();
 
     if ((await client.network.getInfo()).height % 5 === 0) {

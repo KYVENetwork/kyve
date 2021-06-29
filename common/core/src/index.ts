@@ -120,6 +120,8 @@ export default class KYVE {
             .from(this.contract.state!.settings.uploader)
             .tag("Application", this.APP_NAME)
             .tag("Pool", this.poolID)
+            // TODO: Figure out why this errors
+            .exclude("anchor")
             .findAll()) as GQLEdgeTransactionInterface[];
 
           console.log(`\n[listener] Found ${res.length} new transactions.`);

@@ -9,6 +9,6 @@ const client = new Arweave({
 
 (async () => {
   console.log(
-    await readContract(client, "7oLQBwLl4ZWEzRIee4O2hDojLYA6UDzhCM2i65Ah2lc")
+    await readContract(client, "J9bzj8gW9nVKNaNm50mG68Ib-qXwA5fE3XHxd0MUZNE")
   );
 })();

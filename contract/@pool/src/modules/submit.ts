@@ -1,4 +1,5 @@
 import { ActionInterface, StateInterface, SubmitInterface } from "../faces";
+import Prando from "prando";
 
 declare const ContractAssert: any;
 declare const SmartWeave: any;
@@ -9,6 +10,7 @@ export const Submit = async (
 ) => {
   const credit = state.credit;
   const txs = state.txs;
+  const foreignCalls = state.foreignCalls;
   const settings = state.settings;
   // Finds all addresses with stake in the pool
   const voters = Object.entries(credit)
@@ -87,11 +89,33 @@ export const Submit = async (
         }
       }
 
-      // TODO: Payout governance (1%)
+      // Payout governance (1%)
       const governancePayout = Round(tokens * 0.01);
+      const holder = await RandomHolder(
+        settings.foriegnContracts.governance,
+        settings.foriegnContracts.treasury
+      );
+      foreignCalls.push({
+        txID: `${SmartWeave.transaction.id}//${foreignCalls.length}`,
+        contract: settings.foriegnContracts.governance,
+        input: {
+          function: "transfer",
+          target: holder,
+          qty: governancePayout,
+        },
+      });
 
-      // TODO: Payout treasury (1%)
+      // Payout treasury (1%)
       const treasuryPayout = Round(tokens * 0.01);
+      foreignCalls.push({
+        txID: `${SmartWeave.transaction.id}//${foreignCalls.length}`,
+        contract: settings.foriegnContracts.governance,
+        input: {
+          function: "transfer",
+          target: settings.foriegnContracts.treasury,
+          qty: treasuryPayout,
+        },
+      });
 
       // Payout uploader (68%)
       const uploaderPayout = Round(tokens * 0.68);
@@ -151,7 +175,7 @@ export const Submit = async (
     }
   }
 
-  return { ...state, credit, txs, settings };
+  return { ...state, credit, txs, foreignCalls, settings };
 };
 
 const GetBytes = async (txID: string) => {
@@ -182,4 +206,53 @@ const GetBytes = async (txID: string) => {
 
 const Round = (input: number) => {
   return Math.floor(input * 10 ** 12) / 10 ** 12;
+};
+
+const RandomHolder = async (governance: string, treasury: string) => {
+  const state = await SmartWeave.contracts.readContractState(governance);
+  const balances: { [address: string]: number } = state.balances;
+  const vault: {
+    [address: string]: {
+      balance: number;
+      start: number;
+      end: number;
+    }[];
+  } = state.vault;
+
+  let totalTokens = 0;
+  for (const addr of Object.keys(balances)) {
+    totalTokens += balances[addr];
+  }
+
+  for (const addr of Object.keys(vault)) {
+    if (!vault[addr].length) continue;
+
+    const vaultBalance = vault[addr]
+      .map((a) => a.balance)
+      .reduce((a, b) => a + b, 0);
+    totalTokens += vaultBalance;
+    if (addr in balances) {
+      balances[addr] += vaultBalance;
+    } else {
+      balances[addr] = vaultBalance;
+    }
+  }
+
+  const weighted: { [address: string]: number } = {};
+  for (const addr of Object.keys(balances)) {
+    weighted[addr] = balances[addr] / totalTokens;
+  }
+
+  let sum = 0;
+  const r = new Prando(SmartWeave.transaction.id).next();
+
+  for (const key of Object.keys(weighted)) {
+    sum += weighted[key];
+    if (r <= sum && weighted[key] > 0) {
+      return key;
+    }
+  }
+
+  // In the slim chance that no-one is selected, governance reward goes to treasury.
+  return treasury;
 };

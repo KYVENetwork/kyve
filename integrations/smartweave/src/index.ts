@@ -48,7 +48,6 @@ export const upload = async (
           tags: [
             { name: "Contract", value: id },
             { name: "Block", value: latest },
-            { name: "Content-Type", value: "application/json" },
           ],
         });
 
