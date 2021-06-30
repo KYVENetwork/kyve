@@ -23,6 +23,6 @@ export interface ReadOutboxInterface {
 
 export interface TransferInterface {
   function: "transfer";
-  qty: number;
   target: string;
+  qty: number;
 }
