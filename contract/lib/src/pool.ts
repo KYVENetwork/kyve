@@ -5,7 +5,7 @@ import {
 } from "@kyve/contract-pool/dist/faces";
 import Arweave from "arweave";
 import { JWKInterface } from "arweave/node/lib/wallet";
-import { interactWrite, readContract } from "smartweave";
+import { createContractFromTx, interactWrite, readContract } from "smartweave";
 
 type Keyfile = JWKInterface | "use_wallet";
 
@@ -15,10 +15,33 @@ export class Pool {
   public state?: StateInterface;
   public id?: string;
 
+  private src = "-GRxcV2BZT14lnUmoPyRE24KLU-ugN5afVUa-HUhgas";
+  private governance = "cpXtKvM0e6cqAgjv-BCfanWQmYGupECt1MxRk1N9Mjk";
+  private treasury = "shwdmXTFCaMq8WaCGg79oCF5GCj0bpb5tNA62cluEQY";
+
   constructor(arweave: Arweave, wallet: Keyfile, id?: string) {
     this.client = arweave;
     this.wallet = wallet;
     this.id = id;
+  }
+
+  async create(state: StateInterface): Promise<string> {
+    this.id = await createContractFromTx(
+      this.client,
+      this.wallet,
+      this.src,
+      JSON.stringify({
+        ...state,
+        settings: {
+          ...state.settings,
+          foriegnContracts: {
+            governance: this.governance,
+            treasury: this.treasury,
+          },
+        },
+      })
+    );
+    return this.id;
   }
 
   async getState(): Promise<StateInterface> {
