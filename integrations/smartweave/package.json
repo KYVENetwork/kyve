@@ -30,6 +30,6 @@
     "@textury/arlocal": "^1.0.14",
     "@types/object-hash": "^2.1.0",
     "arweave": "^1.10.14",
-    "smartweave": "^0.4.31"
+    "smartweave": "KYVENetwork/SmartWeave#release"
   }
 }

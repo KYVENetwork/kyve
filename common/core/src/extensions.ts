@@ -3,9 +3,9 @@ import Arweave from "arweave";
 import ArweaveBundles from "arweave-bundles";
 
 export const arweaveClient = new Arweave({
-  host: "localhost",
-  port: 1984,
-  protocol: "http",
+  host: "arweave.net",
+  port: 443,
+  protocol: "https",
 });
 
 export const arweaveBundles = ArweaveBundles({

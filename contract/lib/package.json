@@ -18,6 +18,6 @@
   "dependencies": {
     "@kyve/contract": "0.1.0-alpha.4",
     "arweave": "^1.10.13",
-    "smartweave": "^0.4.29"
+    "smartweave": "KYVENetwork/SmartWeave#release"
   }
 }
