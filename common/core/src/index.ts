@@ -8,6 +8,7 @@ import {
   ValidateFunctionReturn,
 } from "./faces";
 import { JWKInterface } from "arweave/node/lib/wallet";
+import hash from "object-hash";
 import { Observable } from "rxjs";
 import { arweaveBundles as bundles, arweaveClient } from "./extensions";
 
@@ -107,33 +108,36 @@ export default class KYVE {
 
   private listener() {
     return new Observable<ListenFunctionReturn>((subscriber) => {
-      const main = async (latest: number) => {
-        const height = (await this.arweave.network.getInfo()).height;
+      let latestHash = "";
 
-        console.log(`\n[listener] height = ${height}, latest = ${latest}.`);
+      const main = async (address: string) => {
+        const state = await this.contract.getState();
+        const newHash = hash(state);
 
-        if (latest !== height) {
-          const res = (await this.ardb
-            .search()
-            .min(latest)
-            .max(height)
-            .from(this.contract.state!.settings.uploader)
-            .tag("Application", this.APP_NAME)
-            .tag("Pool", this.poolID)
-            // TODO: Figure out why this errors
-            .exclude("anchor")
-            .findAll()) as GQLEdgeTransactionInterface[];
+        if (newHash === latestHash) {
+          // State hasn't changed.
+          // Do nothing.
+        } else {
+          // State has changed.
+          // Find all pending transactions that need votes.
 
-          console.log(`\n[listener] Found ${res.length} new transactions.`);
+          const unhandledTxs = Object.entries(state.txs).filter(
+            ([key, value]) =>
+              value.status === "pending" &&
+              !(value.yays.includes(address) || value.nays.includes(address))
+          );
 
-          for (const { node } of res) {
-            console.log(
-              `\n[listener] Parsing transaction.\n  txID = ${node.id}`
-            );
+          for (const [id, value] of unhandledTxs) {
+            const res = (await this.ardb
+              .search()
+              .id(id)
+              .findAll()) as GQLEdgeTransactionInterface[];
+            const node = res[0].node;
 
-            const data: any[] = JSON.parse(await getData(node.id));
+            const data = await getData(id);
+
             subscriber.next({
-              id: node.id,
+              id,
               data,
               transaction: node,
               block: node.block.height,
@@ -141,10 +145,10 @@ export default class KYVE {
           }
         }
 
-        setTimeout(main, 5 * 60 * 1000, height);
+        setTimeout(main, 5 * 60 * 1000, address);
       };
 
-      this.arweave.network.getInfo().then((res) => main(res.height));
+      this.arweave.wallets.getAddress(this.keyfile).then((res) => main(res));
     });
   }
 
@@ -176,6 +180,10 @@ export default class KYVE {
       const tags = [
         { name: "Application", value: APP_NAME },
         { name: "Pool", value: this.poolID.toString() },
+        { name: "App-Name", value: "SmartWeaveAction" },
+        { name: "App-Version", value: "0.3.0" },
+        { name: "Contract", value: this.poolID.toString() },
+        { name: "Input", value: JSON.stringify({ function: "register" }) },
         ...(buffer[0].tags || []),
       ];
       for (const { name, value } of tags) {
@@ -221,6 +229,10 @@ export default class KYVE {
         transaction.addTag("Bundle-Format", "json");
         transaction.addTag("Bundle-Version", "1.0.0");
         transaction.addTag("Content-Type", "application/json");
+        transaction.addTag("App-Name", "SmartWeaveAction");
+        transaction.addTag("App-Version", "0.3.0");
+        transaction.addTag("Contract", this.poolID.toString());
+        transaction.addTag("Input", JSON.stringify({ function: "register" }));
 
         await this.arweave.transactions.sign(transaction, this.keyfile);
         await this.arweave.transactions.post(transaction);
