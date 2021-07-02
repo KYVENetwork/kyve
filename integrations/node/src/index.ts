@@ -1,13 +1,8 @@
 require("dotenv").config({ silent: true });
 import KYVE from "@kyve/core";
-import Contract from "@kyve/contract-lib";
+import { Pool } from "@kyve/contract-lib";
 import Arweave from "arweave";
-import AvalancheInstance from "@kyve/avalanche";
-import CosmosInstance from "@kyve/cosmos";
-import PolkadotInstance from "@kyve/polkadot";
 import SmartWeaveInstance from "@kyve/smartweave";
-import SolanaInstance from "@kyve/solana";
-import ZilliqaInstance from "@kyve/zilliqa";
 import fs from "fs";
 
 import * as Sentry from "@sentry/node";
@@ -48,8 +43,6 @@ const client = new Arweave({
   protocol: "https",
 });
 
-const contract = new Contract(client);
-
 let config: any;
 if (process.env.CONFIG) {
   config = JSON.parse(fs.readFileSync(process.env.CONFIG).toString());
@@ -64,6 +57,21 @@ if (process.env.WALLET) {
   throw new Error("No keyfile provided.");
 }
 
+(async () => {
+  const instances: KYVE[] = [];
+
+  for (const poolID of Object.keys(config.pools)) {
+    const pool = new Pool(client, wallet, poolID);
+    const stake = config.pools[poolID];
+
+    // only allowing SmartWeave right now
+    instances.push(SmartWeaveInstance(poolID, stake, wallet));
+  }
+
+  instances.map((node) => node.run().catch((err) => console.log(err)));
+})();
+
+/*
 (async () => {
   const state = await contract.getState();
   const pools = state.pools;
@@ -105,3 +113,4 @@ if (process.env.WALLET) {
 
   instances.map((node) => node.run().catch((err) => console.log(err)));
 })();
+*/

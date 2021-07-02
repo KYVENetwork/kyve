@@ -12,9 +12,9 @@ import { JWKInterface } from "arweave/node/lib/wallet";
 import { GQLTagInterface } from "smartweave/lib/interfaces/gqlResult";
 
 const client = new Arweave({
-  host: "localhost",
-  port: 1984,
-  protocol: "http",
+  host: "arweave.net",
+  port: 443,
+  protocol: "https",
 });
 
 export const upload = async (
@@ -56,7 +56,7 @@ export const upload = async (
     }
 
     //refetch every 10 minutes
-    setTimeout(main, 5000, height);
+    setTimeout(main, 10 * 60 * 1000, height);
   };
 
   // start with latest block of 0
