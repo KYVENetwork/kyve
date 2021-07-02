@@ -32,7 +32,7 @@ export interface StateInterface {
   txs: {
     [id: string]: {
       status: "pending" | "dropped" | "valid" | "invalid";
-      closesAt: number;
+      closesAt?: number;
       confirmedAt?: number;
 
       yays: string[];
@@ -58,6 +58,10 @@ export interface CreditInterface {
   function: "deposit" | "withdraw" | "fund" | "unfund" | "stake" | "unstake";
   // deposit and unstake don't require qty
   qty?: number;
+}
+
+export interface RegisterInterface {
+  function: "register";
 }
 
 export interface SubmitInterface {

@@ -19,6 +19,7 @@
     "esbuild": "^0.11.2"
   },
   "dependencies": {
+    "arweave-bundles": "^1.0.3",
     "prando": "^6.0.1"
   }
 }

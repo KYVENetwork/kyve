@@ -1,4 +1,4 @@
-import { ActionInterface, StateInterface, SubmitInterface } from "../faces";
+import { ActionInterface, StateInterface } from "../faces";
 import Prando from "prando";
 
 declare const ContractAssert: any;
@@ -28,29 +28,23 @@ export const Submit = async (
   );
 
   for (const { txID, valid } of data) {
-    if (txID in txs) {
+    ContractAssert(
+      !(txs[txID].yays.includes(caller) || txs[txID].nays.includes(caller)),
+      "Caller has already voted."
+    );
+
+    if (txs[txID].closesAt) {
       ContractAssert(
         SmartWeave.block.height <= txs[txID].closesAt,
         "Grace period has ended."
       );
-      ContractAssert(
-        !(txs[txID].yays.includes(caller) || txs[txID].nays.includes(caller)),
-        "Caller has already voted."
-      );
-
-      if (valid) txs[txID].yays.push(caller);
-      else txs[txID].nays.push(caller);
-      txs[txID].voters = voters;
     } else {
-      txs[txID] = {
-        status: "pending",
-        closesAt: SmartWeave.block.height + settings.gracePeriod,
-
-        yays: valid ? [caller] : [],
-        nays: valid ? [] : [caller],
-        voters,
-      };
+      txs[txID].closesAt = SmartWeave.block.height + settings.gracePeriod;
     }
+
+    if (valid) txs[txID].yays.push(caller);
+    else txs[txID].nays.push(caller);
+    txs[txID].voters = voters;
   }
 
   // Finalize any previous transactions
