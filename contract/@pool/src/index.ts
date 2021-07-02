@@ -6,6 +6,7 @@ import { Stake } from "./modules/stake";
 import { Submit } from "./modules/submit";
 import { Unfund } from "./modules/unfund";
 import { Unstake } from "./modules/unstake";
+import { Update } from "./modules/update";
 import { UpdateContracts } from "./modules/updateContracts";
 import { Withdraw } from "./modules/withdraw";
 
@@ -29,6 +30,8 @@ export async function handle(state: StateInterface, action: ActionInterface) {
     case "submit":
       return { state: await Submit(state, action) };
 
+    case "update":
+      return { state: Update(state, action) };
     case "updateContracts":
       return { state: UpdateContracts(state, action) };
   }

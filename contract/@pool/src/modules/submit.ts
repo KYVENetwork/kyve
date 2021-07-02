@@ -69,7 +69,7 @@ export const Submit = async (
           .map(([key, value]) => value.fund)
           .reduce((a, b) => a + b, 0)
       ) {
-        // TODO: Pause pool
+        settings.paused = true;
         continue;
       }
       let tempAmount = tokens;
@@ -157,16 +157,29 @@ export const Submit = async (
   const unhandledSlashing = Object.entries(credit).filter(
     ([key, value]) => value.points > settings.slashThreshold
   );
+  let totalSlashed = 0;
 
   for (const [address, data] of unhandledSlashing) {
-    // TODO: Payout treasury
+    totalSlashed += credit[address].stake;
     credit[address].points = 0;
     credit[address].stake = 0;
 
     if (address === settings.uploader) {
       settings.uploader = "";
-      // TODO: Pause pool
+      settings.paused = true;
     }
+  }
+
+  if (totalSlashed) {
+    foreignCalls.push({
+      txID: `${SmartWeave.transaction.id}//${foreignCalls.length}`,
+      contract: settings.foriegnContracts.governance,
+      input: {
+        function: "transfer",
+        target: settings.foriegnContracts.treasury,
+        qty: totalSlashed,
+      },
+    });
   }
 
   return { ...state, credit, txs, foreignCalls, settings };

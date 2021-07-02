@@ -1,23 +1,5 @@
 export interface StateInterface {
-  settings: {
-    // TODO: Handle metanode architecture
-    name: string;
-    logo: string;
-    foriegnContracts: {
-      governance: string;
-      treasury: string;
-    };
-
-    uploader: string;
-    bundleSize: number; // 1
-
-    gracePeriod: number; // 20
-    slashThreshold: number; // 5
-    payout: {
-      kyvePerByte: number; // 1
-      idleCost: number; // 0
-    };
-  };
+  settings: SettingsInterface;
   config: any;
 
   credit: {
@@ -41,10 +23,31 @@ export interface StateInterface {
     };
   };
 
-  // TODO: Voting
-
   invocations: string[];
   foreignCalls: { txID: string; contract: string; input: any }[];
+}
+
+export interface SettingsInterface {
+  name: string;
+  runtime: string; // e.g. "@kyve/smartweave"
+  version: string;
+  logo: string;
+  foriegnContracts: {
+    governance: string;
+    treasury: string;
+  };
+  paused: boolean;
+  admins: string[];
+
+  uploader: string;
+  bundleSize: number; // 1
+
+  gracePeriod: number; // 20
+  slashThreshold: number; // 5
+  payout: {
+    kyvePerByte: number; // 1
+    idleCost: number; // 0
+  };
 }
 
 export interface ActionInterface {
@@ -61,11 +64,19 @@ export interface CreditInterface {
 }
 
 export interface RegisterInterface {
+  // can only be called by the current uploader
   function: "register";
 }
 
 export interface SubmitInterface {
   function: "submit";
+}
+
+export interface UpdateInterface {
+  // can only be called by the pool owner
+  function: "update";
+  settings?: SettingsInterface;
+  config?: any;
 }
 
 export interface UpdateContractsInterface {
