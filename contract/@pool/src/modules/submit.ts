@@ -33,6 +33,12 @@ export const Submit = async (
       "Caller has already voted."
     );
 
+    ContractAssert(
+      SmartWeave.block.height <=
+        txs[txID].submittedAt + 2 * settings.gracePeriod,
+      "Transaction has been dropped."
+    );
+
     if (txs[txID].closesAt) {
       ContractAssert(
         SmartWeave.block.height <= txs[txID].closesAt,
@@ -52,7 +58,10 @@ export const Submit = async (
     .sort((a, b) => a[1].closesAt - b[1].closesAt)
     .filter(
       ([key, value]) =>
-        value.status === "pending" && SmartWeave.block.height > value.closesAt
+        value.status === "pending" &&
+        (SmartWeave.block.height > value.closesAt ||
+          SmartWeave.block.height >
+            value.submittedAt + 2 * settings.gracePeriod)
     );
 
   for (const [txID, data] of unhandledTxs) {
@@ -150,7 +159,7 @@ export const Submit = async (
       // Dropped (quorum failed)
       txs[txID].status = "dropped";
     }
-    txs[txID].confirmedAt = SmartWeave.block.height;
+    txs[txID].finalizedAt = SmartWeave.block.height;
   }
 
   // Handle slashing

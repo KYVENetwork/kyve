@@ -14,8 +14,9 @@ export interface StateInterface {
   txs: {
     [id: string]: {
       status: "pending" | "dropped" | "valid" | "invalid";
+      submittedAt: number;
       closesAt?: number;
-      confirmedAt?: number;
+      finalizedAt?: number;
 
       yays: string[];
       nays: string[];

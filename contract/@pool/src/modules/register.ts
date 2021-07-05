@@ -46,6 +46,7 @@ export const Register = async (
   for (const id of ids) {
     txs[id] = {
       status: "pending",
+      submittedAt: SmartWeave.block.height,
       yays: [],
       nays: [],
       voters: [],
