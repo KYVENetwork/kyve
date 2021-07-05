@@ -16,6 +16,8 @@ import { Pool } from "@kyve/contract-lib";
 import { GQLEdgeTransactionInterface } from "ardb/lib/faces/gql";
 import { untilMined } from "./helper";
 
+import Log from "./logger";
+
 export const APP_NAME = "KYVE - DEV";
 
 export default class KYVE {
@@ -62,11 +64,12 @@ export default class KYVE {
   }
 
   public async run() {
+    const log = new Log("core");
     const state = await this.contract.getState();
 
     // shut down if no uploader is selected
     if (!state.settings.uploader) {
-      throw new Error(
+      log.error(
         "No uploader specified in pool. Please create a vote to elect an uploader."
       );
     }
@@ -78,35 +81,37 @@ export default class KYVE {
     const diff = Math.abs(this.stake - currentStake);
 
     if (this.stake === currentStake) {
-      console.log(
+      log.info(
         `Already staked with ${this.stake} $KYVE in pool ${this.poolID}.`
       );
     } else if (this.stake > currentStake) {
       const id = await this.contract.stake(diff);
-      console.log(
+      log.info(
         `Staking ${diff} $KYVE in pool ${this.poolID}.\n Transaction: ${id}`
       );
       await untilMined(id, this.arweave);
-      console.log("Successfully staked tokens");
+      log.info("Successfully staked tokens");
     } else {
       const id = await this.contract.unstake(diff);
-      console.log(
+      log.info(
         `Unstaking ${diff} $KYVE in pool ${this.poolID}.\n Transaction: ${id}`
       );
       await untilMined(id, this.arweave);
-      console.log("Successfully unstaked tokens");
+      log.info("Successfully unstaked tokens");
     }
 
     if (address === state.settings.uploader) {
-      console.log("\nRunning as an uploader ...");
+      log.info("\nRunning as an uploader ...");
       this.uploader();
     } else {
-      console.log("\nRunning as a validator ...");
+      log.info("\nRunning as a validator ...");
       this.validator();
     }
   }
 
   private listener() {
+    const log = new Log("listener");
+
     return new Observable<ListenFunctionReturn>((subscriber) => {
       let latestHash = "";
 
@@ -144,7 +149,7 @@ export default class KYVE {
                 block: node.block.height,
               });
             } catch (e) {
-              console.warn("Error while fetching data for tx:", id);
+              log.warn(`Error while fetching data.\n  Transaction: ${id}`);
             }
           }
         }
@@ -168,6 +173,7 @@ export default class KYVE {
   }
 
   private async bundleAndUpload() {
+    const log = new Log("uploader");
     const bundleSize = this.contract.state!.settings.bundleSize;
 
     if (bundleSize === 1) {
@@ -197,13 +203,13 @@ export default class KYVE {
       await this.arweave.transactions.sign(transaction, this.keyfile);
       await this.arweave.transactions.post(transaction);
 
-      console.log(
-        `\nSent a transaction.\n  txID = ${
+      log.info(
+        `Sent a transaction.\n  txID = ${
           transaction.id
         }\n  cost = ${this.arweave.ar.winstonToAr(transaction.reward)} AR`
       );
     } else {
-      console.log(`\nBuffer size is now: ${this.uploaderBuffer.length}`);
+      log.info(`Buffer size is now: ${this.uploaderBuffer.length}`);
       if (this.uploaderBuffer.length >= bundleSize) {
         const buffer = this.uploaderBuffer;
         this.uploaderBuffer = [];
@@ -241,8 +247,8 @@ export default class KYVE {
         await this.arweave.transactions.sign(transaction, this.keyfile);
         await this.arweave.transactions.post(transaction);
 
-        console.log(
-          `\nSent a bundle with ${items.length} items.\n  txID = ${
+        log.info(
+          `Sent a bundle with ${items.length} items.\n  txID = ${
             transaction.id
           }\n  cost = ${this.arweave.ar.winstonToAr(transaction.reward)} AR`
         );
@@ -266,8 +272,9 @@ export default class KYVE {
   }
 
   private async bundleAndSubmit() {
+    const log = new Log("validator");
     const bundleSize = this.contract.state!.settings.bundleSize;
-    console.log(`\nBuffer size is now: ${this.validatorBuffer.length}`);
+    log.info(`Buffer size is now: ${this.validatorBuffer.length}`);
 
     if (this.validatorBuffer.length >= bundleSize) {
       const buffer = this.validatorBuffer;
@@ -290,8 +297,8 @@ export default class KYVE {
       await this.arweave.transactions.sign(transaction, this.keyfile);
       await this.arweave.transactions.post(transaction);
 
-      console.log(
-        `\nSent a bundle with ${buffer.length} items.\n  txID = ${
+      log.info(
+        `Sent a bundle with ${buffer.length} items.\n  txID = ${
           transaction.id
         }\n  cost = ${this.arweave.ar.winstonToAr(transaction.reward)} AR`
       );

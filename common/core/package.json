@@ -23,6 +23,8 @@
     "ardb": "^1.0.8",
     "arweave": "^1.10.11",
     "arweave-bundles": "^1.0.3",
+    "chalk": "^4.1.1",
+    "fecha": "^4.2.1",
     "object-hash": "^2.2.0",
     "rxjs": "^6.6.6",
     "smartweave": "^0.4.27"
