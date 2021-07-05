@@ -3,6 +3,11 @@ import KYVE from "@kyve/core";
 import { Pool } from "@kyve/contract-lib";
 import Arweave from "arweave";
 import SmartWeaveInstance from "@kyve/smartweave";
+import AvalancheInstance from "@kyve/avalanche";
+import CosmosInstance from "@kyve/cosmos";
+import PolkadotInstance from "@kyve/polkadot";
+import SolanaInstance from "@kyve/solana";
+import ZilliqaInstance from "@kyve/zilliqa";
 import fs from "fs";
 
 import * as Sentry from "@sentry/node";
@@ -61,56 +66,37 @@ if (process.env.WALLET) {
   const instances: KYVE[] = [];
 
   for (const poolID of Object.keys(config.pools)) {
+    const stake = config.pools[poolID];
+
+    // get pool runtime
     const pool = new Pool(client, wallet, poolID);
-    const stake = config.pools[poolID];
+    const state = await pool.getState();
+    const runtime = state.settings.runtime;
 
-    // only allowing SmartWeave right now
-    instances.push(SmartWeaveInstance(poolID, stake, wallet));
-  }
-
-  instances.map((node) => node.run().catch((err) => console.log(err)));
-})();
-
-/*
-(async () => {
-  const state = await contract.getState();
-  const pools = state.pools;
-
-  const instances: KYVE[] = [];
-
-  for (const rawID of Object.keys(config.pools)) {
-    const poolID = parseFloat(rawID);
-
-    const stake = config.pools[poolID];
-
-    const architecture = pools[poolID].architecture;
-
-    switch (architecture.toLowerCase()) {
-      case "avalanche":
-        instances.push(AvalancheInstance(poolID.toString(), stake, wallet));
+    // select correct instance based of the runtime
+    switch (runtime) {
+      case "@kyve/avalanche":
+        instances.push(AvalancheInstance(poolID, stake, wallet));
         break;
-      case "cosmos":
-        instances.push(CosmosInstance(poolID.toString(), stake, wallet));
+      case "@kyve/cosmos":
+        instances.push(CosmosInstance(poolID, stake, wallet));
         break;
-      case "polkadot":
-        instances.push(PolkadotInstance(poolID.toString(), stake, wallet));
+      case "@kyve/polkadot":
+        instances.push(PolkadotInstance(poolID, stake, wallet));
         break;
-      case "smartweave":
-        instances.push(SmartWeaveInstance(poolID.toString(), stake, wallet));
+      case "@kyve/smartweave":
+        instances.push(SmartWeaveInstance(poolID, stake, wallet));
         break;
-      case "solana":
-        instances.push(SolanaInstance(poolID.toString(), stake, wallet));
+      case "@kyve/solana":
+        instances.push(SolanaInstance(poolID, stake, wallet));
         break;
-      case "zilliqa":
-        instances.push(ZilliqaInstance(poolID.toString(), stake, wallet));
+      case "@kyve/zilliqa":
+        instances.push(ZilliqaInstance(poolID, stake, wallet));
         break;
       default:
-        throw new Error(
-          `Unsupported architecture.\n  architecture = ${architecture}`
-        );
+        throw new Error(`Unsupported runtime: ${runtime}`);
     }
   }
 
   instances.map((node) => node.run().catch((err) => console.log(err)));
 })();
-*/

@@ -21,22 +21,27 @@ export const upload = async (
   uploader: UploadFunctionSubscriber,
   config: any
 ) => {
-  // mapping contract address to state
-  let contracts: { [id: string]: any } = {};
+  // mapping contract address to hash(state)
+  let contracts: { [id: string]: string } = {};
 
-  const main = async (latest: number) => {
-    const height = (await client.network.getInfo()).height;
-    console.log("Height:", height, "Latest:", latest);
+  const main = async (previousHeight: number) => {
+    const currentHeight = (await client.network.getInfo()).height;
+    console.log(
+      "Current-Height:",
+      currentHeight,
+      "Previous-Height:",
+      previousHeight
+    );
 
-    if (latest !== height) {
+    if (previousHeight !== currentHeight) {
       for (const id of config.contracts) {
-        const res = await readContract(client, id, latest, true);
+        const res = await readContract(client, id, currentHeight, true);
 
         if (contracts[id]) {
-          const previousHash = hash(contracts[id]);
-          const latestHash = hash(res);
+          const previousHash = contracts[id];
+          const currentHash = hash(res);
 
-          if (previousHash === latestHash) {
+          if (previousHash === currentHash) {
             // no change, can continue
             continue;
           }
@@ -47,20 +52,21 @@ export const upload = async (
           data: res,
           tags: [
             { name: "Contract", value: id },
-            { name: "Block", value: latest },
+            { name: "Block", value: currentHeight },
           ],
         });
 
-        contracts[id] = res;
+        contracts[id] = hash(res);
       }
     }
 
     //refetch every 10 minutes
-    setTimeout(main, 10 * 60 * 1000, height);
+    setTimeout(main, 10 * 60 * 1000, currentHeight);
   };
 
-  // start with latest block of 0
-  main(0);
+  const height = (await client.network.getInfo()).height;
+  // start with latest block height
+  main(height);
 };
 
 export const validate = async (
@@ -80,10 +86,14 @@ export const validate = async (
     const state = await readContract(client, contract, block, true);
     const localHash = hash(state);
 
-    const data = await getData(res.id);
-    const compareHash = hash(JSON.parse(data.toString()));
+    try {
+      const data = await getData(res.id);
+      const compareHash = hash(JSON.parse(data.toString()));
 
-    validator.next({ valid: localHash === compareHash, id: res.id });
+      validator.next({ valid: localHash === compareHash, id: res.id });
+    } catch (e) {
+      console.warn("Error while data from:", res.id);
+    }
   });
 };
 
