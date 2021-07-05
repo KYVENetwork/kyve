@@ -22,14 +22,12 @@
   "types": "dist/index",
   "dependencies": {
     "@kyve/core": "0.0.0-alpha.10",
-    "arweave": "^1.10.13",
+    "arweave": "^1.10.14",
     "object-hash": "^2.1.1",
-    "smartweave": "^0.4.27"
+    "smartweave": "KYVENetwork/SmartWeave#release"
   },
   "devDependencies": {
     "@textury/arlocal": "^1.0.14",
-    "@types/object-hash": "^2.1.0",
-    "arweave": "^1.10.14",
-    "smartweave": "KYVENetwork/SmartWeave#release"
+    "@types/object-hash": "^2.1.0"
   }
 }
