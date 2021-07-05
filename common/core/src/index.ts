@@ -134,14 +134,18 @@ export default class KYVE {
               .findAll()) as GQLEdgeTransactionInterface[];
             const node = res[0].node;
 
-            const data = await getData(id);
+            try {
+              const data = await getData(id);
 
-            subscriber.next({
-              id,
-              data,
-              transaction: node,
-              block: node.block.height,
-            });
+              subscriber.next({
+                id,
+                data,
+                transaction: node,
+                block: node.block.height,
+              });
+            } catch (e) {
+              console.warn("Error while fetching data for tx:", id);
+            }
           }
         }
 

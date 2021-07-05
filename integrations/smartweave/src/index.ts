@@ -26,7 +26,12 @@ export const upload = async (
 
   const main = async (previousHeight: number) => {
     const currentHeight = (await client.network.getInfo()).height;
-    console.log("Current-Height:", currentHeight, "Previous-Height:", previousHeight);
+    console.log(
+      "Current-Height:",
+      currentHeight,
+      "Previous-Height:",
+      previousHeight
+    );
 
     if (previousHeight !== currentHeight) {
       for (const id of config.contracts) {
@@ -81,10 +86,14 @@ export const validate = async (
     const state = await readContract(client, contract, block, true);
     const localHash = hash(state);
 
-    const data = await getData(res.id);
-    const compareHash = hash(JSON.parse(data.toString()));
+    try {
+      const data = await getData(res.id);
+      const compareHash = hash(JSON.parse(data.toString()));
 
-    validator.next({ valid: localHash === compareHash, id: res.id });
+      validator.next({ valid: localHash === compareHash, id: res.id });
+    } catch (e) {
+      console.warn("Error while data from:", res.id);
+    }
   });
 };
 
