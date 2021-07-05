@@ -1,6 +1,6 @@
 {
   "name": "@kyve/contract-treasury",
-  "version": "1.0.0-alpha",
+  "version": "1.0.0-alpha.0",
   "main": "dist/index",
   "types": "dist/**.d.ts",
   "files": [

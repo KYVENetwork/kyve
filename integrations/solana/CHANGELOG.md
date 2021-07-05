@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.9](https://github.com/KYVENetwork/solana/compare/@kyve/solana@0.0.0-alpha.8...@kyve/solana@0.0.0-alpha.9) (2021-07-05)
+
+
+### Bug Fixes
+
+* make sure everything builds ([994181b](https://github.com/KYVENetwork/solana/commit/994181bbbc4b242c59545b29f7234f8bc0b822e4))
+
+
+
+
+
 # [0.0.0-alpha.8](https://github.com/KYVENetwork/solana/compare/@kyve/solana@0.0.0-alpha.7...@kyve/solana@0.0.0-alpha.8) (2021-06-09)
 
 **Note:** Version bump only for package @kyve/solana

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.25](https://github.com/KYVENetwork/avalanche/compare/@kyve/avalanche@0.0.0-alpha.24...@kyve/avalanche@0.0.0-alpha.25) (2021-07-05)
+
+
+### Bug Fixes
+
+* make sure everything builds ([994181b](https://github.com/KYVENetwork/avalanche/commit/994181bbbc4b242c59545b29f7234f8bc0b822e4))
+
+
+
+
+
 # [0.0.0-alpha.24](https://github.com/KYVENetwork/avalanche/compare/@kyve/avalanche@0.0.0-alpha.23...@kyve/avalanche@0.0.0-alpha.24) (2021-06-09)
 
 **Note:** Version bump only for package @kyve/avalanche

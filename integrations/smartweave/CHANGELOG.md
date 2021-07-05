@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.9](https://github.com/KYVENetwork/smartweave/compare/@kyve/smartweave@0.0.0-alpha.8...@kyve/smartweave@0.0.0-alpha.9) (2021-07-05)
+
+
+### Bug Fixes
+
+* added try/catch to data retrieval ([ea33f69](https://github.com/KYVENetwork/smartweave/commit/ea33f697b4bc5d83add8c6197a3d4b6e166dbae3))
+* changed log format ([960ac2b](https://github.com/KYVENetwork/smartweave/commit/960ac2b9b3676091f5cdd9fd5e190f6f91c0e0bd))
+* fixed height issues ([2e37316](https://github.com/KYVENetwork/smartweave/commit/2e3731615bd87dfb040141cee79db4b794d8ae11))
+* make sure everything builds ([994181b](https://github.com/KYVENetwork/smartweave/commit/994181bbbc4b242c59545b29f7234f8bc0b822e4))
+* updated Arweave client and installed fixed SmartWeave version ([52ba079](https://github.com/KYVENetwork/smartweave/commit/52ba0796df3deceeab176e22e86face0b05bca6f))
+
+
+### Features
+
+* added `runtime` support ([3155067](https://github.com/KYVENetwork/smartweave/commit/3155067d25600c15c2427ec4a760fd4a8274d288))
+* test FCP ([6b93d85](https://github.com/KYVENetwork/smartweave/commit/6b93d8506fba2454a78e9e9e81111d17aca3dddb))
+* **wip:** e2e tests for SmartWeave integration ([858aa72](https://github.com/KYVENetwork/smartweave/commit/858aa72e1a32455bc0bf43081ac0bc13d92dfcb2))
+
+
+
+
+
 # [0.0.0-alpha.8](https://github.com/KYVENetwork/smartweave/compare/@kyve/smartweave@0.0.0-alpha.7...@kyve/smartweave@0.0.0-alpha.8) (2021-06-09)
 
 **Note:** Version bump only for package @kyve/smartweave

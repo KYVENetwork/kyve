@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.11](https://github.com/KYVENetwork/logic/compare/@kyve/core@0.0.0-alpha.10...@kyve/core@0.0.0-alpha.11) (2021-07-05)
+
+
+### Bug Fixes
+
+* added try/catch to data retrieval ([ea33f69](https://github.com/KYVENetwork/logic/commit/ea33f697b4bc5d83add8c6197a3d4b6e166dbae3))
+* auto stake ([2490dfb](https://github.com/KYVENetwork/logic/commit/2490dfbc166a51a580272879f13d2503a4fbf6f4))
+* changed log format ([29f34eb](https://github.com/KYVENetwork/logic/commit/29f34eb1f27b1409295fb34d557321bbee38a9c5))
+* changed log format ([960ac2b](https://github.com/KYVENetwork/logic/commit/960ac2b9b3676091f5cdd9fd5e190f6f91c0e0bd))
+* make sure everything builds ([994181b](https://github.com/KYVENetwork/logic/commit/994181bbbc4b242c59545b29f7234f8bc0b822e4))
+* updated Arweave client and installed fixed SmartWeave version ([52ba079](https://github.com/KYVENetwork/logic/commit/52ba0796df3deceeab176e22e86face0b05bca6f))
+
+
+### Features
+
+* improve logs ([c50ee32](https://github.com/KYVENetwork/logic/commit/c50ee32a12752979e0566141ac2937284409d66b))
+* test FCP ([6b93d85](https://github.com/KYVENetwork/logic/commit/6b93d8506fba2454a78e9e9e81111d17aca3dddb))
+* update node for new contract logic ([007766d](https://github.com/KYVENetwork/logic/commit/007766dd03d61c4e1526cb74e6c4129354fb909e))
+* **wip:** e2e tests for SmartWeave integration ([858aa72](https://github.com/KYVENetwork/logic/commit/858aa72e1a32455bc0bf43081ac0bc13d92dfcb2))
+* **wip:** update core library for new infra ([e46901b](https://github.com/KYVENetwork/logic/commit/e46901b197dc9be46a9c6181661118f56d29f909))
+
+
+
+
+
 # [0.0.0-alpha.10](https://github.com/KYVENetwork/logic/compare/@kyve/core@0.0.0-alpha.9...@kyve/core@0.0.0-alpha.10) (2021-06-09)
 
 

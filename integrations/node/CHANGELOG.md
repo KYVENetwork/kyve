@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.14](https://github.com/KYVENetwork/kyve/compare/@kyve/node@0.0.0-alpha.13...@kyve/node@0.0.0-alpha.14) (2021-07-05)
+
+
+### Bug Fixes
+
+* make sure everything builds ([994181b](https://github.com/KYVENetwork/kyve/commit/994181bbbc4b242c59545b29f7234f8bc0b822e4))
+* updated Arweave client and installed fixed SmartWeave version ([52ba079](https://github.com/KYVENetwork/kyve/commit/52ba0796df3deceeab176e22e86face0b05bca6f))
+
+
+### Features
+
+* added `runtime` support ([3155067](https://github.com/KYVENetwork/kyve/commit/3155067d25600c15c2427ec4a760fd4a8274d288))
+
+
+
+
+
 # [0.0.0-alpha.13](https://github.com/KYVENetwork/kyve/compare/@kyve/node@0.0.0-alpha.12...@kyve/node@0.0.0-alpha.13) (2021-06-09)
 
 **Note:** Version bump only for package @kyve/node
