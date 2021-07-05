@@ -31,7 +31,7 @@ export default class Log {
     const formattedLevel = this.getFormattedLevel(level);
     const formattedTiemstamp = this.getFormattedTimestamp();
 
-    return `[${formattedName}] ${formattedLevel} ${message} - ${formattedTiemstamp}\n`;
+    return `${formattedTiemstamp} ${formattedLevel} [${formattedName}]:  ${message}`;
   }
 
   private getFormattedName() {

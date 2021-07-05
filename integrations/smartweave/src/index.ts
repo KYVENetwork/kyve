@@ -51,7 +51,7 @@ export const upload = async (
         uploader.next({
           data: res,
           tags: [
-            { name: "Contract", value: id },
+            { name: "Target-Contract", value: id },
             { name: "Block", value: currentHeight },
           ],
         });
@@ -76,24 +76,25 @@ export const validate = async (
 ) => {
   listener.subscribe(async (res: ListenFunctionReturn) => {
     const contract = res.transaction.tags.find(
-      (tag: GQLTagInterface) => tag.name === "Contract"
+      (tag: GQLTagInterface) => tag.name === "Target-Contract"
     )?.value!;
-    const block = parseFloat(
+
+    const block = parseInt(
       res.transaction.tags.find((tag: GQLTagInterface) => tag.name === "Block")
         ?.value!
     );
 
+    if (!(contract && block)) {
+      console.warn("Error while parsing tags. Skipping...");
+      return;
+    }
+
     const state = await readContract(client, contract, block, true);
     const localHash = hash(state);
 
-    try {
-      const data = await getData(res.id);
-      const compareHash = hash(JSON.parse(data.toString()));
+    const compareHash = hash(JSON.parse(res.data));
 
-      validator.next({ valid: localHash === compareHash, id: res.id });
-    } catch (e) {
-      console.warn("Error while data from:", res.id);
-    }
+    validator.next({ valid: localHash === compareHash, id: res.id });
   });
 };
 
