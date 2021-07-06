@@ -8,11 +8,11 @@ type TransactionID = string;
 type TransactionData = string;
 
 export class Query extends ArDB {
-  private poolID: number;
+  private poolID: string;
   public deRef: boolean;
 
   constructor(
-    poolID: number,
+    poolID: string,
     deRef: boolean = true,
     arweave: Arweave = arweaveClient
   ) {
@@ -26,7 +26,7 @@ export class Query extends ArDB {
 
   async find() {
     super.tag("Application", APP_NAME);
-    super.tag("Pool", this.poolID.toString());
+    super.tag("Pool", this.poolID);
     const res = (await super.find()) as GQLEdgeTransactionInterface[];
     const ret: any[] = [];
 

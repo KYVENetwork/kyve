@@ -10,7 +10,7 @@ export const { assert, expect } = chai;
 
 describe("Test Query", () => {
   describe("With DeRef", () => {
-    const query = new Query(0);
+    const query = new Query("l6S4oMyzw_rggjt4yt4LrnRmggHQ2CdM1hna2MK4o_c");
 
     it("Loads data", async () => {
       const data: any[] = await query.find();
@@ -27,7 +27,7 @@ describe("Test Query", () => {
   }).timeout(60 * 1000);
 
   describe("Without DeRef", () => {
-    const query = new Query(0, false);
+    const query = new Query("l6S4oMyzw_rggjt4yt4LrnRmggHQ2CdM1hna2MK4o_c", false);
 
     it("Loads data", async () => {
       const limit = 10;
