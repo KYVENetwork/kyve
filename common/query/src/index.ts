@@ -3,6 +3,7 @@ import { APP_NAME, getData } from "@kyve/core";
 import { arweaveClient } from "@kyve/core/dist/extensions";
 import { GQLEdgeTransactionInterface } from "ardb/lib/faces/gql";
 import Arweave from "arweave";
+export { readContract } from "./smartweave"
 
 type TransactionID = string;
 type TransactionData = string;
