@@ -27,7 +27,10 @@ describe("Test Query", () => {
   }).timeout(60 * 1000);
 
   describe("Without DeRef", () => {
-    const query = new Query("l6S4oMyzw_rggjt4yt4LrnRmggHQ2CdM1hna2MK4o_c", false);
+    const query = new Query(
+      "l6S4oMyzw_rggjt4yt4LrnRmggHQ2CdM1hna2MK4o_c",
+      false
+    );
 
     it("Loads data", async () => {
       const limit = 10;
