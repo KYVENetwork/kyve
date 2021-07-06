@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.10](https://github.com/KYVENetwork/smartweave/compare/@kyve/smartweave@0.0.0-alpha.9...@kyve/smartweave@0.0.0-alpha.10) (2021-07-06)
+
+
+### Bug Fixes
+
+* added refetchInterval and improved logs ([acd53b3](https://github.com/KYVENetwork/smartweave/commit/acd53b38a15a96eab79f38de3dfa99874a6abf10))
+
+
+
+
+
 # [0.0.0-alpha.9](https://github.com/KYVENetwork/smartweave/compare/@kyve/smartweave@0.0.0-alpha.8...@kyve/smartweave@0.0.0-alpha.9) (2021-07-05)
 
 

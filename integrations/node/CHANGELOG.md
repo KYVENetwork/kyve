@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.15](https://github.com/KYVENetwork/kyve/compare/@kyve/node@0.0.0-alpha.14...@kyve/node@0.0.0-alpha.15) (2021-07-06)
+
+
+### Features
+
+* enriching sentry by adding optional user context ([f9680d4](https://github.com/KYVENetwork/kyve/commit/f9680d467cce07bf703b9235fd671e9cdc33fe04))
+
+
+
+
+
 # [0.0.0-alpha.14](https://github.com/KYVENetwork/kyve/compare/@kyve/node@0.0.0-alpha.13...@kyve/node@0.0.0-alpha.14) (2021-07-05)
 
 

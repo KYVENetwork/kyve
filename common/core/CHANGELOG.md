@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.12](https://github.com/KYVENetwork/logic/compare/@kyve/core@0.0.0-alpha.11...@kyve/core@0.0.0-alpha.12) (2021-07-06)
+
+
+### Bug Fixes
+
+* added refetchInterval and improved logs ([acd53b3](https://github.com/KYVENetwork/logic/commit/acd53b38a15a96eab79f38de3dfa99874a6abf10))
+
+
+### Features
+
+* enriching sentry by adding optional user context ([f9680d4](https://github.com/KYVENetwork/logic/commit/f9680d467cce07bf703b9235fd671e9cdc33fe04))
+
+
+
+
+
 # [0.0.0-alpha.11](https://github.com/KYVENetwork/logic/compare/@kyve/core@0.0.0-alpha.10...@kyve/core@0.0.0-alpha.11) (2021-07-05)
 
 

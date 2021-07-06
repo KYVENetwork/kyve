@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.15](https://github.com/KYVENetwork/logic/compare/@kyve/query@0.0.0-alpha.14...@kyve/query@0.0.0-alpha.15) (2021-07-06)
+
+
+### Bug Fixes
+
+* migrate poolID from `number` to `string` ([1694cdb](https://github.com/KYVENetwork/logic/commit/1694cdbd8521a1a992219aef555f19b116106a98))
+* migrate poolID from `number` to `string` ([09c3b4c](https://github.com/KYVENetwork/logic/commit/09c3b4cd413a8f276b7c2fc5f9efb282bc3876c7))
+* only adding mined transactions to latest state ([e502801](https://github.com/KYVENetwork/logic/commit/e50280148ef8eb21c8ca7f689797e4fd9f10710d))
+
+
+### Features
+
+* added custom `readContract` which uses KYVE to get the last state ([8dfd915](https://github.com/KYVENetwork/logic/commit/8dfd915efdf2a87eef0023252d7ac16c6665f3d9))
+
+
+
+
+
 # [0.0.0-alpha.14](https://github.com/KYVENetwork/logic/compare/@kyve/query@0.0.0-alpha.13...@kyve/query@0.0.0-alpha.14) (2021-07-05)
 
 **Note:** Version bump only for package @kyve/query
