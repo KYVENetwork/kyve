@@ -16,7 +16,7 @@
     "test": "yarn run build"
   },
   "dependencies": {
-    "@kyve/contract": "0.1.0-alpha.4",
+    "@kyve/contract-pool": "1.0.0-alpha.0",
     "arweave": "^1.10.13",
     "smartweave": "KYVENetwork/SmartWeave#release"
   }

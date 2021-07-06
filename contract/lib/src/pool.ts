@@ -1,7 +1,6 @@
 import {
   CreditInterface,
   StateInterface,
-  SubmitInterface,
 } from "@kyve/contract-pool/dist/faces";
 import Arweave from "arweave";
 import { JWKInterface } from "arweave/node/lib/wallet";
@@ -15,9 +14,9 @@ export class Pool {
   public state?: StateInterface;
   public id?: string;
 
-  private src = "-GRxcV2BZT14lnUmoPyRE24KLU-ugN5afVUa-HUhgas";
-  private governance = "cpXtKvM0e6cqAgjv-BCfanWQmYGupECt1MxRk1N9Mjk";
-  private treasury = "shwdmXTFCaMq8WaCGg79oCF5GCj0bpb5tNA62cluEQY";
+  private src = "MjrjR6qCFcld0VO83tt3NcpZs2FIuLscvo7ya64afbY";
+  private governance = "C_1uo08qRuQAeDi9Y1I8fkaWYUC9IWkOrKDNe9EphJo";
+  private treasury = "RCH2pVk8m-IAuwg36mwxUt8Em_CnpWjSLpiAcCvZJMA";
 
   constructor(arweave: Arweave, wallet: Keyfile, id?: string) {
     this.client = arweave;
