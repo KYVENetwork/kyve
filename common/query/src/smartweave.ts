@@ -10,7 +10,7 @@ import { GQLEdgeTransactionInterface } from "ardb/lib/faces/gql";
 import { loadContract } from "smartweave";
 
 export const readContract = async (
-  poolID: number,
+  poolID: string,
   contractID: string,
   returnValidity: boolean,
   arweave: Arweave = arweaveClient
@@ -19,7 +19,7 @@ export const readContract = async (
   const query = new Query(poolID, false, arweave);
 
   const result = await query
-    .tag("Contract", contractID)
+    .tag("Target-Contract", contractID)
     .only(["id", "tags", "tags.name", "tags.value"])
     .limit(1)
     .find();
@@ -57,10 +57,8 @@ export const readContract = async (
     ])
     .findAll()) as GQLEdgeTransactionInterface[];
 
-  console.log(missingTXs);
-
   // from https://github.com/ArweaveTeam/SmartWeave/blob/master/src/contract-read.ts#L56
-  console.log(`Replaying ${missingTXs.length} confirmed interactions`);
+  // TODO: FIX ONCE https://github.com/ArweaveTeam/SmartWeave/pull/82 is merged
 
   await sortTransactions(arweave, missingTXs);
 

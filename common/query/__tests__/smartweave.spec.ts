@@ -11,8 +11,8 @@ describe("Test SmartWeave", () => {
   describe("Getting the latest state", async () => {
     it("Loads the last contract state", async () => {
       const data = await readContract(
-        4,
-        "cETTyJQYxJLVQ6nC3VxzsZf1x2-6TW2LFkGZa91gUWc",
+        "l6S4oMyzw_rggjt4yt4LrnRmggHQ2CdM1hna2MK4o_c",
+        "OrO8n453N6bx921wtsEs-0OCImBLCItNU5oSbFKlFuU",
         false
       );
     }).timeout(60 * 1000);
