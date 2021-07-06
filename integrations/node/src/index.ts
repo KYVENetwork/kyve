@@ -40,6 +40,9 @@ if (process.env.SEND_STATISTICS) {
     // We recommend adjusting this value in production
     tracesSampleRate: 1.0,
   });
+
+  // enriching exceptions with user context
+  Sentry.setUser({ email: process.env.MAINTAINER, username: process.env.NAME });
 }
 
 const client = new Arweave({
@@ -98,5 +101,12 @@ if (process.env.WALLET) {
     }
   }
 
-  instances.map((node) => node.run().catch((err) => console.log(err)));
+  instances.map((node) =>
+    node.run().catch((err) => {
+      if (process.env.SEND_STATISTICS) {
+        Sentry.captureException(err);
+      }
+      console.log(err);
+    })
+  );
 })();
