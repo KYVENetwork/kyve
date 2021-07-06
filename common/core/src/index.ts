@@ -2,6 +2,7 @@ import Arweave from "arweave";
 import ArDB from "ardb";
 import {
   ListenFunctionReturn,
+  Options,
   UploadFunction,
   UploadFunctionReturn,
   ValidateFunction,
@@ -31,6 +32,8 @@ export default class KYVE {
   private uploaderBuffer: UploadFunctionReturn[] = [];
   private validatorBuffer: ValidateFunctionReturn[] = [];
 
+  private readonly refetchInterval: number = 5 * 60 * 1000;
+
   public poolID: string;
   public stake: number;
 
@@ -39,12 +42,7 @@ export default class KYVE {
   protected dryRun: boolean = false;
 
   constructor(
-    options: {
-      pool: string;
-      stake: number;
-      jwk: JWKInterface;
-      arweave?: Arweave;
-    },
+    options: Options,
     uploadFunc: UploadFunction,
     validateFunc: ValidateFunction
   ) {
@@ -57,6 +55,9 @@ export default class KYVE {
 
     if (options.arweave) {
       this.arweave = options.arweave;
+    }
+    if (options.refetchInterval) {
+      this.refetchInterval = options.refetchInterval;
     }
 
     this.ardb = new ArDB(this.arweave);
@@ -87,24 +88,24 @@ export default class KYVE {
     } else if (this.stake > currentStake) {
       const id = await this.contract.stake(diff);
       log.info(
-        `Staking ${diff} $KYVE in pool ${this.poolID}.\n Transaction: ${id}`
+        `Staking ${diff} $KYVE in pool ${this.poolID}. Transaction: ${id}`
       );
       await untilMined(id, this.arweave);
       log.info("Successfully staked tokens");
     } else {
       const id = await this.contract.unstake(diff);
       log.info(
-        `Unstaking ${diff} $KYVE in pool ${this.poolID}.\n Transaction: ${id}`
+        `Unstaking ${diff} $KYVE in pool ${this.poolID}. Transaction: ${id}`
       );
       await untilMined(id, this.arweave);
       log.info("Successfully unstaked tokens");
     }
 
     if (address === state.settings.uploader) {
-      log.info("\nRunning as an uploader ...");
+      log.info("Running as an uploader ...");
       this.uploader();
     } else {
-      log.info("\nRunning as a validator ...");
+      log.info("Running as a validator ...");
       this.validator();
     }
   }
@@ -149,12 +150,13 @@ export default class KYVE {
                 block: node.block.height,
               });
             } catch (e) {
-              log.warn(`Error while fetching data.\n  Transaction: ${id}`);
+              log.warn(`Error while fetching data for transaction: ${id}`);
             }
           }
         }
 
-        setTimeout(main, 5 * 60 * 1000, address);
+        // refetch every x ms
+        setTimeout(main, this.refetchInterval, address);
       };
 
       this.arweave.wallets.getAddress(this.keyfile).then((res) => main(res));
@@ -204,9 +206,9 @@ export default class KYVE {
       await this.arweave.transactions.post(transaction);
 
       log.info(
-        `Sent a transaction.\n  txID = ${
+        `Sent a transaction: ${
           transaction.id
-        }\n  cost = ${this.arweave.ar.winstonToAr(transaction.reward)} AR`
+        }. Cost: ${this.arweave.ar.winstonToAr(transaction.reward)} AR`
       );
     } else {
       log.info(`Buffer size is now: ${this.uploaderBuffer.length}`);
@@ -248,9 +250,9 @@ export default class KYVE {
         await this.arweave.transactions.post(transaction);
 
         log.info(
-          `Sent a bundle with ${items.length} items.\n  txID = ${
+          `Sent a bundle with ${items.length} items: ${
             transaction.id
-          }\n  cost = ${this.arweave.ar.winstonToAr(transaction.reward)} AR`
+          }. Cost: ${this.arweave.ar.winstonToAr(transaction.reward)} AR`
         );
       }
     }
@@ -298,9 +300,9 @@ export default class KYVE {
       await this.arweave.transactions.post(transaction);
 
       log.info(
-        `Sent a bundle with ${buffer.length} items.\n  txID = ${
+        `Sent a bundle with ${buffer.length} items: ${
           transaction.id
-        }\n  cost = ${this.arweave.ar.winstonToAr(transaction.reward)} AR`
+        }. Cost: ${this.arweave.ar.winstonToAr(transaction.reward)} AR`
       );
     }
   }
