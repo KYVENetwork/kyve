@@ -1,5 +1,7 @@
 import { Subscriber, Observable } from "rxjs";
 import { GQLTransactionInterface } from "ardb/lib/faces/gql";
+import { JWKInterface } from "arweave/node/lib/wallet";
+import Arweave from "arweave";
 
 // Types for the upload function
 
@@ -38,3 +40,12 @@ export type ValidateFunction = (
   subscriber: ValidateFunctionSubscriber,
   config: any
 ) => void;
+
+// Options in constructor
+export interface Options {
+  pool: string;
+  stake: number;
+  jwk: JWKInterface;
+  arweave?: Arweave;
+  refetchInterval?: number;
+}

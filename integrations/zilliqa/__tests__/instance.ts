@@ -2,7 +2,7 @@ import TestInstance from "@kyve/core/dist/testing";
 import { upload, validate } from "../src";
 
 const pool = {
-  id: 0,
+  id: "abc",
   pool: {
     name: "Zilliqa TestPool",
     architecture: "Zilliqa",

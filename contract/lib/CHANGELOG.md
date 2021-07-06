@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.8](https://github.com/KYVENetwork/kyve/compare/@kyve/contract-lib@0.1.0-alpha.7...@kyve/contract-lib@0.1.0-alpha.8) (2021-07-05)
+
+
+### Bug Fixes
+
+* auto stake ([2490dfb](https://github.com/KYVENetwork/kyve/commit/2490dfbc166a51a580272879f13d2503a4fbf6f4))
+* updated Arweave client and installed fixed SmartWeave version ([52ba079](https://github.com/KYVENetwork/kyve/commit/52ba0796df3deceeab176e22e86face0b05bca6f))
+
+
+### Features
+
+* deploy contracts ([e956161](https://github.com/KYVENetwork/kyve/commit/e956161197cee0f2db0d3e9610529ffcdc27a656))
+* **wip:** update core library for new infra ([e46901b](https://github.com/KYVENetwork/kyve/commit/e46901b197dc9be46a9c6181661118f56d29f909))
+
+
+
+
+
 # [0.1.0-alpha.7](https://github.com/KYVENetwork/kyve/compare/@kyve/contract-lib@0.1.0-alpha.6...@kyve/contract-lib@0.1.0-alpha.7) (2021-05-11)
 
 

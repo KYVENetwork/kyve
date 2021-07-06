@@ -5,3 +5,5 @@ node_modules
 *config*.json
 .idea
 /deploy-on-heroku.sh
+/createPool.js
+/transfer.js
