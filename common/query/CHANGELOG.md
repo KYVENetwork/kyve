@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.16](https://github.com/KYVENetwork/logic/compare/@kyve/query@0.0.0-alpha.15...@kyve/query@0.0.0-alpha.16) (2021-07-06)
+
+
+### Bug Fixes
+
+* fixed import ([636c70c](https://github.com/KYVENetwork/logic/commit/636c70c185d907015066d610e0bb5751215ad3fa))
+
+
+
+
+
 # [0.0.0-alpha.15](https://github.com/KYVENetwork/logic/compare/@kyve/query@0.0.0-alpha.14...@kyve/query@0.0.0-alpha.15) (2021-07-06)
 
 
