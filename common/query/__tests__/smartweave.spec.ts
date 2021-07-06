@@ -1,11 +1,11 @@
-import {readContract} from "../src";
+import { readContract } from "../src";
 
 const chai = require("chai");
 const chaiAsPromised = require("chai-as-promised");
 
 chai.use(chaiAsPromised);
 
-export const {assert, expect} = chai;
+export const { assert, expect } = chai;
 
 describe("Test SmartWeave", () => {
   describe("Getting the latest state", async () => {
