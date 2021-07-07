@@ -65,9 +65,30 @@ export class Pool {
     );
   }
 
+  async withdraw(qty: number): Promise<string> {
+    const input: CreditInterface = {
+      function: "withdraw",
+      qty,
+    };
+
+    return await this.interactWithPool(input, [
+      { name: "Contract", value: this.governance },
+      { name: "Input", value: JSON.stringify({ function: "readOutbox" }) },
+    ]);
+  }
+
   async fund(qty: number): Promise<string> {
     const input: CreditInterface = {
       function: "fund",
+      qty,
+    };
+
+    return await this.interactWithPool(input);
+  }
+
+  async unfund(qty: number): Promise<string> {
+    const input: CreditInterface = {
+      function: "unfund",
       qty,
     };
 
