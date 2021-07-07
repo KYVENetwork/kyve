@@ -1,12 +1,12 @@
 import {
-  UploadFunctionSubscriber,
   ListenFunctionObservable,
-  ValidateFunctionSubscriber,
   ListenFunctionReturn,
+  UploadFunctionSubscriber,
+  ValidateFunctionSubscriber,
 } from "@kyve/core/dist/faces";
 import Web3 from "web3";
 import hash from "object-hash";
-import KYVE, { getData } from "@kyve/core";
+import KYVE from "@kyve/core";
 import { JWKInterface } from "arweave/node/lib/wallet";
 
 const upload = async (uploader: UploadFunctionSubscriber, config: any) => {
