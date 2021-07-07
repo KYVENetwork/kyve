@@ -73,7 +73,10 @@ export class Pool {
 
     return await this.interactWithPool(input, [
       { name: "Contract", value: this.governance },
-      { name: "Input", value: JSON.stringify({ function: "readOutbox" }) },
+      {
+        name: "Input",
+        value: JSON.stringify({ function: "readOutbox", contract: this.id! }),
+      },
     ]);
   }
 
