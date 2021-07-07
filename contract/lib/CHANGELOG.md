@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.10](https://github.com/KYVENetwork/kyve/compare/@kyve/contract-lib@0.1.0-alpha.9...@kyve/contract-lib@0.1.0-alpha.10) (2021-07-07)
+
+
+### Bug Fixes
+
+* correctly call read outbox function ([939c257](https://github.com/KYVENetwork/kyve/commit/939c257be317456da9727a61f64fb1b142c7a3bb))
+
+
+### Features
+
+* add missing pool interaction functions ([e3619ad](https://github.com/KYVENetwork/kyve/commit/e3619ad28684771745be3db7ac521557a5bf676f))
+
+
+
+
+
 # [0.1.0-alpha.9](https://github.com/KYVENetwork/kyve/compare/@kyve/contract-lib@0.1.0-alpha.8...@kyve/contract-lib@0.1.0-alpha.9) (2021-07-06)
 
 **Note:** Version bump only for package @kyve/contract-lib
