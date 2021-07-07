@@ -40,13 +40,11 @@ const validate = async (
   );
 
   listener.subscribe(async (res: ListenFunctionReturn) => {
-    const index = res.transaction.tags.findIndex(
-      (tag) => tag.name === "Block" && tag.value === res.data.hash
-    );
-    const height = res.transaction.tags[index + 1].value;
+    const blockHash = res.transaction.tags.find((tag) => tag.name === "Block")
+      ?.value!;
 
-    const block = await client.eth.getBlock(height, true);
-    const localHash = hash(block);
+    const block = await client.eth.getBlock(blockHash, true);
+    const localHash = hash(JSON.stringify(block));
     const compareHash = hash(res.data);
 
     validator.next({ valid: localHash === compareHash, id: res.id });
