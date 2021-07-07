@@ -40,7 +40,7 @@ export class Pool {
         },
       })
     );
-    return this.id;
+    return this.id!;
   }
 
   async getState(): Promise<StateInterface> {
