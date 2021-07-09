@@ -43,9 +43,22 @@ export class Pool {
     return this.id!;
   }
 
-  async getState(): Promise<StateInterface> {
+  async getState(useCache: boolean = true): Promise<StateInterface> {
     if (!this.id) throw new Error("No pool ID specified.");
-    const res = await readContract(this.client, this.id);
+
+    let res: StateInterface;
+
+    if (useCache) {
+      const response = await fetch(`https://kyve.network/api/pool?id=${this.id}`)
+      if (response.ok) {
+        res = await response.json()
+      } else {
+        throw new Error(`Couldn't read state for ${this.id} from cache.`)
+      }
+    } else {
+      res = await readContract(this.client, this.id);
+    }
+
     this.state = res;
 
     return res;
