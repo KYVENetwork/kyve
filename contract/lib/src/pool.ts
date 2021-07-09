@@ -5,6 +5,7 @@ import {
 import Arweave from "arweave";
 import { JWKInterface } from "arweave/node/lib/wallet";
 import { createContractFromTx, interactWrite, readContract } from "smartweave";
+import { fetch } from "cross-fetch";
 
 type Keyfile = JWKInterface | "use_wallet";
 
