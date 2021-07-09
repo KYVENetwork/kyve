@@ -49,11 +49,13 @@ export class Pool {
     let res: StateInterface;
 
     if (useCache) {
-      const response = await fetch(`https://kyve.network/api/pool?id=${this.id}`)
+      const response = await fetch(
+        `https://kyve.network/api/pool?id=${this.id}`
+      );
       if (response.ok) {
-        res = await response.json()
+        res = await response.json();
       } else {
-        throw new Error(`Couldn't read state for ${this.id} from cache.`)
+        throw new Error(`Couldn't read state for ${this.id} from cache.`);
       }
     } else {
       res = await readContract(this.client, this.id);
