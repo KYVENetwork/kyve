@@ -13,18 +13,22 @@ import hash from "object-hash";
 import { Observable } from "rxjs";
 import { arweaveBundles as bundles, arweaveClient } from "./extensions";
 
-import { Pool } from "@kyve/contract-lib";
+import { Pool, Governance } from "@kyve/contract-lib";
 import { GQLEdgeTransactionInterface } from "ardb/lib/faces/gql";
-import { untilMined } from "./helper";
+import { deposit, untilMined } from "./helper";
 
 import Log from "./logger";
+import { create } from "arweave-bundles";
 
 export const APP_NAME = "KYVE - DEV";
 
 export default class KYVE {
   public arweave: Arweave = arweaveClient;
   public ardb: ArDB;
-  public contract: Pool;
+
+  public pool: Pool;
+  public governance: Governance;
+
   public APP_NAME: string = APP_NAME;
 
   public uploadFunc: UploadFunction;
@@ -61,12 +65,13 @@ export default class KYVE {
     }
 
     this.ardb = new ArDB(this.arweave);
-    this.contract = new Pool(this.arweave, this.keyfile, options.pool);
+    this.pool = new Pool(this.arweave, this.keyfile, options.pool);
+    this.governance = new Governance(this.arweave, this.keyfile);
   }
 
   public async run() {
     const log = new Log("core");
-    const state = await this.contract.getState();
+    const state = await this.pool.getState();
 
     // shut down if no uploader is selected
     if (!state.settings.uploader) {
@@ -79,33 +84,40 @@ export default class KYVE {
 
     // check if node has deposited tokens
     if (!Object.keys(state.credit).includes(address)) {
-      throw new Error("Please deposit tokens into the pool first.");
+      await deposit(
+        this.stake,
+        address,
+        this.governance,
+        this.pool,
+        this.arweave
+      );
     }
 
-    // check if node has enough stake
     const currentStake = state.credit[address].stake;
     const diff = Math.abs(this.stake - currentStake);
 
     if (this.stake === currentStake) {
       log.info(
-        `Already staked with ${this.stake} $KYVE in pool ${this.poolID}.`
+        `Already staked with ${this.stake} $KYVE in pool ${this.pool.id}.`
       );
     } else if (this.stake > currentStake) {
-      // check if enough tokens got deposited
+
+      // if node has not enough tokens to stake, deposit missing ones
       if (state.credit[address].amount < diff) {
-        throw new Error("Not enough tokens deposited.");
+        await deposit(diff, address, this.governance, this.pool, this.arweave);
       }
 
-      const id = await this.contract.stake(diff);
+      // stake missing tokens
+      const id = await this.pool.stake(diff);
       log.info(
-        `Staking ${diff} $KYVE in pool ${this.poolID}. Transaction: ${id}`
+        `Staking ${diff} $KYVE in pool ${this.pool.id}. Transaction: ${id}`
       );
       await untilMined(id, this.arweave);
       log.info("Successfully staked tokens");
     } else {
-      const id = await this.contract.unstake(diff);
+      const id = await this.pool.unstake(diff);
       log.info(
-        `Unstaking ${diff} $KYVE in pool ${this.poolID}. Transaction: ${id}`
+        `Unstaking ${diff} $KYVE in pool ${this.pool.id}. Transaction: ${id}`
       );
       await untilMined(id, this.arweave);
       log.info("Successfully unstaked tokens");
@@ -127,7 +139,7 @@ export default class KYVE {
       let latestHash = "";
 
       const main = async (address: string) => {
-        const state = await this.contract.getState();
+        const state = await this.pool.getState();
         const newHash = hash(state);
 
         if (newHash === latestHash) {
@@ -175,7 +187,7 @@ export default class KYVE {
 
   protected uploader(dryRun: boolean = false) {
     const node = new Observable<UploadFunctionReturn>((subscriber) =>
-      this.uploadFunc(subscriber, this.contract.state!.config)
+      this.uploadFunc(subscriber, this.pool.state!.config)
     );
 
     node.subscribe((data) => {
@@ -186,7 +198,7 @@ export default class KYVE {
 
   private async bundleAndUpload() {
     const log = new Log("uploader");
-    const bundleSize = this.contract.state!.settings.bundleSize;
+    const bundleSize = this.pool.state!.settings.bundleSize;
 
     if (bundleSize === 1) {
       const buffer = this.uploaderBuffer;
@@ -201,10 +213,10 @@ export default class KYVE {
 
       const tags = [
         { name: "Application", value: APP_NAME },
-        { name: "Pool", value: this.poolID.toString() },
+        { name: "Pool", value: this.pool.id! },
         { name: "App-Name", value: "SmartWeaveAction" },
         { name: "App-Version", value: "0.3.0" },
-        { name: "Contract", value: this.poolID.toString() },
+        { name: "Contract", value: this.pool.id! },
         { name: "Input", value: JSON.stringify({ function: "register" }) },
         ...(buffer[0].tags || []),
       ];
@@ -253,7 +265,7 @@ export default class KYVE {
         transaction.addTag("Content-Type", "application/json");
         transaction.addTag("App-Name", "SmartWeaveAction");
         transaction.addTag("App-Version", "0.3.0");
-        transaction.addTag("Contract", this.poolID.toString());
+        transaction.addTag("Contract", this.pool.id!);
         transaction.addTag("Input", JSON.stringify({ function: "register" }));
 
         await this.arweave.transactions.sign(transaction, this.keyfile);
@@ -270,11 +282,7 @@ export default class KYVE {
 
   protected validator() {
     const node = new Observable<ValidateFunctionReturn>((subscriber) =>
-      this.validateFunc(
-        this.listener(),
-        subscriber,
-        this.contract.state!.config
-      )
+      this.validateFunc(this.listener(), subscriber, this.pool.state!.config)
     );
 
     node.subscribe((res) => {
@@ -285,7 +293,7 @@ export default class KYVE {
 
   private async bundleAndSubmit() {
     const log = new Log("validator");
-    const bundleSize = this.contract.state!.settings.bundleSize;
+    const bundleSize = this.pool.state!.settings.bundleSize;
     log.info(`Buffer size is now: ${this.validatorBuffer.length}`);
 
     if (this.validatorBuffer.length >= bundleSize) {
@@ -303,7 +311,7 @@ export default class KYVE {
 
       transaction.addTag("App-Name", "SmartWeaveAction");
       transaction.addTag("App-Version", "0.3.0");
-      transaction.addTag("Contract", this.poolID);
+      transaction.addTag("Contract", this.pool.id!);
       transaction.addTag("Input", JSON.stringify({ function: "submit" }));
 
       await this.arweave.transactions.sign(transaction, this.keyfile);
