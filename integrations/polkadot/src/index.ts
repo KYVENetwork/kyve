@@ -17,7 +17,7 @@ export const upload = async (
   const provider = new WsProvider(config.endpoint);
   const api = await ApiPromise.create({ provider });
 
-  api.rpc.chain.subscribeNewHeads(async (header: Header) => {
+  api.rpc.chain.subscribeFinalizedHeads(async (header: Header) => {
     const { block, tags } = await parseBlockByNumber(
       header.number.toNumber(),
       api
