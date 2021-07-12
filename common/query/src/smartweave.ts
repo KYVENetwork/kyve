@@ -8,6 +8,10 @@ import { InteractionTx } from "smartweave/lib/interaction-tx";
 import { arrayToHex, formatTags } from "smartweave/lib/utils";
 import { GQLEdgeTransactionInterface } from "ardb/lib/faces/gql";
 import { loadContract } from "smartweave";
+import { JWKInterface } from "arweave/node/lib/wallet";
+import { BlockData } from "arweave/node/blocks";
+import Transaction from "arweave/node/lib/transaction";
+import { CreateTransactionInterface } from "arweave/node/common";
 
 export const readContract = async (
   poolID: string,
@@ -125,6 +129,44 @@ export const readContract = async (
   return returnValidity ? { state, validity } : state;
 };
 
+export async function interactRead(
+  poolID: string,
+  contractID: string,
+  input: any,
+  wallet: JWKInterface | "use_wallet" | undefined,
+  tags: { name: string; value: string }[] = [],
+  target: string = "",
+  winstonQty: string = "",
+  arweave: Arweave = arweaveClient
+): Promise<any> {
+  const latestState = await readContract(poolID, contractID, false, arweave);
+  const { handler, swGlobal } = await loadContract(arweave, contractID);
+  const from = wallet ? await arweave.wallets.getAddress(wallet) : "";
+
+  const interaction: ContractInteraction = {
+    input,
+    caller: from,
+  };
+
+  const tx = await createTx(
+    arweave,
+    wallet,
+    contractID,
+    input,
+    tags,
+    target,
+    winstonQty
+  );
+  const currentBlock: BlockData = await arweave.blocks.getCurrent();
+
+  // @ts-ignore
+  swGlobal._activeTx = createDummyTx(tx, from, currentBlock);
+
+  const result = await execute(handler, interaction, latestState);
+
+  return result.result;
+}
+
 // Sort the transactions based on the sort key generated in addSortKey()
 async function sortTransactions(arweave: Arweave, txInfos: any[]) {
   const addKeysFuncs = txInfos.map((tx) => addSortKey(arweave, tx));
@@ -147,4 +189,66 @@ async function addSortKey(arweave: Arweave, txInfo: any) {
   const blockHeight = `000000${node.block.height}`.slice(-12);
 
   txInfo.sortKey = `${blockHeight},${hashed}`;
+}
+
+async function createTx(
+  arweave: Arweave,
+  wallet: JWKInterface | "use_wallet" | undefined,
+  contractId: string,
+  input: any,
+  tags: { name: string; value: string }[],
+  target: string = "",
+  winstonQty: string = "0"
+): Promise<Transaction> {
+  const options: Partial<CreateTransactionInterface> = {
+    data: Math.random().toString().slice(-4),
+  };
+
+  if (target && target.length) {
+    options.target = target.toString();
+    if (winstonQty && +winstonQty > 0) {
+      options.quantity = winstonQty.toString();
+    }
+  }
+
+  const interactionTx = await arweave.createTransaction(options, wallet);
+
+  if (!input) {
+    throw new Error(`Input should be a truthy value: ${JSON.stringify(input)}`);
+  }
+
+  if (tags && tags.length) {
+    for (const tag of tags) {
+      interactionTx.addTag(tag.name.toString(), tag.value.toString());
+    }
+  }
+  interactionTx.addTag("App-Name", "SmartWeaveAction");
+  interactionTx.addTag("App-Version", "0.3.0");
+  interactionTx.addTag("Contract", contractId);
+  interactionTx.addTag("Input", JSON.stringify(input));
+
+  await arweave.transactions.sign(interactionTx, wallet);
+  return interactionTx;
+}
+
+function createDummyTx(tx: Transaction, from: string, block: BlockData) {
+  return {
+    id: tx.id,
+    owner: {
+      address: from,
+    },
+    recipient: tx.target,
+    tags: tx.tags,
+    fee: {
+      winston: tx.reward,
+    },
+    quantity: {
+      winston: tx.quantity,
+    },
+    block: {
+      id: block.indep_hash,
+      height: block.height,
+      timestamp: block.timestamp,
+    },
+  };
 }
