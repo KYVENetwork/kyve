@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.13](https://github.com/KYVENetwork/kyve/compare/@kyve/contract-lib@0.1.0-alpha.12...@kyve/contract-lib@0.1.0-alpha.13) (2021-07-12)
+
+
+### Features
+
+* added governance contract to contract-lib ([cf9a6d0](https://github.com/KYVENetwork/kyve/commit/cf9a6d033c19c6e1330551fcadbb135778d7a5d5))
+
+
+
+
+
 # [0.1.0-alpha.12](https://github.com/KYVENetwork/kyve/compare/@kyve/contract-lib@0.1.0-alpha.11...@kyve/contract-lib@0.1.0-alpha.12) (2021-07-09)
 
 

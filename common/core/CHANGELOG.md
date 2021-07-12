@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.16](https://github.com/KYVENetwork/logic/compare/@kyve/core@0.0.0-alpha.15...@kyve/core@0.0.0-alpha.16) (2021-07-12)
+
+
+### Bug Fixes
+
+* throw error when not enough tokens got deposited ([6af3388](https://github.com/KYVENetwork/logic/commit/6af33889768bf26cb367855d2d21518ba1f7c7a5))
+
+
+### Features
+
+* added auto depositing ([f603c56](https://github.com/KYVENetwork/logic/commit/f603c562b29050affcc6b54eadd948728379c0c6))
+* added auto depositing ([80a6437](https://github.com/KYVENetwork/logic/commit/80a643795e905f50f3984e7934e57a0ae01de61b))
+
+
+
+
+
 # [0.0.0-alpha.15](https://github.com/KYVENetwork/logic/compare/@kyve/core@0.0.0-alpha.14...@kyve/core@0.0.0-alpha.15) (2021-07-09)
 
 **Note:** Version bump only for package @kyve/core

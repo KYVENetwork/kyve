@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.19](https://github.com/KYVENetwork/kyve/compare/@kyve/node@0.0.0-alpha.18...@kyve/node@0.0.0-alpha.19) (2021-07-12)
+
+
+### Bug Fixes
+
+* improving error messages ([c7412f3](https://github.com/KYVENetwork/kyve/commit/c7412f3a381fe89e755a47c7e047af4ecada4dbf))
+* improving error messages [#2](https://github.com/KYVENetwork/kyve/issues/2) ([970be14](https://github.com/KYVENetwork/kyve/commit/970be14233a4f116162aca38518c4b6dd06043ca))
+
+
+
+
+
 # [0.0.0-alpha.18](https://github.com/KYVENetwork/kyve/compare/@kyve/node@0.0.0-alpha.17...@kyve/node@0.0.0-alpha.18) (2021-07-09)
 
 **Note:** Version bump only for package @kyve/node

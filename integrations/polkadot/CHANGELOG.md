@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.19](https://github.com/KYVENetwork/polkadot/compare/@kyve/polkadot@0.0.0-alpha.18...@kyve/polkadot@0.0.0-alpha.19) (2021-07-12)
+
+
+### Bug Fixes
+
+* using `subscribeFinalizedHeads` instead of `subscribeNewHeads`, closes [#6](https://github.com/KYVENetwork/polkadot/issues/6) ([8ad2182](https://github.com/KYVENetwork/polkadot/commit/8ad2182e62b1b1aea11ac83b7974460d1099a572))
+
+
+
+
+
 # [0.0.0-alpha.18](https://github.com/KYVENetwork/polkadot/compare/@kyve/polkadot@0.0.0-alpha.17...@kyve/polkadot@0.0.0-alpha.18) (2021-07-09)
 
 **Note:** Version bump only for package @kyve/polkadot
