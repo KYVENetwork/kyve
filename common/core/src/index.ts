@@ -77,6 +77,11 @@ export default class KYVE {
 
     const address = await this.arweave.wallets.getAddress(this.keyfile);
 
+    // check if node has deposited tokens
+    if (!Object.keys(state.credit).includes(address)){
+      throw new Error("Please deposit tokens into the pool first.")
+    }
+
     // check if node has enough stake
     const currentStake = state.credit[address].stake;
     const diff = Math.abs(this.stake - currentStake);
@@ -86,6 +91,12 @@ export default class KYVE {
         `Already staked with ${this.stake} $KYVE in pool ${this.poolID}.`
       );
     } else if (this.stake > currentStake) {
+
+      // check if enough tokens got deposited
+      if(state.credit[address].amount < diff){
+        throw new Error("Not enough tokens deposited.")
+      }
+
       const id = await this.contract.stake(diff);
       log.info(
         `Staking ${diff} $KYVE in pool ${this.poolID}. Transaction: ${id}`
@@ -308,8 +319,8 @@ export default class KYVE {
   }
 }
 
-export const getData = async (id: string) => {
-  const res = await arweaveClient.transactions.getData(id, {
+export const getData = async (id: string, arweave: Arweave = arweaveClient): Promise<string> => {
+  const res = await arweave.transactions.getData(id, {
     decode: true,
     string: true,
   });
