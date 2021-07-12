@@ -55,14 +55,14 @@ let config: any;
 if (process.env.CONFIG) {
   config = JSON.parse(fs.readFileSync(process.env.CONFIG).toString());
 } else {
-  throw new Error("No config provided.");
+  throw new Error("Can't parse or read config-file.");
 }
 
 let wallet: any;
 if (process.env.WALLET) {
   wallet = JSON.parse(fs.readFileSync(process.env.WALLET).toString());
 } else {
-  throw new Error("No keyfile provided.");
+  throw new Error("Can't parse or read keyfile.");
 }
 
 (async () => {
