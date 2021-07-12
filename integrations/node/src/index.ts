@@ -55,14 +55,18 @@ let config: any;
 if (process.env.CONFIG) {
   config = JSON.parse(fs.readFileSync(process.env.CONFIG).toString());
 } else {
-  throw new Error("Can't parse or read config-file.");
+  throw new Error(
+    "No CONFIG in .env file specified. Please check if your .env file is in the node directory."
+  );
 }
 
 let wallet: any;
 if (process.env.WALLET) {
   wallet = JSON.parse(fs.readFileSync(process.env.WALLET).toString());
 } else {
-  throw new Error("Can't parse or read keyfile.");
+  throw new Error(
+    "No WALLET in .env file specified. Please check if your .env file is in the node directory."
+  );
 }
 
 (async () => {
