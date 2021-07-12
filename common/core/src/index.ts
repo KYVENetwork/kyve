@@ -101,7 +101,6 @@ export default class KYVE {
         `Already staked with ${this.stake} $KYVE in pool ${this.pool.id}.`
       );
     } else if (this.stake > currentStake) {
-
       // if node has not enough tokens to stake, deposit missing ones
       if (state.credit[address].amount < diff) {
         await deposit(diff, address, this.governance, this.pool, this.arweave);

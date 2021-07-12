@@ -45,8 +45,10 @@ export const deposit = async (
     );
   }
   // deposit tokens into the pool
-  log.info(`Depositing ${amount} $KYVE into pool: ${pool.id!}`);
   const depositID = await pool.deposit(amount);
+  log.info(
+    `Depositing ${amount} $KYVE into pool: ${pool.id!}. Transaction ${depositID}`
+  );
   await untilMined(depositID, arweave);
   log.info("Successfully deposited tokens.");
 };
