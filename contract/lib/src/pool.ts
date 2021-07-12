@@ -6,6 +6,11 @@ import Arweave from "arweave";
 import { JWKInterface } from "arweave/node/lib/wallet";
 import { createContractFromTx, interactWrite, readContract } from "smartweave";
 import { fetch } from "cross-fetch";
+import {
+  GOVERNANCE_CONTRACT_ID,
+  POOL_SOURCE_CONTRACT_ID,
+  TREASURY_CONTRACT_ID,
+} from "./constants";
 
 type Keyfile = JWKInterface | "use_wallet";
 
@@ -15,9 +20,9 @@ export class Pool {
   public state?: StateInterface;
   public id?: string;
 
-  private src = "MjrjR6qCFcld0VO83tt3NcpZs2FIuLscvo7ya64afbY";
-  private governance = "C_1uo08qRuQAeDi9Y1I8fkaWYUC9IWkOrKDNe9EphJo";
-  private treasury = "RCH2pVk8m-IAuwg36mwxUt8Em_CnpWjSLpiAcCvZJMA";
+  private src = POOL_SOURCE_CONTRACT_ID;
+  private governance = GOVERNANCE_CONTRACT_ID;
+  private treasury = TREASURY_CONTRACT_ID;
 
   constructor(arweave: Arweave, wallet: Keyfile, id?: string) {
     this.client = arweave;
