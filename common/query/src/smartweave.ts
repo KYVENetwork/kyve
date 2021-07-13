@@ -129,7 +129,7 @@ export const readContract = async (
   return returnValidity ? { state, validity } : state;
 };
 
-export async function interactRead(
+export const interactRead = async (
   poolID: string,
   contractID: string,
   input: any,
@@ -138,7 +138,7 @@ export async function interactRead(
   target: string = "",
   winstonQty: string = "",
   arweave: Arweave = arweaveClient
-): Promise<any> {
+) => {
   const latestState = await readContract(poolID, contractID, false, arweave);
   const { handler, swGlobal } = await loadContract(arweave, contractID);
   const from = wallet ? await arweave.wallets.getAddress(wallet) : "";
@@ -165,7 +165,7 @@ export async function interactRead(
   const result = await execute(handler, interaction, latestState);
 
   return result.result;
-}
+};
 
 // Sort the transactions based on the sort key generated in addSortKey()
 async function sortTransactions(arweave: Arweave, txInfos: any[]) {
