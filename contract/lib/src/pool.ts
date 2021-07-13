@@ -75,7 +75,7 @@ export class Pool {
   async processOutbox(): Promise<string> {
     return await this.interactWithGovernance({
       function: "readOutbox",
-      contract: this.id!
+      contract: this.id!,
     });
   }
 
