@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.14](https://github.com/KYVENetwork/kyve/compare/@kyve/contract-lib@0.1.0-alpha.13...@kyve/contract-lib@0.1.0-alpha.14) (2021-07-13)
+
+
+### Features
+
+* add function to process outbox ([91c5283](https://github.com/KYVENetwork/kyve/commit/91c52832c71685a63c5e14cb9c20b8a7b7de6c8f))
+
+
+
+
+
 # [0.1.0-alpha.13](https://github.com/KYVENetwork/kyve/compare/@kyve/contract-lib@0.1.0-alpha.12...@kyve/contract-lib@0.1.0-alpha.13) (2021-07-12)
 
 

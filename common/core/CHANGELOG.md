@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.17](https://github.com/KYVENetwork/logic/compare/@kyve/core@0.0.0-alpha.16...@kyve/core@0.0.0-alpha.17) (2021-07-13)
+
+
+### Features
+
+* trigger outbox processing on submit ([398e733](https://github.com/KYVENetwork/logic/commit/398e73389017cd0e458e31858a653eb6007272dc))
+
+
+
+
+
 # [0.0.0-alpha.16](https://github.com/KYVENetwork/logic/compare/@kyve/core@0.0.0-alpha.15...@kyve/core@0.0.0-alpha.16) (2021-07-12)
 
 
