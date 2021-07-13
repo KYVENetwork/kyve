@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.21](https://github.com/KYVENetwork/logic/compare/@kyve/query@0.0.0-alpha.20...@kyve/query@0.0.0-alpha.21) (2021-07-13)
+
+
+### Features
+
+* add `interactRead` to query library ([4d899c6](https://github.com/KYVENetwork/logic/commit/4d899c6722a06be562e3ae32a8e672c07ffe74f2))
+
+
+
+
+
 # [0.0.0-alpha.20](https://github.com/KYVENetwork/logic/compare/@kyve/query@0.0.0-alpha.19...@kyve/query@0.0.0-alpha.20) (2021-07-12)
 
 **Note:** Version bump only for package @kyve/query
