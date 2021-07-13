@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.22](https://github.com/KYVENetwork/logic/compare/@kyve/query@0.0.0-alpha.21...@kyve/query@0.0.0-alpha.22) (2021-07-13)
+
+
+### Bug Fixes
+
+* correctly export `interactRead` function ([586a826](https://github.com/KYVENetwork/logic/commit/586a826ac3d11cbd12c0a331aaf64df8602750b9))
+
+
+
+
+
 # [0.0.0-alpha.21](https://github.com/KYVENetwork/logic/compare/@kyve/query@0.0.0-alpha.20...@kyve/query@0.0.0-alpha.21) (2021-07-13)
 
 
