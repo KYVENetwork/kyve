@@ -312,6 +312,8 @@ export default class KYVE {
       transaction.addTag("App-Version", "0.3.0");
       transaction.addTag("Contract", this.pool.id!);
       transaction.addTag("Input", JSON.stringify({ function: "submit" }));
+      transaction.addTag("Contract", this.governance.id);
+      transaction.addTag("Input", JSON.stringify({ function: "readOutbox", contract: this.pool.id! }));
 
       await this.arweave.transactions.sign(transaction, this.keyfile);
       await this.arweave.transactions.post(transaction);
