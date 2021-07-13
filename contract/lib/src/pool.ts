@@ -72,6 +72,13 @@ export class Pool {
     return res;
   }
 
+  async processOutbox(): Promise<string> {
+    return await this.interactWithGovernance({
+      function: "readOutbox",
+      contract: this.id!
+    });
+  }
+
   async deposit(qty: number): Promise<string> {
     return await this.interactWithGovernance(
       {
