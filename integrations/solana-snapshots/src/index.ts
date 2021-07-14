@@ -16,8 +16,7 @@ const upload = async (
 
   const main = async () => {
     // Fetch the latest slot height from the endpoint.
-    const info = await connection.getEpochInfo();
-    const currentHeight = info.absoluteSlot;
+    const currentHeight = await connection.getSlot();
 
     // Group the difference in slot heights into snapshot ranges.
     const ranges: { min: number; max: number }[] = [];
