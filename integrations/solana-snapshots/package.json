@@ -1,0 +1,28 @@
+{
+  "name": "@kyve/solana-snapshots",
+  "description": "The official KYVE node for Solana snapshots",
+  "version": "0.0.0-alpha",
+  "author": "John Letey <john@kyve.network>, Fabian Riewe <fabian@kyve.network>",
+  "repository": "https://github.com/KYVENetwork/kyve/tree/master/integrations/solana-snapshots",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "fmt": "prettier --write .",
+    "clean": "rimraf dist"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist"
+  ],
+  "main": "dist/index",
+  "types": "dist/index",
+  "dependencies": {
+    "@kyve/core": "0.0.0-alpha.17",
+    "@solana/web3.js": "^1.21.0"
+  },
+  "devDependencies": {
+    "prettier": "^2.3.2"
+  }
+}
