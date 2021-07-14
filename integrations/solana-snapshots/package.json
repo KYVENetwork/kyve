@@ -20,9 +20,12 @@
   "types": "dist/index",
   "dependencies": {
     "@kyve/core": "0.0.0-alpha.17",
-    "@solana/web3.js": "^1.21.0"
+    "@solana/web3.js": "^1.21.0",
+    "arweave": "^1.10.15",
+    "object-hash": "^2.2.0"
   },
   "devDependencies": {
+    "@types/object-hash": "^2.1.1",
     "prettier": "^2.3.2"
   }
 }
