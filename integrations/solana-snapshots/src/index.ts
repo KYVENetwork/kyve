@@ -5,10 +5,13 @@ import {
   UploadFunctionSubscriber,
   ValidateFunctionSubscriber,
 } from "@kyve/core/dist/faces";
+import Log from "@kyve/core/dist/logger";
 import { Query } from "@kyve/query";
 import { BlockResponse, Connection } from "@solana/web3.js";
 import { JWKInterface } from "arweave/node/lib/wallet";
 import hash from "object-hash";
+
+const logger = new Log("Solana Snapshots");
 
 const upload = async (
   uploader: UploadFunctionSubscriber,
@@ -20,6 +23,7 @@ const upload = async (
   const connection = new Connection(config.endpoint, {
     commitment: "finalized",
   });
+  logger.info(`Connection created.\n  endpoint = ${config.endpoint}`);
 
   // Fetch the slot height of the last snapshot.
   let height = 0;
@@ -37,9 +41,12 @@ const upload = async (
     if (index > -1) height = parseInt(tags[index].value) + 1;
   }
 
+  logger.info(`Starting at slot height: ${height}`);
+
   const main = async () => {
     // Fetch the latest slot height from the endpoint.
     const currentHeight = await connection.getSlot();
+    logger.info(`Current slot height: ${currentHeight}`);
 
     // Group the difference in slot heights into snapshot ranges.
     const ranges: { min: number; max: number }[] = [];
@@ -50,9 +57,13 @@ const upload = async (
       }
       i += config.size;
     }
+    logger.info(`Found ${ranges.length} snapshot range(s)`);
 
     // Iterate over the ranges and pull down block data.
     for (const range of ranges) {
+      logger.info(
+        `Pulling block data for snapshot range.\n  min = ${range.min}\n  max = ${range.max}`
+      );
       const data: BlockResponse[] = [];
 
       for (let i = range.min; i <= range.max; i++) {
