@@ -9,9 +9,15 @@ import Log from "@kyve/core/dist/logger";
 import { Query } from "@kyve/query";
 import { BlockResponse, Connection } from "@solana/web3.js";
 import { JWKInterface } from "arweave/node/lib/wallet";
+import cliProgress from "cli-progress";
 import hash from "object-hash";
 
 const logger = new Log("Solana Snapshots");
+const progress = new cliProgress.SingleBar({}, cliProgress.Presets.shades_grey);
+
+const sleep = (ms: number) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};
 
 const upload = async (
   uploader: UploadFunctionSubscriber,
@@ -23,7 +29,7 @@ const upload = async (
   const connection = new Connection(config.endpoint, {
     commitment: "finalized",
   });
-  logger.info(`Connection created.\n  endpoint = ${config.endpoint}`);
+  logger.info(`Connection created. endpoint = ${config.endpoint}`);
 
   // Fetch the slot height of the last snapshot.
   let height = 0;
@@ -62,14 +68,20 @@ const upload = async (
     // Iterate over the ranges and pull down block data.
     for (const range of ranges) {
       logger.info(
-        `Pulling block data for snapshot range.\n  min = ${range.min}\n  max = ${range.max}`
+        `Pulling block data for snapshot range. min = ${range.min}, max = ${range.max}`
       );
       const data: BlockResponse[] = [];
 
+      progress.start(range.max, range.min);
       for (let i = range.min; i <= range.max; i++) {
+        progress.update(i);
+
         const res = await connection.getBlock(i);
         if (res) data.push(res);
+
+        await sleep(250);
       }
+      progress.stop();
 
       uploader.next({
         data,

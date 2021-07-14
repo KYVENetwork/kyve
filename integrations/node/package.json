@@ -23,6 +23,7 @@
     "@kyve/polkadot": "0.0.0-alpha.20",
     "@kyve/smartweave": "0.0.0-alpha.15",
     "@kyve/solana": "0.0.0-alpha.15",
+    "@kyve/solana-snapshots": "0.0.0-alpha",
     "@kyve/zilliqa": "0.0.0-alpha.14",
     "@sentry/integrations": "^6.5.0",
     "@sentry/node": "^6.5.0",
