@@ -7,6 +7,7 @@ import AvalancheInstance from "@kyve/avalanche";
 import CosmosInstance from "@kyve/cosmos";
 import PolkadotInstance from "@kyve/polkadot";
 import SolanaInstance from "@kyve/solana";
+import SolanaSnapshotsInstance from "@kyve/solana-snapshots";
 import ZilliqaInstance from "@kyve/zilliqa";
 import fs from "fs";
 
@@ -96,6 +97,9 @@ if (process.env.WALLET) {
         break;
       case "@kyve/solana":
         instances.push(SolanaInstance(poolID, stake, wallet));
+        break;
+      case "@kyve/solana-snapshots":
+        instances.push(SolanaSnapshotsInstance(poolID, stake, wallet));
         break;
       case "@kyve/zilliqa":
         instances.push(ZilliqaInstance(poolID, stake, wallet));
