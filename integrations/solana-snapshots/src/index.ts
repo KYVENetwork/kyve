@@ -11,6 +11,7 @@ import hash from "object-hash";
 
 const upload = async (
   uploader: UploadFunctionSubscriber,
+  pool: string,
   config: { endpoint: string; size: number }
 ) => {
   // Connect to the Solana RPC endpoint.
@@ -64,6 +65,7 @@ const upload = async (
 const validate = async (
   listener: ListenFunctionObservable,
   validator: ValidateFunctionSubscriber,
+  pool: string,
   config: { endpoint: string; size: number }
 ) => {
   // Connect to the Solana RPC endpoint.
