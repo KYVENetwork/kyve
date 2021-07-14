@@ -5,6 +5,7 @@ import {
   UploadFunctionSubscriber,
   ValidateFunctionSubscriber,
 } from "@kyve/core/dist/faces";
+import { Query } from "@kyve/query";
 import { BlockResponse, Connection } from "@solana/web3.js";
 import { JWKInterface } from "arweave/node/lib/wallet";
 import hash from "object-hash";
@@ -20,8 +21,21 @@ const upload = async (
     commitment: "finalized",
   });
 
-  // TODO: Fetch the slot height of the last snapshot.
+  // Fetch the slot height of the last snapshot.
   let height = 0;
+
+  const query = new Query(pool, false);
+  const res = await query
+    .only(["tags", "tags.name", "tags.value"])
+    .limit(1)
+    .find();
+
+  if (res.length) {
+    const tags: { name: string; value: string }[] = res[0].tags;
+    const index = tags.findIndex((tag) => tag.name === "Maximum-Height");
+
+    if (index > -1) height = parseInt(tags[index].value) + 1;
+  }
 
   const main = async () => {
     // Fetch the latest slot height from the endpoint.
@@ -53,6 +67,8 @@ const upload = async (
           { name: "Maximum-Height", value: range.max.toString() },
         ],
       });
+
+      height = range.max + 1;
     }
 
     // Wait 10 minutes, then run again.
