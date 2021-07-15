@@ -11,6 +11,7 @@ import { BlockResponse, Connection } from "@solana/web3.js";
 import { JWKInterface } from "arweave/node/lib/wallet";
 import cliProgress from "cli-progress";
 import hash from "object-hash";
+import { concatMap } from "rxjs/operators";
 
 const logger = new Log("Solana Snapshots");
 const progress = new cliProgress.SingleBar({}, cliProgress.Presets.shades_grey);
@@ -112,32 +113,56 @@ const validate = async (
   const connection = new Connection(config.endpoint, {
     commitment: "finalized",
   });
+  logger.info(`Connection created. endpoint = ${config.endpoint}`);
+
+  // Keep track of already handled transactions.
+  const handledTxs: string[] = [];
 
   // Subscribe to the listener.
-  listener.subscribe(async (res: ListenFunctionReturn) => {
-    // Fetch the slot range of the snapshot.
-    const min = parseInt(
-      res.transaction.tags.find((tag) => tag.name === "Minimum-Height")?.value!
-    );
-    const max = parseInt(
-      res.transaction.tags.find((tag) => tag.name === "Maximum-Height")?.value!
-    );
+  listener
+    .pipe(
+      concatMap(async (res) => {
+        // Check if transaction has already been handled.
+        if (handledTxs.includes(res.id)) return null;
+        const parsed: BlockResponse[] = JSON.parse(res.data);
 
-    // Iterate over the slot range, and pull down block data.
-    const data: BlockResponse[] = [];
+        // Fetch the slot range of the snapshot.
+        const min = parseInt(
+          res.transaction.tags.find((tag) => tag.name === "Minimum-Height")
+            ?.value!
+        );
+        const max = parseInt(
+          res.transaction.tags.find((tag) => tag.name === "Maximum-Height")
+            ?.value!
+        );
+        logger.info(`Found snapshot. min = ${min}, max = ${max}`);
 
-    for (let i = min; i <= max; i++) {
-      const res = await connection.getBlock(i);
-      if (res) data.push(res);
-    }
+        // Iterate over the slot range, and pull down block data.
+        const data: BlockResponse[] = [];
 
-    // Hash both the local data and uploaded data.
-    // Compare.
-    const localHash = hash(data);
-    const uploaderHash = hash(JSON.parse(res.data));
+        progress.start(max, min);
+        for (let i = min; i <= max; i++) {
+          progress.update(i);
 
-    validator.next({ valid: localHash === uploaderHash, id: res.id });
-  });
+          const res = await connection.getBlock(i);
+          if (res) data.push(res);
+
+          await sleep(250);
+        }
+        progress.stop();
+
+        // Hash both the local data and uploaded data.
+        // Compare.
+        const localHash = hash(JSON.parse(JSON.stringify(data)));
+        const uploaderHash = hash(JSON.parse(res.data));
+
+        handledTxs.push(res.id);
+        return { valid: localHash === uploaderHash, id: res.id };
+      })
+    )
+    .subscribe((res) => {
+      if (res) validator.next(res);
+    });
 };
 
 export default function main(pool: string, stake: number, jwk: JWKInterface) {

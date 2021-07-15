@@ -24,7 +24,8 @@
     "@solana/web3.js": "^1.21.0",
     "arweave": "^1.10.15",
     "cli-progress": "^3.9.0",
-    "object-hash": "^2.2.0"
+    "object-hash": "^2.2.0",
+    "rxjs": "^7.2.0"
   },
   "devDependencies": {
     "@types/cli-progress": "^3.9.2",
