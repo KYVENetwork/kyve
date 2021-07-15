@@ -121,10 +121,9 @@ const validate = async (
   // Subscribe to the listener.
   listener
     .pipe(
-      concatMap(async (res) => {
+      concatMap(async (res: ListenFunctionReturn) => {
         // Check if transaction has already been handled.
         if (handledTxs.includes(res.id)) return null;
-        const parsed: BlockResponse[] = JSON.parse(res.data);
 
         // Fetch the slot range of the snapshot.
         const min = parseInt(
