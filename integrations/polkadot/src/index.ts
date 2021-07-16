@@ -12,6 +12,7 @@ import { JWKInterface } from "arweave/node/lib/wallet";
 
 export const upload = async (
   uploader: UploadFunctionSubscriber,
+  pool: string,
   config: any
 ) => {
   const provider = new WsProvider(config.endpoint);
@@ -30,6 +31,7 @@ export const upload = async (
 export const validate = async (
   listener: ListenFunctionObservable,
   validator: ValidateFunctionSubscriber,
+  pool: string,
   config: any
 ) => {
   const provider = new WsProvider(config.endpoint);
