@@ -14,6 +14,7 @@ const logger = new Log("EVM");
 
 const upload = async (
   uploader: UploadFunctionSubscriber,
+  pool: string,
   config: { endpoint: string }
 ) => {
   // Connect to the WebSocket endpoint.
@@ -44,6 +45,7 @@ const upload = async (
 const validate = async (
   listener: ListenFunctionObservable,
   validator: ValidateFunctionSubscriber,
+  pool: string,
   config: { endpoint: string }
 ) => {
   // Connect to the WebSocket endpoint.

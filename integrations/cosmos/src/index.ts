@@ -8,7 +8,11 @@ import hash from "object-hash";
 import KYVE, { getData } from "@kyve/core";
 import { JWKInterface } from "arweave/node/lib/wallet";
 
-const upload = async (uploader: UploadFunctionSubscriber, config: any) => {
+const upload = async (
+  uploader: UploadFunctionSubscriber,
+  pool: string,
+  config: any
+) => {
   let res = await (await fetch(`${config.endpoint}/blocks`)).json();
   if (res.data) res = res.data;
   let latestBlock = res[0].height;
@@ -53,6 +57,7 @@ const upload = async (uploader: UploadFunctionSubscriber, config: any) => {
 const validate = async (
   listener: ListenFunctionObservable,
   validator: ValidateFunctionSubscriber,
+  pool: string,
   config: any
 ) => {
   listener.subscribe(async (res) => {

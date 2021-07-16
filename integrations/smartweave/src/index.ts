@@ -22,6 +22,7 @@ const logger = new Log("SmartWeave");
 
 export const upload = async (
   uploader: UploadFunctionSubscriber,
+  pool: string,
   config: any
 ) => {
   // mapping contract address to hash(state)
@@ -74,6 +75,7 @@ export const upload = async (
 export const validate = async (
   listener: ListenFunctionObservable,
   validator: ValidateFunctionSubscriber,
+  pool: string,
   config: any
 ) => {
   listener.subscribe(async (res: ListenFunctionReturn) => {

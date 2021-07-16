@@ -24,6 +24,7 @@ export interface ZilliqaBlock extends TxBlockObj{
 
 export const upload = async (
   uploader: UploadFunctionSubscriber,
+  pool: string,
   config: any
 ) => {
   const zilliqa = new Zilliqa(config.api);
@@ -68,6 +69,7 @@ export const upload = async (
 export const validate = async (
   listener: ListenFunctionObservable,
   validator: ValidateFunctionSubscriber,
+  pool: string,
   config: any
 ) => {
   const zilliqa = new Zilliqa(config.api);
