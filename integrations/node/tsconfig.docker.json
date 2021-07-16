@@ -3,7 +3,12 @@
     "strict": true,
     "outDir": "dist",
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+
+    // create source-maps for Sentry
+    "sourceMap": true,
+    "inlineSources": true,
+    "sourceRoot": "/"
   },
   "files": ["src/index.ts"]
 }

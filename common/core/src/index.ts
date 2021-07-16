@@ -2,48 +2,51 @@ import Arweave from "arweave";
 import ArDB from "ardb";
 import {
   ListenFunctionReturn,
+  Options,
   UploadFunction,
   UploadFunctionReturn,
   ValidateFunction,
   ValidateFunctionReturn,
 } from "./faces";
 import { JWKInterface } from "arweave/node/lib/wallet";
+import hash from "object-hash";
 import { Observable } from "rxjs";
-import { arweaveClient } from "./extensions";
+import { arweaveBundles as bundles, arweaveClient } from "./extensions";
 
-import Contract from "@kyve/contract-lib";
+import { Pool, Governance } from "@kyve/contract-lib";
 import { GQLEdgeTransactionInterface } from "ardb/lib/faces/gql";
-import { untilMined } from "./helper";
+import { deposit, untilMined } from "./helper";
+
+import Log from "./logger";
+import { create } from "arweave-bundles";
 
 export const APP_NAME = "KYVE - DEV";
 
 export default class KYVE {
   public arweave: Arweave = arweaveClient;
   public ardb: ArDB;
-  public contract: Contract;
+
+  public pool: Pool;
+  public governance: Governance;
+
   public APP_NAME: string = APP_NAME;
 
   public uploadFunc: UploadFunction;
   public validateFunc: ValidateFunction;
-  private buffer: UploadFunctionReturn[] = [];
+  private uploaderBuffer: UploadFunctionReturn[] = [];
+  private validatorBuffer: ValidateFunctionReturn[] = [];
 
-  // TODO: Write interface for contract.
-  // TODO: Refetch!!!
-  public pool: any;
-  public poolID: number;
+  private readonly refetchInterval: number = 5 * 60 * 1000;
+
+  public poolID: string;
   public stake: number;
 
-  protected readonly keyfile: JWKInterface;
+  protected keyfile: JWKInterface;
 
   protected dryRun: boolean = false;
 
   constructor(
-    options: {
-      pool: number;
-      stake: number;
-      jwk: JWKInterface;
-      arweave?: Arweave;
-    },
+    options: Options,
     uploadFunc: UploadFunction,
     validateFunc: ValidateFunction
   ) {
@@ -57,247 +60,288 @@ export default class KYVE {
     if (options.arweave) {
       this.arweave = options.arweave;
     }
+    if (options.refetchInterval) {
+      this.refetchInterval = options.refetchInterval;
+    }
 
     this.ardb = new ArDB(this.arweave);
-    this.contract = new Contract(this.arweave, this.keyfile);
+    this.pool = new Pool(this.arweave, this.keyfile, options.pool);
+    this.governance = new Governance(this.arweave, this.keyfile);
   }
 
   public async run() {
-    const state = await this.contract.getState();
-    if (this.poolID >= 0 && this.poolID < state.pools.length) {
-      this.pool = state.pools[this.poolID];
-      console.log(
-        `\nFound pool with name "${this.pool.name}" in the KYVE contract.\n  architecture = ${this.pool.architecture}`
-      );
-    } else {
-      throw Error(
-        `No pool with id "${this.poolID}" was found in the KYVE contract.`
+    const log = new Log("core");
+    const state = await this.pool.getState();
+
+    // shut down if no uploader is selected
+    if (!state.settings.uploader) {
+      log.error(
+        "No uploader specified in pool. Please create a vote to elect an uploader."
       );
     }
 
     const address = await this.arweave.wallets.getAddress(this.keyfile);
 
-    // check if validator has enough stake
-    const currentStake = state.pools[this.poolID].vault[address] || 0;
-    const diff = this.stake - currentStake;
-
-    // todo handle case if desired stake is smaller than current stake
-    if (diff > 0) {
-      const id = await this.contract.lock(this.poolID, diff);
-      console.log(
-        `Staking ${diff} $KYVE in pool ${this.poolID}.\n Transaction: ${id}`
-      );
-      await untilMined(id, this.arweave);
-      console.log("Successfully staked tokens");
-    } else if (diff < 0) {
-      throw new Error(
-        `Please unlock your tokens in pool ${this.poolID} and start again.`
-      );
-    } else {
-      console.log(
-        `Already staked with ${this.stake} $KYVE in pool ${this.poolID}.`
+    // check if node has deposited tokens
+    if (!Object.keys(state.credit).includes(address)) {
+      await deposit(
+        this.stake,
+        address,
+        this.governance,
+        this.pool,
+        this.arweave
       );
     }
 
-    if (address === this.pool.uploader) {
-      console.log("\nRunning as an uploader ...");
-      this.uploader();
-    } else {
-      if (!state.pools[this.poolID].registered.includes(address)) {
-        // register validator
-        const id = await this.contract.register(this.poolID);
-        console.log(
-          `Registering in pool ${this.poolID} as validator.\n Transaction: ${id}`
-        );
-        await untilMined(id, this.arweave);
-        console.log("Successfully registered");
-      } else {
-        console.log("Already registered");
+    const currentStake = state.credit[address].stake;
+    const diff = Math.abs(this.stake - currentStake);
+
+    if (this.stake === currentStake) {
+      log.info(
+        `Already staked with ${this.stake} $KYVE in pool ${this.pool.id}.`
+      );
+    } else if (this.stake > currentStake) {
+      // if node has not enough tokens to stake, deposit missing ones
+      if (state.credit[address].amount < diff) {
+        await deposit(diff, address, this.governance, this.pool, this.arweave);
       }
 
-      console.log("\nRunning as a validator ...");
-      this.validator();
+      // stake missing tokens
+      const id = await this.pool.stake(diff);
+      log.info(
+        `Staking ${diff} $KYVE in pool ${this.pool.id}. Transaction: ${id}`
+      );
+      await untilMined(id, this.arweave);
+      log.info("Successfully staked tokens");
+    } else {
+      const id = await this.pool.unstake(diff);
+      log.info(
+        `Unstaking ${diff} $KYVE in pool ${this.pool.id}. Transaction: ${id}`
+      );
+      await untilMined(id, this.arweave);
+      log.info("Successfully unstaked tokens");
+    }
 
-      process.on("SIGINT", async () => {
-        await this.contract.unregister(this.poolID);
-        console.log("\nUnregistered");
-        process.exit();
-      });
+    if (address === state.settings.uploader) {
+      log.info("Running as an uploader ...");
+      this.uploader();
+    } else {
+      log.info("Running as a validator ...");
+      this.validator();
     }
   }
 
   private listener() {
+    const log = new Log("listener");
+
     return new Observable<ListenFunctionReturn>((subscriber) => {
-      const main = async (latest: number) => {
-        const height = (await this.arweave.network.getInfo()).height;
+      let latestHash = "";
 
-        console.log(`\n[listener] height = ${height}, latest = ${latest}.`);
+      const main = async (address: string) => {
+        const state = await this.pool.getState();
+        const newHash = hash(state);
 
-        if (latest !== height) {
-          const res = (await this.ardb
-            .search()
-            .min(latest)
-            .max(height)
-            .from(this.pool.uploader)
-            .tag("Application", this.APP_NAME)
-            .tag("Pool", this.poolID.toString())
-            .tag("Architecture", this.pool.architecture)
-            .findAll()) as GQLEdgeTransactionInterface[];
+        if (newHash === latestHash) {
+          // State hasn't changed.
+          // Do nothing.
+        } else {
+          // State has changed.
+          // Find all pending transactions that need votes.
 
-          console.log(`\n[listener] Found ${res.length} new transactions.`);
+          const unhandledTxs = Object.entries(state.txs).filter(
+            ([key, value]) =>
+              value.status === "pending" &&
+              !(value.yays.includes(address) || value.nays.includes(address))
+          );
 
-          for (const { node } of res) {
-            console.log(
-              `\n[listener] Parsing transaction.\n  txID = ${node.id}`
-            );
+          for (const [id, value] of unhandledTxs) {
+            const res = (await this.ardb
+              .search()
+              .id(id)
+              .findAll()) as GQLEdgeTransactionInterface[];
 
-            const data: any[] = JSON.parse(await getData(node.id));
+            if (!res.length) continue;
+            const node = res[0].node;
 
-            for (const entry of data) {
+            try {
+              const data = await getData(id);
+
               subscriber.next({
-                id: node.id,
-                data: entry,
+                id,
+                data,
                 transaction: node,
                 block: node.block.height,
               });
+            } catch (e) {
+              log.warn(`Error while fetching data for transaction: ${id}`);
             }
           }
         }
 
-        setTimeout(main, 150000, height);
+        // refetch every x ms
+        setTimeout(main, this.refetchInterval, address);
       };
 
-      this.arweave.network.getInfo().then((res) => main(res.height));
+      this.arweave.wallets.getAddress(this.keyfile).then((res) => main(res));
     });
   }
 
   protected uploader(dryRun: boolean = false) {
     const node = new Observable<UploadFunctionReturn>((subscriber) =>
-      this.uploadFunc(subscriber, this.pool.config)
+      this.uploadFunc(subscriber, this.poolID, this.pool.state!.config)
     );
 
     node.subscribe((data) => {
-      this.bundleAndUpload(data);
+      this.uploaderBuffer.push(data);
+      this.bundleAndUpload();
     });
   }
 
-  private async bundleAndUpload(data: UploadFunctionReturn) {
-    const buffer = this.buffer;
-    this.buffer = [];
+  private async bundleAndUpload() {
+    const log = new Log("uploader");
+    const bundleSize = this.pool.state!.settings.bundleSize;
 
-    const transaction = await this.arweave.createTransaction(
-      {
-        data: JSON.stringify(buffer.map((item) => item.data)),
-      },
-      this.keyfile
-    );
+    if (bundleSize === 1) {
+      const buffer = this.uploaderBuffer;
+      this.uploaderBuffer = [];
 
-    const tags = [
-      { name: "Application", value: this.APP_NAME },
-      { name: "Pool", value: this.poolID.toString() },
-      { name: "Architecture", value: this.pool.architecture },
-    ];
-    for (const { name, value } of tags) {
-      transaction.addTag(name, value);
-    }
-    buffer.forEach((item) => {
-      for (const { name, value } of item.tags || []) {
+      const transaction = await this.arweave.createTransaction(
+        {
+          data: JSON.stringify(buffer[0].data),
+        },
+        this.keyfile
+      );
+
+      const tags = [
+        { name: "Application", value: APP_NAME },
+        { name: "Pool", value: this.pool.id! },
+        { name: "App-Name", value: "SmartWeaveAction" },
+        { name: "App-Version", value: "0.3.0" },
+        { name: "Contract", value: this.pool.id! },
+        { name: "Input", value: JSON.stringify({ function: "register" }) },
+        ...(buffer[0].tags || []),
+      ];
+      for (const { name, value } of tags) {
         transaction.addTag(name, value);
       }
-    });
 
-    const sizeBefore = new TextEncoder().encode(
-      JSON.stringify(transaction.tags)
-    ).length;
+      await this.arweave.transactions.sign(transaction, this.keyfile);
+      await this.arweave.transactions.post(transaction);
 
-    const newTransaction = await this.arweave.createTransaction(
-      {
-        data: JSON.stringify([...buffer, data].map((item) => item.data)),
-      },
-      this.keyfile
-    );
+      log.info(
+        `Sent a transaction: ${
+          transaction.id
+        }. Cost: ${this.arweave.ar.winstonToAr(transaction.reward)} AR`
+      );
+    } else {
+      log.info(`Buffer size is now: ${this.uploaderBuffer.length}`);
+      if (this.uploaderBuffer.length >= bundleSize) {
+        const buffer = this.uploaderBuffer;
+        this.uploaderBuffer = [];
 
-    for (const { name, value } of tags) {
-      newTransaction.addTag(name, value);
-    }
-    buffer.forEach((item) => {
-      for (const { name, value } of item.tags || []) {
-        newTransaction.addTag(name, value);
-      }
-    });
-    for (const { name, value } of data.tags || []) {
-      newTransaction.addTag(name, value);
-    }
-
-    const sizeAfter = new TextEncoder().encode(
-      JSON.stringify(newTransaction.tags)
-    ).length;
-
-    if (sizeBefore < 2048) {
-      if (sizeAfter > 2048) {
-        await this.arweave.transactions.sign(transaction, this.keyfile);
-
-        // only send when not in dry-run
-        if (!this.dryRun) {
-          await this.arweave.transactions.post(transaction);
-        } else {
-          console.log(transaction);
-          console.log(transaction.tags);
-        }
-
-        console.log(
-          `\nSent a transaction\n  txID = ${
-            transaction.id
-          }\n  cost = ${this.arweave.ar.winstonToAr(transaction.reward)} AR`
-        );
-      } else {
-        if (buffer.length >= this.pool.bundleSize) {
-          await this.arweave.transactions.sign(newTransaction, this.keyfile);
-          // only send when not in dry-run
-          if (!this.dryRun) {
-            await this.arweave.transactions.post(newTransaction);
-          }
-
-          console.log(
-            `\nSent a transaction\n  txID = ${
-              newTransaction.id
-            }\n  cost = ${this.arweave.ar.winstonToAr(
-              newTransaction.reward
-            )} AR`
+        const items = [];
+        for (const entry of buffer) {
+          const item = await bundles.createData(
+            {
+              data: JSON.stringify(entry.data),
+              tags: [
+                { name: "Application", value: APP_NAME },
+                { name: "Pool", value: this.poolID.toString() },
+                ...(entry.tags || []),
+              ],
+            },
+            this.keyfile
           );
-        } else {
-          this.buffer = [...buffer, data, ...this.buffer];
+          items.push(await bundles.sign(item, this.keyfile));
         }
+
+        const bundle = await bundles.bundleData(items);
+        const transaction = await this.arweave.createTransaction(
+          { data: JSON.stringify(bundle) },
+          this.keyfile
+        );
+
+        transaction.addTag("Bundle-Format", "json");
+        transaction.addTag("Bundle-Version", "1.0.0");
+        transaction.addTag("Content-Type", "application/json");
+        transaction.addTag("App-Name", "SmartWeaveAction");
+        transaction.addTag("App-Version", "0.3.0");
+        transaction.addTag("Contract", this.pool.id!);
+        transaction.addTag("Input", JSON.stringify({ function: "register" }));
+
+        await this.arweave.transactions.sign(transaction, this.keyfile);
+        await this.arweave.transactions.post(transaction);
+
+        log.info(
+          `Sent a bundle with ${items.length} items: ${
+            transaction.id
+          }. Cost: ${this.arweave.ar.winstonToAr(transaction.reward)} AR`
+        );
       }
     }
   }
 
   protected validator() {
     const node = new Observable<ValidateFunctionReturn>((subscriber) =>
-      this.validateFunc(this.listener(), subscriber, this.pool.config)
+      this.validateFunc(
+        this.listener(),
+        subscriber,
+        this.poolID,
+        this.pool.state!.config
+      )
     );
 
     node.subscribe((res) => {
-      if (res.valid) {
-        console.log(`\nSuccessfully validated a block.\n  txID = ${res.id}`);
-      } else {
-        console.log(`\nFound an invalid block.\n  txID = ${res.id}`);
-        this.raiseConcern();
-      }
+      this.validatorBuffer.push(res);
+      this.bundleAndSubmit();
     });
   }
 
-  private async raiseConcern() {
-    console.log(`\nRaising a dispute in the DAO...`);
-    if (!this.dryRun) {
-      const id = await this.contract.deny(this.poolID);
-      console.log(`\t txID = ${id}`);
+  private async bundleAndSubmit() {
+    const log = new Log("validator");
+    const bundleSize = this.pool.state!.settings.bundleSize;
+    log.info(`Buffer size is now: ${this.validatorBuffer.length}`);
+
+    if (this.validatorBuffer.length >= bundleSize) {
+      const buffer = this.validatorBuffer;
+      this.validatorBuffer = [];
+
+      const transaction = await this.arweave.createTransaction(
+        {
+          data: JSON.stringify(
+            buffer.map((item) => ({ txID: item.id, valid: item.valid }))
+          ),
+        },
+        this.keyfile
+      );
+
+      transaction.addTag("App-Name", "SmartWeaveAction");
+      transaction.addTag("App-Version", "0.3.0");
+      transaction.addTag("Contract", this.pool.id!);
+      transaction.addTag("Input", JSON.stringify({ function: "submit" }));
+      transaction.addTag("Contract", this.governance.id);
+      transaction.addTag(
+        "Input",
+        JSON.stringify({ function: "readOutbox", contract: this.pool.id! })
+      );
+
+      await this.arweave.transactions.sign(transaction, this.keyfile);
+      await this.arweave.transactions.post(transaction);
+
+      log.info(
+        `Sent a bundle with ${buffer.length} items: ${
+          transaction.id
+        }. Cost: ${this.arweave.ar.winstonToAr(transaction.reward)} AR`
+      );
     }
   }
 }
 
-export const getData = async (id: string) => {
-  const res = await arweaveClient.transactions.getData(id, {
+export const getData = async (
+  id: string,
+  arweave: Arweave = arweaveClient
+): Promise<string> => {
+  const res = await arweave.transactions.getData(id, {
     decode: true,
     string: true,
   });

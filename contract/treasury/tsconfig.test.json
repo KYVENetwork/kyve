@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "strict": true,
+    "outDir": "__tests__/dist",
+    "declaration": true,
+    "esModuleInterop": true
+  },
+  "files": ["__tests__/index.ts"]
+}

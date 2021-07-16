@@ -8,7 +8,11 @@ import hash from "object-hash";
 import KYVE, { getData } from "@kyve/core";
 import { JWKInterface } from "arweave/node/lib/wallet";
 
-const upload = async (uploader: UploadFunctionSubscriber, config: any) => {
+const upload = async (
+  uploader: UploadFunctionSubscriber,
+  pool: string,
+  config: any
+) => {
   const main = async (latestSlot: number) => {
     const newLatest = await fetchLatestSlot(config.endpoint);
 
@@ -40,6 +44,7 @@ const upload = async (uploader: UploadFunctionSubscriber, config: any) => {
 const validate = async (
   listener: ListenFunctionObservable,
   validator: ValidateFunctionSubscriber,
+  pool: string,
   config: any
 ) => {
   listener.subscribe(async (res) => {
@@ -57,7 +62,7 @@ const validate = async (
   });
 };
 
-export default function main(pool: number, stake: number, jwk: JWKInterface) {
+export default function main(pool: string, stake: number, jwk: JWKInterface) {
   const instance = new KYVE(
     {
       pool,

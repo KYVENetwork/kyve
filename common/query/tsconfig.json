@@ -5,8 +5,8 @@
     "outDir": "dist",
     "declaration": true,
     "esModuleInterop": true,
-    "target": "ES6",
-    "moduleResolution": "Node"
+    "target": "es2015",
+    "module": "commonjs"
   },
   "files": ["src/index.ts"]
 }

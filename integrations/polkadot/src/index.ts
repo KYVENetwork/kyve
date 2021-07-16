@@ -10,11 +10,15 @@ import hash from "object-hash";
 import KYVE, { getData } from "@kyve/core";
 import { JWKInterface } from "arweave/node/lib/wallet";
 
-const upload = async (uploader: UploadFunctionSubscriber, config: any) => {
+export const upload = async (
+  uploader: UploadFunctionSubscriber,
+  pool: string,
+  config: any
+) => {
   const provider = new WsProvider(config.endpoint);
   const api = await ApiPromise.create({ provider });
 
-  api.rpc.chain.subscribeNewHeads(async (header: Header) => {
+  api.rpc.chain.subscribeFinalizedHeads(async (header: Header) => {
     const { block, tags } = await parseBlockByNumber(
       header.number.toNumber(),
       api
@@ -24,9 +28,10 @@ const upload = async (uploader: UploadFunctionSubscriber, config: any) => {
   });
 };
 
-const validate = async (
+export const validate = async (
   listener: ListenFunctionObservable,
   validator: ValidateFunctionSubscriber,
+  pool: string,
   config: any
 ) => {
   const provider = new WsProvider(config.endpoint);
@@ -47,7 +52,7 @@ const validate = async (
   });
 };
 
-export default function main(pool: number, stake: number, jwk: JWKInterface) {
+export default function main(pool: string, stake: number, jwk: JWKInterface) {
   const instance = new KYVE(
     {
       pool,

@@ -3,16 +3,17 @@ import { APP_NAME, getData } from "@kyve/core";
 import { arweaveClient } from "@kyve/core/dist/extensions";
 import { GQLEdgeTransactionInterface } from "ardb/lib/faces/gql";
 import Arweave from "arweave";
+export { interactRead, readContract } from "./smartweave";
 
 type TransactionID = string;
 type TransactionData = string;
 
 export class Query extends ArDB {
-  private poolID: number;
+  private poolID: string;
   public deRef: boolean;
 
   constructor(
-    poolID: number,
+    poolID: string,
     deRef: boolean = true,
     arweave: Arweave = arweaveClient
   ) {
@@ -26,17 +27,16 @@ export class Query extends ArDB {
 
   async find() {
     super.tag("Application", APP_NAME);
-    super.tag("Pool", this.poolID.toString());
+    super.tag("Pool", this.poolID);
     const res = (await super.find()) as GQLEdgeTransactionInterface[];
     const ret: any[] = [];
 
     for (let { node } of res) {
-      const txID = node.id;
       if (this.deRef) {
-        const data = await getData(txID);
+        const data = await getData(node.id);
         ret.push(data);
       } else {
-        ret.push(txID);
+        ret.push(node);
       }
     }
     return ret;

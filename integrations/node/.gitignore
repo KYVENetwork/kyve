@@ -2,5 +2,8 @@ dist
 node_modules
 .env
 *arweave*.json
-config.json
+*config*.json
 .idea
+/deploy-on-heroku.sh
+/createPool.js
+/transfer.js
