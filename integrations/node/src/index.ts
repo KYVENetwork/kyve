@@ -5,6 +5,7 @@ import Arweave from "arweave";
 import SmartWeaveInstance from "@kyve/smartweave";
 import CosmosInstance from "@kyve/cosmos";
 import EVMInstance from "@kyve/evm";
+import EVMEventsInstance from "@kyve/evm-events";
 import PolkadotInstance from "@kyve/polkadot";
 import SolanaInstance from "@kyve/solana";
 import SolanaSnapshotsInstance from "@kyve/solana-snapshots";
@@ -88,6 +89,9 @@ if (process.env.WALLET) {
         break;
       case "@kyve/evm":
         instances.push(EVMInstance(poolID, stake, wallet));
+        break;
+      case "@kyve/evm-events":
+        instances.push(EVMEventsInstance(poolID, stake, wallet));
         break;
       case "@kyve/polkadot":
         instances.push(PolkadotInstance(poolID, stake, wallet));

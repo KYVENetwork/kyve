@@ -1,29 +1,39 @@
+import KYVE, { getData } from "@kyve/core";
 import {
-  UploadFunctionSubscriber,
   ListenFunctionObservable,
-  ValidateFunctionSubscriber,
   ListenFunctionReturn,
+  UploadFunctionSubscriber,
+  ValidateFunctionSubscriber,
 } from "@kyve/core/dist/faces";
+import Log from "@kyve/core/dist/logger";
+import { JWKInterface } from "arweave/node/lib/wallet";
+import hash from "object-hash";
 import Web3 from "web3";
 import { EventData } from "web3-eth-contract";
-import hash from "object-hash";
-import KYVE, { getData } from "@kyve/core";
-import { JWKInterface } from "arweave/node/lib/wallet";
+
+const logger = new Log("EVM Events");
 
 export const upload = async (
   uploader: UploadFunctionSubscriber,
-  config: any
+  pool: string,
+  config: { abi: string; address: string; endpoint: string }
 ) => {
+  // Connect to the WebSocket endpoint.
   const client = new Web3(
     new Web3.providers.WebsocketProvider(config.endpoint)
   );
+  logger.info(`Connection created. endpoint = ${config.endpoint}`);
 
+  // Create a contract class by using the ABI code.
   const contract = new client.eth.Contract(
     JSON.parse(await getData(config.abi)),
     config.address
   );
 
+  // Subscribe to new events.
   contract.events.allEvents().on("data", async (res: EventData) => {
+    logger.info(`Recieved event. type = ${res.event}`);
+
     uploader.next({
       data: res,
       tags: [
@@ -44,21 +54,28 @@ export const upload = async (
 export const validate = async (
   listener: ListenFunctionObservable,
   validator: ValidateFunctionSubscriber,
-  config: any
+  pool: string,
+  config: { abi: string; address: string; endpoint: string }
 ) => {
+  // Connect to the WebSocket endpoint.
   const client = new Web3(
     new Web3.providers.WebsocketProvider(config.endpoint)
   );
+  logger.info(`Connection created. endpoint = ${config.endpoint}`);
 
+  // Create a contract class by using the ABI code.
   const contract = new client.eth.Contract(
     JSON.parse(await getData(config.abi)),
     config.address
   );
 
+  // Subscribe to the listener.
   listener.subscribe(async (res: ListenFunctionReturn) => {
     const event = res.data.event;
     const transaction = res.data.transactionHash;
     const block = res.data.blockNumber;
+
+    logger.info(`Found event. type = ${event}`);
 
     const events = await contract.getPastEvents(event, {
       fromBlock: block,
@@ -67,13 +84,13 @@ export const validate = async (
     const data = events.find((event) => event.transactionHash === transaction)!;
 
     const localHash = hash(data);
-    const compareHash = hash(res.data);
+    const uploaderHash = hash(res.data);
 
-    validator.next({ valid: localHash === compareHash, id: res.id });
+    validator.next({ valid: localHash === uploaderHash, id: res.id });
   });
 };
 
-export default function main(pool: number, stake: number, jwk: JWKInterface) {
+export default function main(pool: string, stake: number, jwk: JWKInterface) {
   const instance = new KYVE(
     {
       pool,
