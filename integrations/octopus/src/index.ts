@@ -17,7 +17,8 @@ import {
 
 export const upload = async (
   uploader: UploadFunctionSubscriber,
-  config: any
+  pool: string,
+  config: { endpoint: string }
 ) => {
   const provider = new WsProvider(config.endpoint);
   const api = await ApiPromise.create({ provider });
@@ -38,7 +39,8 @@ export const upload = async (
 export const validate = async (
   listener: ListenFunctionObservable,
   validator: ValidateFunctionSubscriber,
-  config: any
+  pool: string,
+  config: { endpoint: string }
 ) => {
   const provider = new WsProvider(config.endpoint);
   const api = await ApiPromise.create({ provider });
