@@ -14,6 +14,7 @@ export type UploadFunctionSubscriber = Subscriber<UploadFunctionReturn>;
 
 export type UploadFunction = (
   subscriber: UploadFunctionSubscriber,
+  pool: string,
   config: any
 ) => void;
 
@@ -38,6 +39,7 @@ export type ValidateFunctionSubscriber = Subscriber<ValidateFunctionReturn>;
 export type ValidateFunction = (
   listener: ListenFunctionObservable,
   subscriber: ValidateFunctionSubscriber,
+  pool: string,
   config: any
 ) => void;
 

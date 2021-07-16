@@ -3,11 +3,13 @@ import KYVE from "@kyve/core";
 import { Pool } from "@kyve/contract-lib";
 import Arweave from "arweave";
 import SmartWeaveInstance from "@kyve/smartweave";
-import AvalancheInstance from "@kyve/avalanche";
 import CosmosInstance from "@kyve/cosmos";
+import EVMInstance from "@kyve/evm";
+import EVMEventsInstance from "@kyve/evm-events";
 import OctopusInstance from "@kyve/octopus";
 import PolkadotInstance from "@kyve/polkadot";
 import SolanaInstance from "@kyve/solana";
+import SolanaSnapshotsInstance from "@kyve/solana-snapshots";
 import ZilliqaInstance from "@kyve/zilliqa";
 import fs from "fs";
 
@@ -83,15 +85,17 @@ if (process.env.WALLET) {
 
     // select correct instance based of the runtime
     switch (runtime) {
-      case "@kyve/avalanche":
-        instances.push(AvalancheInstance(poolID, stake, wallet));
-        break;
       case "@kyve/cosmos":
         instances.push(CosmosInstance(poolID, stake, wallet));
         break;
+      case "@kyve/evm":
+        instances.push(EVMInstance(poolID, stake, wallet));
+        break;
+      case "@kyve/evm-events":
+        instances.push(EVMEventsInstance(poolID, stake, wallet));
+        break;
       case "@kyve/octopus":
         instances.push(OctopusInstance(poolID, stake, wallet));
-        break;
       case "@kyve/polkadot":
         instances.push(PolkadotInstance(poolID, stake, wallet));
         break;
@@ -100,6 +104,9 @@ if (process.env.WALLET) {
         break;
       case "@kyve/solana":
         instances.push(SolanaInstance(poolID, stake, wallet));
+        break;
+      case "@kyve/solana-snapshots":
+        instances.push(SolanaSnapshotsInstance(poolID, stake, wallet));
         break;
       case "@kyve/zilliqa":
         instances.push(ZilliqaInstance(poolID, stake, wallet));
