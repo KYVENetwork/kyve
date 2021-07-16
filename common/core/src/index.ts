@@ -159,6 +159,8 @@ export default class KYVE {
               .search()
               .id(id)
               .findAll()) as GQLEdgeTransactionInterface[];
+
+            if (!res.length) continue;
             const node = res[0].node;
 
             try {

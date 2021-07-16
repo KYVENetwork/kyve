@@ -3,8 +3,8 @@ import KYVE from "@kyve/core";
 import { Pool } from "@kyve/contract-lib";
 import Arweave from "arweave";
 import SmartWeaveInstance from "@kyve/smartweave";
-import AvalancheInstance from "@kyve/avalanche";
 import CosmosInstance from "@kyve/cosmos";
+import EVMInstance from "@kyve/evm";
 import PolkadotInstance from "@kyve/polkadot";
 import SolanaInstance from "@kyve/solana";
 import SolanaSnapshotsInstance from "@kyve/solana-snapshots";
@@ -83,11 +83,11 @@ if (process.env.WALLET) {
 
     // select correct instance based of the runtime
     switch (runtime) {
-      case "@kyve/avalanche":
-        instances.push(AvalancheInstance(poolID, stake, wallet));
-        break;
       case "@kyve/cosmos":
         instances.push(CosmosInstance(poolID, stake, wallet));
+        break;
+      case "@kyve/evm":
+        instances.push(EVMInstance(poolID, stake, wallet));
         break;
       case "@kyve/polkadot":
         instances.push(PolkadotInstance(poolID, stake, wallet));

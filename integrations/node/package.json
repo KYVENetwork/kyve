@@ -20,6 +20,7 @@
     "@kyve/contract-lib": "0.1.0-alpha.14",
     "@kyve/core": "0.0.0-alpha.17",
     "@kyve/cosmos": "0.0.0-alpha.18",
+    "@kyve/evm": "0.0.0-alpha",
     "@kyve/polkadot": "0.0.0-alpha.20",
     "@kyve/smartweave": "0.0.0-alpha.15",
     "@kyve/solana": "0.0.0-alpha.15",
