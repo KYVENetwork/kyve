@@ -1,16 +1,14 @@
 {
   "name": "@kyve/octopus",
-  "description": "The official KYVE node for Polkadot",
-  "version": "0.0.0-alpha.20",
+  "description": "The official KYVE node for Octopus",
+  "version": "0.0.0-alpha",
   "author": "John Letey <john@kyve.network>, Fabian Riewe <fabian@kyve.network>",
-  "repository": "https://github.com/KYVENetwork/polkadot",
+  "repository": "https://github.com/KYVENetwork/kyve/tree/master/integrations/octopus",
   "license": "MIT",
   "scripts": {
     "build": "tsc",
     "fmt": "prettier --write .",
-    "build:test": "rimraf __tests__/dist && tsc -p tsconfig.test.json",
-    "clean": "rimraf dist",
-    "test": "node __tests__/dist/__tests__/instance.js"
+    "clean": "rimraf dist"
   },
   "files": [
     "dist"
@@ -23,10 +21,11 @@
   "dependencies": {
     "@kyve/core": "0.0.0-alpha.17",
     "@open-rpc/client-js": "^1.7.0",
-    "@polkadot/api": "^4.13.1",
-    "object-hash": "^2.1.1"
+    "@polkadot/api": "^5.0.1",
+    "object-hash": "^2.2.0"
   },
   "devDependencies": {
-    "@types/object-hash": "^2.1.0"
+    "@types/object-hash": "^2.1.1",
+    "prettier": "^2.3.2"
   }
 }

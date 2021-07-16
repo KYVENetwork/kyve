@@ -5,6 +5,7 @@ import Arweave from "arweave";
 import SmartWeaveInstance from "@kyve/smartweave";
 import AvalancheInstance from "@kyve/avalanche";
 import CosmosInstance from "@kyve/cosmos";
+import OctopusInstance from "@kyve/octopus";
 import PolkadotInstance from "@kyve/polkadot";
 import SolanaInstance from "@kyve/solana";
 import ZilliqaInstance from "@kyve/zilliqa";
@@ -87,6 +88,9 @@ if (process.env.WALLET) {
         break;
       case "@kyve/cosmos":
         instances.push(CosmosInstance(poolID, stake, wallet));
+        break;
+      case "@kyve/octopus":
+        instances.push(OctopusInstance(poolID, stake, wallet));
         break;
       case "@kyve/polkadot":
         instances.push(PolkadotInstance(poolID, stake, wallet));
