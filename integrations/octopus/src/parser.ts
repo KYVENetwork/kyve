@@ -12,7 +12,10 @@ export const parseBlockByNumber = async (
   let block = JSON.stringify(result);
 
   const tags = [
-    { name: "ChaidId", value: 9999 },
+    {
+      name: "ChainId",
+      value: (await api.query.octopusAppchain.appchainId()).toHuman(),
+    },
     { name: "Height", value: blockNumber },
     { name: "Block", value: hash.toHex() },
   ];
