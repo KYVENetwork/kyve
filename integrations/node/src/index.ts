@@ -25,6 +25,7 @@ declare global {
   }
 }
 
+// @ts-ignore
 global.__rootdir__ = __dirname || process.cwd();
 
 if (process.env.SEND_STATISTICS) {
@@ -34,6 +35,7 @@ if (process.env.SEND_STATISTICS) {
     release: "node@" + process.env.npm_package_version,
     integrations: [
       new RewriteFrames({
+        // @ts-ignore
         root: global.__rootdir__,
       }),
     ],
