@@ -255,9 +255,6 @@ export default class KYVE {
         const bundle = await bundleAndSignData(items, this.keyfile);
         const transaction = await bundle.toTransaction(this.arweave);
 
-        transaction.addTag("Bundle-Format", "json");
-        transaction.addTag("Bundle-Version", "1.0.0");
-        transaction.addTag("Content-Type", "application/json");
         transaction.addTag("App-Name", "SmartWeaveAction");
         transaction.addTag("App-Version", "0.3.0");
         transaction.addTag("Contract", this.pool.id!);
