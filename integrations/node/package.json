@@ -22,6 +22,7 @@
     "@kyve/cosmos": "0.0.0-alpha.18",
     "@kyve/evm": "0.0.0-alpha",
     "@kyve/evm-events": "0.0.0-alpha",
+    "@kyve/octopus": "0.0.0-alpha",
     "@kyve/polkadot": "0.0.0-alpha.20",
     "@kyve/smartweave": "0.0.0-alpha.15",
     "@kyve/solana": "0.0.0-alpha.15",
