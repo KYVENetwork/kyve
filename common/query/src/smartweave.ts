@@ -61,6 +61,14 @@ export const readContract = async (
     ])
     .findAll()) as GQLEdgeTransactionInterface[];
 
+  const validity: Record<string, boolean> = {};
+
+  if (missingTXs.length == 0) {
+    // return immediately to avoid call to loadContract function (which is slooooow)
+    // note: not sure what to do with validity?
+    return returnValidity ? { state, validity } : state;
+  }
+
   // from https://github.com/ArweaveTeam/SmartWeave/blob/master/src/contract-read.ts#L56
   // TODO: FIX ONCE https://github.com/ArweaveTeam/SmartWeave/pull/82 is merged
 
@@ -68,8 +76,6 @@ export const readContract = async (
 
   const contractInfo = await loadContract(arweave, contractID);
   const { handler, swGlobal } = contractInfo;
-
-  const validity: Record<string, boolean> = {};
 
   for (const txInfo of missingTXs) {
     const tags = formatTags(txInfo.node.tags);
