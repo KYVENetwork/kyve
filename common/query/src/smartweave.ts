@@ -41,8 +41,10 @@ export const readContract = async (
     ).value
   );
 
-  const data: { state: object } = JSON.parse(await getData(transaction.id));
+  const data: { state: object; validity: { [txID: string]: boolean } } =
+    JSON.parse(await getData(transaction.id));
   let state = data.state;
+  let validity = data.validity;
 
   // find txs which have not been added to state
 
@@ -61,11 +63,8 @@ export const readContract = async (
     ])
     .findAll()) as GQLEdgeTransactionInterface[];
 
-  const validity: Record<string, boolean> = {};
-
   if (missingTXs.length == 0) {
     // return immediately to avoid call to loadContract function (which is slooooow)
-    // note: not sure what to do with validity?
     return returnValidity ? { state, validity } : state;
   }
 
