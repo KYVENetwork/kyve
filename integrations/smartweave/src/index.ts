@@ -5,12 +5,13 @@ import {
   ValidateFunctionSubscriber,
 } from "@kyve/core/dist/faces";
 import Arweave from "arweave";
-import { readContract } from "smartweave";
 import hash from "object-hash";
 import KYVE from "@kyve/core";
 import Log from "@kyve/core/dist/logger";
 import { JWKInterface } from "arweave/node/lib/wallet";
 import { GQLTagInterface } from "smartweave/lib/interfaces/gqlResult";
+import { connect, start } from "./db";
+import { readContract } from "./utils";
 
 const client = new Arweave({
   host: "arweave.net",
@@ -25,6 +26,10 @@ export const upload = async (
   pool: string,
   config: any
 ) => {
+  // Connect to the local database.
+  const connection = connect();
+  await start(connection);
+
   // mapping contract address to hash(state)
   let contracts: { [id: string]: string } = {};
 
@@ -36,7 +41,7 @@ export const upload = async (
 
     if (previousHeight !== currentHeight) {
       for (const id of config.contracts) {
-        const res = await readContract(client, id, currentHeight, true);
+        const res = await readContract(client, connection, id, currentHeight);
 
         // if no hash in local storage, upload a new state
         if (contracts[id]) {
@@ -78,6 +83,10 @@ export const validate = async (
   pool: string,
   config: any
 ) => {
+  // Connect to the local database.
+  const connection = connect();
+  await start(connection);
+
   listener.subscribe(async (res: ListenFunctionReturn) => {
     // find Target-Contract and Block in transaction tags
     const contract = res.transaction.tags.find(
@@ -95,7 +104,7 @@ export const validate = async (
     }
 
     // read the contract to the height passed by the uploader
-    const state = await readContract(client, contract, block, true);
+    const state = await readContract(client, connection, contract, block);
     const localHash = hash(state);
     const compareHash = hash(JSON.parse(res.data));
 

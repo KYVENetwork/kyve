@@ -22,9 +22,12 @@
   "types": "dist/index",
   "dependencies": {
     "@kyve/core": "0.0.0-alpha.18",
+    "ardb": "^1.0.8",
     "arweave": "^1.10.14",
+    "knex": "^0.95.7",
     "object-hash": "^2.1.1",
-    "smartweave": "johnletey/SmartWeave#release"
+    "smartweave": "johnletey/SmartWeave#release",
+    "sqlite3": "^5.0.2"
   },
   "devDependencies": {
     "@textury/arlocal": "^1.0.14",
