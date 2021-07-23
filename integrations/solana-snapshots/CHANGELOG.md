@@ -1,0 +1,19 @@
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+# 0.0.0-alpha.0 (2021-07-23)
+
+
+### Bug Fixes
+
+* correctly handle async for validation ([0be5fe6](https://github.com/KYVENetwork/kyve/tree/master/integrations/solana-snapshots/commit/0be5fe65d0b5df7761459687a2c9da19d0df221b))
+
+
+### Features
+
+* add logs to uploader ([05caaba](https://github.com/KYVENetwork/kyve/tree/master/integrations/solana-snapshots/commit/05caaba4227ec17f5ef1315b67aa9fe9cafd3bf2))
+* implement uploader for Solana snapshots ([c359ac6](https://github.com/KYVENetwork/kyve/tree/master/integrations/solana-snapshots/commit/c359ac6451b35033c7bd91ee3a949cd2b1d054e8))
+* implement validator for Solana snapshots ([3c9abff](https://github.com/KYVENetwork/kyve/tree/master/integrations/solana-snapshots/commit/3c9abff9c642a7e75b57fc9a4488e5a0225b23f5))
+* pass the pool ID into the uploader/validator ([e2b5621](https://github.com/KYVENetwork/kyve/tree/master/integrations/solana-snapshots/commit/e2b5621f37cc58ea6727ce99d473e4f6dffa933e))

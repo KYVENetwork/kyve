@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.21](https://github.com/KYVENetwork/kyve/compare/@kyve/node@0.0.0-alpha.20...@kyve/node@0.0.0-alpha.21) (2021-07-23)
+
+
+### Features
+
+* add EVM to meta node ([0610d2b](https://github.com/KYVENetwork/kyve/commit/0610d2b6999eff3f8a89a0e0ca9d73cf50726591))
+* **wip:** add Solana snapshots to meta node ([80340ac](https://github.com/KYVENetwork/kyve/commit/80340ac8a1d8e55f1dc8b0c5fa53e7b50b0b90fd))
+
+
+
+
+
 # [0.0.0-alpha.20](https://github.com/KYVENetwork/kyve/compare/@kyve/node@0.0.0-alpha.19...@kyve/node@0.0.0-alpha.20) (2021-07-13)
 
 **Note:** Version bump only for package @kyve/node

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.24](https://github.com/KYVENetwork/logic/compare/@kyve/query@0.0.0-alpha.23...@kyve/query@0.0.0-alpha.24) (2021-07-23)
+
+
+### Bug Fixes
+
+* correctly pull validity from archive ([54a4eac](https://github.com/KYVENetwork/logic/commit/54a4eaca0595b883b0eb1c9ded54f4e87e696d1f))
+
+
+
+
+
 # [0.0.0-alpha.23](https://github.com/KYVENetwork/logic/compare/@kyve/query@0.0.0-alpha.22...@kyve/query@0.0.0-alpha.23) (2021-07-13)
 
 **Note:** Version bump only for package @kyve/query

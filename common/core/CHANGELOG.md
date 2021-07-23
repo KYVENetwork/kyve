@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.18](https://github.com/KYVENetwork/logic/compare/@kyve/core@0.0.0-alpha.17...@kyve/core@0.0.0-alpha.18) (2021-07-23)
+
+
+### Bug Fixes
+
+* catch when GraphQL returns no data ([08b7fcc](https://github.com/KYVENetwork/logic/commit/08b7fcc87e05ec3da357ea1af860ad32e22a4f0a)), closes [#8](https://github.com/KYVENetwork/logic/issues/8)
+
+
+### Features
+
+* pass the pool ID into the uploader/validator ([e2b5621](https://github.com/KYVENetwork/logic/commit/e2b5621f37cc58ea6727ce99d473e4f6dffa933e))
+
+
+
+
+
 # [0.0.0-alpha.17](https://github.com/KYVENetwork/logic/compare/@kyve/core@0.0.0-alpha.16...@kyve/core@0.0.0-alpha.17) (2021-07-13)
 
 
