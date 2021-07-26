@@ -597,14 +597,6 @@ export async function handle(state, action) {
     }
     return { state: newState };
   }
-  if (input.function === "dispense") {
-    if (caller in balances) {
-      balances[caller] += 1e3;
-    } else {
-      balances[caller] = 1e3;
-    }
-    return { state };
-  }
   function isArweaveAddress(addy) {
     const address = addy.toString().trim();
     if (!/[a-z0-9_-]{43}/i.test(address)) {

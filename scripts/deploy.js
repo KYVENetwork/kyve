@@ -65,7 +65,7 @@ const client = new Arweave({
 
   // Deploy treasury contract.
   const treasurySrc = fs.readFileSync(
-    "./contract/@treasury/dist/index.js",
+    "./contract/treasury/dist/index.js",
     "utf-8"
   );
   const treasuryState = {
@@ -83,7 +83,7 @@ const client = new Arweave({
   console.log(`Treasury:\n  ${treasury}`);
 
   // Deploy pool contract source.
-  const poolSrc = fs.readFileSync("./contract/@pool/dist/index.js", "utf-8");
+  const poolSrc = fs.readFileSync("./contract/pool/dist/index.js", "utf-8");
 
   const pool = await client.createTransaction({ data: poolSrc }, wallet);
 
