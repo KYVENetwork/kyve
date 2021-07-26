@@ -1,6 +1,5 @@
 import { ActionInterface, StateInterface } from "./faces";
 import { Deposit } from "./modules/deposit";
-import { Evolve } from "./modules/evolve";
 import { Fund } from "./modules/fund";
 import { Register } from "./modules/register";
 import { Stake } from "./modules/stake";
@@ -33,8 +32,6 @@ export async function handle(state: StateInterface, action: ActionInterface) {
 
     case "update":
       return { state: Update(state, action) };
-    case "evolve":
-      return { state: Evolve(state, action) };
     case "updateContracts":
       return { state: UpdateContracts(state, action) };
   }

@@ -26,8 +26,6 @@ export interface StateInterface {
 
   invocations: string[];
   foreignCalls: { txID: string; contract: string; input: any }[];
-
-  _evolvedTo?: string;
 }
 
 export interface SettingsInterface {
@@ -76,16 +74,10 @@ export interface SubmitInterface {
 }
 
 export interface UpdateInterface {
-  // can only be called by the pool admins
+  // can only be called by the pool owner
   function: "update";
   settings?: SettingsInterface;
   config?: any;
-}
-
-export interface EvolveInterface {
-  // can only be called by the pool admins
-  function: "evolve";
-  source: string;
 }
 
 export interface UpdateContractsInterface {
