@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.15](https://github.com/KYVENetwork/kyve/compare/@kyve/contract-lib@0.1.0-alpha.14...@kyve/contract-lib@0.1.0-alpha.15) (2021-07-27)
+
+
+### Bug Fixes
+
+* speed up cache access ([c1b2d08](https://github.com/KYVENetwork/kyve/commit/c1b2d081d871fe9a59e9e924180edffd17ac6d7e))
+
+
+
+
+
 # [0.1.0-alpha.14](https://github.com/KYVENetwork/kyve/compare/@kyve/contract-lib@0.1.0-alpha.13...@kyve/contract-lib@0.1.0-alpha.14) (2021-07-13)
 
 

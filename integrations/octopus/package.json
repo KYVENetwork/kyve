@@ -1,7 +1,7 @@
 {
   "name": "@kyve/octopus",
   "description": "The official KYVE node for Octopus",
-  "version": "0.0.0-alpha.0",
+  "version": "0.0.0-alpha.1",
   "author": "John Letey <john@kyve.network>, Fabian Riewe <fabian@kyve.network>",
   "repository": "https://github.com/KYVENetwork/kyve/tree/master/integrations/octopus",
   "license": "MIT",
@@ -19,7 +19,7 @@
   "main": "dist/index",
   "types": "dist/index",
   "dependencies": {
-    "@kyve/core": "0.0.0-alpha.18",
+    "@kyve/core": "0.0.0-alpha.19",
     "@open-rpc/client-js": "^1.7.0",
     "@polkadot/api": "^5.0.1",
     "object-hash": "^2.2.0"
