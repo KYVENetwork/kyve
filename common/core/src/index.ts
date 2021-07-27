@@ -11,14 +11,15 @@ import {
 import { JWKInterface } from "arweave/node/lib/wallet";
 import hash from "object-hash";
 import { Observable } from "rxjs";
-import { arweaveBundles as bundles, arweaveClient } from "./extensions";
+import { arweaveClient } from "./extensions";
+import { DataItemCreateOptions } from "ans104/lib/ar-data-base";
+import { bundleAndSignData } from "ans104";
 
 import { Pool, Governance } from "@kyve/contract-lib";
 import { GQLEdgeTransactionInterface } from "ardb/lib/faces/gql";
 import { deposit, untilMined } from "./helper";
 
 import Log from "./logger";
-import { create } from "arweave-bundles";
 
 export const APP_NAME = "KYVE - DEV";
 
@@ -239,31 +240,21 @@ export default class KYVE {
         const buffer = this.uploaderBuffer;
         this.uploaderBuffer = [];
 
-        const items = [];
+        const items: DataItemCreateOptions[] = [];
         for (const entry of buffer) {
-          const item = await bundles.createData(
-            {
-              data: JSON.stringify(entry.data),
-              tags: [
-                { name: "Application", value: APP_NAME },
-                { name: "Pool", value: this.poolID.toString() },
-                ...(entry.tags || []),
-              ],
-            },
-            this.keyfile
-          );
-          items.push(await bundles.sign(item, this.keyfile));
+          items.push({
+            data: JSON.stringify(entry.data),
+            tags: [
+              { name: "Application", value: APP_NAME },
+              { name: "Pool", value: this.poolID.toString() },
+              ...(entry.tags || []),
+            ],
+          });
         }
 
-        const bundle = await bundles.bundleData(items);
-        const transaction = await this.arweave.createTransaction(
-          { data: JSON.stringify(bundle) },
-          this.keyfile
-        );
+        const bundle = await bundleAndSignData(items, this.keyfile);
+        const transaction = await bundle.toTransaction(this.arweave);
 
-        transaction.addTag("Bundle-Format", "json");
-        transaction.addTag("Bundle-Version", "1.0.0");
-        transaction.addTag("Content-Type", "application/json");
         transaction.addTag("App-Name", "SmartWeaveAction");
         transaction.addTag("App-Version", "0.3.0");
         transaction.addTag("Contract", this.pool.id!);

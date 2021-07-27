@@ -1,5 +1,6 @@
 import { ActionInterface, StateInterface } from "../faces";
 import { DataItemJson } from "arweave-bundles";
+import { unbundleData } from "ans104";
 
 declare const ContractAssert: any;
 declare const SmartWeave: any;
@@ -17,7 +18,7 @@ export const Register = async (
     "Only the uploader can register data."
   );
 
-  const ids: string[] = [];
+  let ids: string[] = [];
   const tags = await GetTags(SmartWeave.transaction.id);
 
   if (
@@ -28,7 +29,7 @@ export const Register = async (
       (tag) => tag.name === "Bundle-Version" && tag.value === "1.0.0"
     ) > -1
   ) {
-    // Transaction is a bundle
+    // Transaction is an ANS-102 bundle
     const data = JSON.parse(
       await SmartWeave.unsafeClient.transactions.getData(
         SmartWeave.transaction.id,
@@ -38,6 +39,21 @@ export const Register = async (
 
     const items = data.items as DataItemJson[];
     items.forEach((item) => ids.push(item.id));
+  } else if (
+    tags.findIndex(
+      (tag) => tag.name === "Bundle-Format" && tag.value === "binary"
+    ) > -1 &&
+    tags.findIndex(
+      (tag) => tag.name === "Bundle-Version" && tag.value === "2.0.0"
+    ) > -1
+  ) {
+    // Transaction is an ANS-104 bundle
+    const data = await SmartWeave.unsafeClient.transactions.getData(
+      SmartWeave.transaction.id
+    );
+
+    const bundle = unbundleData(data);
+    ids = bundle.getIds();
   } else {
     // Transaction is not a bundle
     ids.push(SmartWeave.transaction.id);
