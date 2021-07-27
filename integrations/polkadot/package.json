@@ -22,7 +22,7 @@
   "types": "dist/index",
   "dependencies": {
     "@kyve/core": "0.0.0-alpha.18",
-    "@polkadot/api": "^4.13.1",
+    "@polkadot/api": "^5.0.1",
     "object-hash": "^2.1.1"
   },
   "devDependencies": {
