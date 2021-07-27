@@ -26,7 +26,7 @@ export class Governance {
 
     if (useCache) {
       const response = await fetch(
-        `https://kyve.network/api/pool?id=${this.id}`
+        `https://kyve.network/api/pool?id=${this.id}&type=meta`
       );
       if (response.ok) {
         res = await response.json();
