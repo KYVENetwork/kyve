@@ -96,6 +96,7 @@ if (process.env.WALLET) {
         break;
       case "@kyve/octopus":
         instances.push(OctopusInstance(poolID, stake, wallet));
+        break;
       case "@kyve/polkadot":
         instances.push(PolkadotInstance(poolID, stake, wallet));
         break;
