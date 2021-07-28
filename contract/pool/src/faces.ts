@@ -11,18 +11,7 @@ export interface StateInterface {
     };
   };
 
-  txs: {
-    [id: string]: {
-      status: "pending" | "dropped" | "valid" | "invalid";
-      submittedAt: number;
-      closesAt?: number;
-      finalizedAt?: number;
-
-      yays: string[];
-      nays: string[];
-      voters: string[];
-    };
-  };
+  txs: TransactionsFace;
 
   invocations: string[];
   foreignCalls: { txID: string; contract: string; input: any }[];
@@ -48,6 +37,19 @@ export interface SettingsInterface {
   payout: {
     kyvePerByte: number; // 1
     idleCost: number; // 0
+  };
+}
+
+export interface TransactionsFace {
+  [id: string]: {
+    status: "pending" | "dropped" | "valid" | "invalid";
+    submittedAt: number;
+    closesAt?: number;
+    finalizedAt?: number;
+
+    yays: string[];
+    nays: string[];
+    voters: string[];
   };
 }
 

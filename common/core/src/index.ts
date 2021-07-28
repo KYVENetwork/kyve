@@ -148,13 +148,9 @@ export default class KYVE {
           // State has changed.
           // Find all pending transactions that need votes.
 
-          const unhandledTxs = Object.entries(state.txs).filter(
-            ([key, value]) =>
-              value.status === "pending" &&
-              !(value.yays.includes(address) || value.nays.includes(address))
-          );
+          const unhandledTxs = await this.pool.getUnhandledTxs(address);
 
-          for (const [id, value] of unhandledTxs) {
+          for (const id of unhandledTxs) {
             const res = (await this.ardb
               .search()
               .id(id)

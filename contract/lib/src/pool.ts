@@ -1,6 +1,7 @@
 import {
   CreditInterface,
   StateInterface,
+  TransactionsFace,
 } from "@kyve/contract-pool/dist/faces";
 import Arweave from "arweave";
 import { JWKInterface } from "arweave/node/lib/wallet";
@@ -70,6 +71,38 @@ export class Pool {
     this.state = res;
 
     return res;
+  }
+
+  async getUnhandledTxs(
+    address: string,
+    useCache: boolean = true
+  ): Promise<string[]> {
+    if (!this.id) throw new Error("No pool ID specified.");
+
+    let txs: TransactionsFace;
+
+    if (useCache) {
+      const response = await fetch(
+        `https://kyve.network/api/pool?id=${this.id}&type=unhandledTxs`
+      );
+      if (response.ok) {
+        txs = await response.json();
+      } else {
+        throw new Error(
+          `Couldn't read unhandled txs for ${this.id} from cache.`
+        );
+      }
+    } else {
+      const state: StateInterface = await readContract(this.client, this.id);
+      txs = state.txs;
+    }
+
+    const unhandledTxs = Object.entries(txs).filter(
+      ([key, value]) =>
+        value.status === "pending" && !value.voters.includes(address)
+    );
+
+    return unhandledTxs.map((tx) => tx[0]);
   }
 
   async processOutbox(): Promise<string> {
