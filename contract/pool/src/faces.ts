@@ -14,7 +14,7 @@ export interface StateInterface {
   txs: TransactionsFace;
 
   invocations: string[];
-  foreignCalls: { txID: string; contract: string; input: any }[];
+  foreignCalls: { [contract: string]: { txID: string; invocation: string }[] };
 }
 
 export interface SettingsInterface {
@@ -73,6 +73,10 @@ export interface RegisterInterface {
 
 export interface SubmitInterface {
   function: "submit";
+}
+
+export interface PruneInterface {
+  function: "prune";
 }
 
 export interface UpdateInterface {

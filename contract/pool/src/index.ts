@@ -1,6 +1,7 @@
 import { ActionInterface, StateInterface } from "./faces";
 import { Deposit } from "./modules/deposit";
 import { Fund } from "./modules/fund";
+import { Prune } from "./modules/prune";
 import { Register } from "./modules/register";
 import { Stake } from "./modules/stake";
 import { Submit } from "./modules/submit";
@@ -29,6 +30,9 @@ export async function handle(state: StateInterface, action: ActionInterface) {
       return { state: await Register(state, action) };
     case "submit":
       return { state: await Submit(state, action) };
+
+    case "prune":
+      return { state: await Prune(state, action) };
 
     case "update":
       return { state: Update(state, action) };
