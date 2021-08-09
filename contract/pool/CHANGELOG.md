@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.2](https://github.com/KYVENetwork/kyve/compare/@kyve/contract-pool@1.0.0-alpha.1...@kyve/contract-pool@1.0.0-alpha.2) (2021-08-09)
+
+
+### Bug Fixes
+
+* fetch unhandled txs from cache ([58f3a5e](https://github.com/KYVENetwork/kyve/commit/58f3a5e20a535aad62c5298f544fd83cc7dbd8ed))
+
+
+### Features
+
+* add ability to evolve a pool contract ([8908abd](https://github.com/KYVENetwork/kyve/commit/8908abd869347764f8a7df98daf315f52892880c))
+
+
+
+
+
 # [1.0.0-alpha.1](https://github.com/KYVENetwork/kyve/compare/@kyve/contract-pool@1.0.0-alpha.0...@kyve/contract-pool@1.0.0-alpha.1) (2021-07-06)
 
 **Note:** Version bump only for package @kyve/contract-pool

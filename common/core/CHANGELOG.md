@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.20](https://github.com/KYVENetwork/logic/compare/@kyve/core@0.0.0-alpha.19...@kyve/core@0.0.0-alpha.20) (2021-08-09)
+
+
+### Bug Fixes
+
+* fetch unhandled txs from cache ([58f3a5e](https://github.com/KYVENetwork/logic/commit/58f3a5e20a535aad62c5298f544fd83cc7dbd8ed))
+
+
+
+
+
 # [0.0.0-alpha.19](https://github.com/KYVENetwork/logic/compare/@kyve/core@0.0.0-alpha.18...@kyve/core@0.0.0-alpha.19) (2021-07-27)
 
 **Note:** Version bump only for package @kyve/core

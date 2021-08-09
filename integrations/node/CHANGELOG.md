@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.23](https://github.com/KYVENetwork/kyve/compare/@kyve/node@0.0.0-alpha.22...@kyve/node@0.0.0-alpha.23) (2021-08-09)
+
+
+### Bug Fixes
+
+* unsupported runtime issue ([eff92c5](https://github.com/KYVENetwork/kyve/commit/eff92c5dbffd9f2cc95306b590a080ef7f6eae6e))
+
+
+
+
+
 # [0.0.0-alpha.22](https://github.com/KYVENetwork/kyve/compare/@kyve/node@0.0.0-alpha.21...@kyve/node@0.0.0-alpha.22) (2021-07-27)
 
 **Note:** Version bump only for package @kyve/node

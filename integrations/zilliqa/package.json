@@ -1,7 +1,7 @@
 {
   "name": "@kyve/zilliqa",
   "description": "The official KYVE node for Zilliqa",
-  "version": "0.0.0-alpha.16",
+  "version": "0.0.0-alpha.17",
   "author": "Ewart ten Brink, Martijn Heus",
   "repository": "https://github.com/KYVENetwork/zilliqa",
   "license": "MIT",
@@ -21,7 +21,7 @@
   "main": "dist/index",
   "types": "dist/index",
   "dependencies": {
-    "@kyve/core": "0.0.0-alpha.19",
+    "@kyve/core": "0.0.0-alpha.20",
     "@zilliqa-js/zilliqa": "^2.2.1",
     "object-hash": "^2.1.1"
   },

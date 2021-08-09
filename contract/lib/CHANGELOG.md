@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.16](https://github.com/KYVENetwork/kyve/compare/@kyve/contract-lib@0.1.0-alpha.15...@kyve/contract-lib@0.1.0-alpha.16) (2021-08-09)
+
+
+### Bug Fixes
+
+* fetch unhandled txs from cache ([58f3a5e](https://github.com/KYVENetwork/kyve/commit/58f3a5e20a535aad62c5298f544fd83cc7dbd8ed))
+
+
+
+
+
 # [0.1.0-alpha.15](https://github.com/KYVENetwork/kyve/compare/@kyve/contract-lib@0.1.0-alpha.14...@kyve/contract-lib@0.1.0-alpha.15) (2021-07-27)
 
 
