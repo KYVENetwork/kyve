@@ -575,24 +575,23 @@ export async function handle(state, action) {
         contract
       );
       ContractAssert(
-        foreignState.foreignCalls,
+        foreignState.outbox,
         "Contract does not support foreign calls."
       );
-      const unhandledCalls = foreignState.foreignCalls.filter(
-        (entry) =>
-          entry.contract === SmartWeave.contract.id &&
-          !newState.invocations.includes(entry.txID)
-      );
-      for (const call of unhandledCalls) {
+      let outbox = foreignState.outbox;
+      const lastParsedTx = state.invocations[contract] || "";
+      const index = outbox.findIndex((item) => item.txID === lastParsedTx);
+      outbox = outbox.slice(index + 1);
+      for (const call of outbox) {
         let res;
         try {
           res = await handle(newState, {
             caller: contract,
-            input: call.input,
+            input: call.invocation,
           });
         } catch {}
         if (res) newState = res.state;
-        newState.invocations.push(call.txID);
+        newState.invocations[contract] = call.txID;
       }
     }
     return { state: newState };
