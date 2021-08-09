@@ -6,17 +6,16 @@ export const Prune = async (
   state: StateInterface,
   action: ActionInterface
 ): Promise<StateInterface> => {
-  const foreignCalls = state.foreignCalls;
+  let outbox = state.outbox;
+  const settings = state.settings;
 
-  for (const contract of Object.keys(foreignCalls)) {
-    const foreignState = await SmartWeave.contracts.readContractState(contract);
-    const lastParsedTx = foreignState.lastParsedTx as string;
+  const governanceState = await SmartWeave.contracts.readContractState(
+    settings.foriegnContracts.governance
+  );
+  const lastParsedTx = governanceState.lastParsedTx as string;
 
-    const index = foreignCalls[contract].findIndex(
-      (item) => item.txID === lastParsedTx
-    );
-    foreignCalls[contract] = foreignCalls[contract].slice(index + 1);
-  }
+  const index = outbox.findIndex((item) => item.txID === lastParsedTx);
+  outbox = outbox.slice(index + 1);
 
-  return { ...state, foreignCalls };
+  return { ...state, outbox };
 };

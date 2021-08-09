@@ -12,9 +12,7 @@ export interface StateInterface {
   };
 
   txs: TransactionsFace;
-
-  invocations: string[];
-  foreignCalls: { [contract: string]: { txID: string; invocation: string }[] };
+  outbox: { txID: string; invocation: string }[];
 }
 
 export interface SettingsInterface {
