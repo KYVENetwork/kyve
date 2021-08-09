@@ -64,6 +64,10 @@ export const Submit = async (
             value.submittedAt + 2 * settings.gracePeriod)
     );
 
+  const governanceState = await SmartWeave.contracts.readContractState(
+    settings.foriegnContracts.governance
+  );
+
   for (const [txID, data] of unhandledTxs) {
     if (data.yays.length + data.nays.length > 0.5 * data.voters.length) {
       // Enough people voted
@@ -95,7 +99,7 @@ export const Submit = async (
       // Payout governance (1%)
       const governancePayout = Round(tokens * 0.01);
       const holder = await RandomHolder(
-        settings.foriegnContracts.governance,
+        governanceState,
         settings.foriegnContracts.treasury
       );
       outbox.push({
@@ -221,9 +225,8 @@ const Round = (input: number) => {
   return Math.floor(input * 10 ** 12) / 10 ** 12;
 };
 
-const RandomHolder = async (governance: string, treasury: string) => {
-  const state = await SmartWeave.contracts.readContractState(governance);
-  const balances: { [address: string]: number } = state.balances;
+const RandomHolder = async (state: any, treasury: string) => {
+  const balances: { [address: string]: number } = {};
   const vault: {
     [address: string]: {
       balance: number;
@@ -233,22 +236,16 @@ const RandomHolder = async (governance: string, treasury: string) => {
   } = state.vault;
 
   let totalTokens = 0;
-  for (const addr of Object.keys(balances)) {
-    totalTokens += balances[addr];
-  }
-
   for (const addr of Object.keys(vault)) {
     if (!vault[addr].length) continue;
 
     const vaultBalance = vault[addr]
+      .filter((item) => item.end > SmartWeave.block.height)
       .map((a) => a.balance)
       .reduce((a, b) => a + b, 0);
+
     totalTokens += vaultBalance;
-    if (addr in balances) {
-      balances[addr] += vaultBalance;
-    } else {
-      balances[addr] = vaultBalance;
-    }
+    balances[addr] = vaultBalance;
   }
 
   const weighted: { [address: string]: number } = {};
