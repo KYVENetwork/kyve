@@ -9,9 +9,9 @@ export const Submit = async (
   action: ActionInterface
 ) => {
   const credit = state.credit;
-  const txs = state.txs;
-  const foreignCalls = state.foreignCalls;
+  const outbox = state.outbox;
   const settings = state.settings;
+  const txs = state.txs;
   // Finds all addresses with stake in the pool
   const voters = Object.entries(credit)
     .filter(([key, value]) => value.stake && key !== settings.uploader)
@@ -98,10 +98,9 @@ export const Submit = async (
         settings.foriegnContracts.governance,
         settings.foriegnContracts.treasury
       );
-      foreignCalls.push({
-        txID: `${SmartWeave.transaction.id}//${foreignCalls.length}`,
-        contract: settings.foriegnContracts.governance,
-        input: {
+      outbox.push({
+        txID: `${SmartWeave.transaction.id}//${outbox.length}`,
+        invocation: {
           function: "transfer",
           target: holder,
           qty: governancePayout,
@@ -110,10 +109,9 @@ export const Submit = async (
 
       // Payout treasury (1%)
       const treasuryPayout = Round(tokens * 0.01);
-      foreignCalls.push({
-        txID: `${SmartWeave.transaction.id}//${foreignCalls.length}`,
-        contract: settings.foriegnContracts.governance,
-        input: {
+      outbox.push({
+        txID: `${SmartWeave.transaction.id}//${outbox.length}`,
+        invocation: {
           function: "transfer",
           target: settings.foriegnContracts.treasury,
           qty: treasuryPayout,
@@ -180,10 +178,9 @@ export const Submit = async (
   }
 
   if (totalSlashed) {
-    foreignCalls.push({
-      txID: `${SmartWeave.transaction.id}//${foreignCalls.length}`,
-      contract: settings.foriegnContracts.governance,
-      input: {
+    outbox.push({
+      txID: `${SmartWeave.transaction.id}//${outbox.length}`,
+      invocation: {
         function: "transfer",
         target: settings.foriegnContracts.treasury,
         qty: totalSlashed,
@@ -191,7 +188,7 @@ export const Submit = async (
     });
   }
 
-  return { ...state, credit, txs, foreignCalls, settings };
+  return { ...state, credit, outbox, settings, txs };
 };
 
 const GetBytes = async (txID: string) => {

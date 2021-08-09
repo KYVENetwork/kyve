@@ -12,7 +12,7 @@ export interface StateInterface {
   };
 
   txs: TransactionsFace;
-  outbox: { txID: string; invocation: string }[];
+  outbox: { txID: string; invocation: any }[];
 }
 
 export interface SettingsInterface {
