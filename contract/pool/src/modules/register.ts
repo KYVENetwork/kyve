@@ -18,7 +18,7 @@ export const Register = async (
   );
 
   const ids: string[] = [];
-  const tags = await GetTags(SmartWeave.transaction.id);
+  const tags: { name: string, value: string }[] = SmartWeave.transaction.tags;
 
   if (
     tags.findIndex(
@@ -54,34 +54,4 @@ export const Register = async (
   }
 
   return { ...state, txs };
-};
-
-const GetTags = async (txID: string) => {
-  const res = await SmartWeave.unsafeClient.api.post(
-    "graphql",
-    {
-      query: `
-      query($txID: ID!) {
-        transactions(ids: [$txID]) {
-          edges {
-            node {
-              tags {
-                name
-                value
-              }
-            }
-          }
-        }
-      }
-  `,
-      variables: { txID },
-    },
-    { headers: { "content-type": "application/json" } }
-  );
-
-  // Only return the tags
-  return res.data.data.transactions.edges[0].node.tags as {
-    name: string;
-    value: string;
-  }[];
 };
