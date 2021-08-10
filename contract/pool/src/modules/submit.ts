@@ -198,33 +198,48 @@ export const Submit = async (
 };
 
 const GetBytes = async (ids: string[]) => {
-  const res = await SmartWeave.unsafeClient.api.post(
-    "graphql",
-    {
-      query: `
-      query($ids: [ID!]) {
-        transactions(ids: $ids) {
-          edges {
-            node {
-              id
-              data {
-                size
+  let hasNextPage = true;
+  let edges: { id: string; data: { size: string } }[] = [];
+  let cursor: string = "";
+
+  while (hasNextPage) {
+    const raw = await SmartWeave.unsafeClient.api.post(
+      "graphql",
+      {
+        query: `
+        query($ids: [ID!], $cursor: String) {
+          transactions(ids: $ids, after: $cursor) {
+            edges {
+              cursor
+              node {
+                id
+                data {
+                  size
+                }
               }
+            }
+            pageInfo {
+              hasNextPage
             }
           }
         }
-      }
-  `,
-      variables: { ids },
-    },
-    { headers: { "content-type": "application/json" } }
-  );
+    `,
+        variables: { ids, cursor },
+      },
+      { headers: { "content-type": "application/json" } }
+    );
+    const res = raw.data.data.transactions;
 
-  const edges: { id: string; data: { size: string } }[] =
-    res.data.data.transactions.edges;
+    if (res.edges && res.edges.length) {
+      edges = edges.concat(res.edges);
+      cursor = res.edges[res.edges.length - 1].cursor;
+    }
+    hasNextPage = res.pageInfo.hasNextPage;
+  }
+
   const bytes: { [id: string]: number } = {};
-
   edges.map((edge) => (bytes[edge.id] = +edge.data.size));
+
   return bytes;
 };
 
