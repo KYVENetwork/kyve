@@ -199,7 +199,7 @@ export const Submit = async (
 
 const GetBytes = async (ids: string[]) => {
   let hasNextPage = true;
-  let edges: { id: string; data: { size: string } }[] = [];
+  let edges: { node: { id: string; data: { size: string } } }[] = [];
   let cursor: string = "";
 
   while (hasNextPage) {
@@ -238,7 +238,7 @@ const GetBytes = async (ids: string[]) => {
   }
 
   const bytes: { [id: string]: number } = {};
-  edges.map((edge) => (bytes[edge.id] = +edge.data.size));
+  edges.map(({ node }) => (bytes[node.id] = +node.data.size));
 
   return bytes;
 };
