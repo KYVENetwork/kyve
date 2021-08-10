@@ -5,7 +5,7 @@ declare const SmartWeave: any;
 
 export const Withdraw = (state: StateInterface, action: ActionInterface) => {
   const credit = state.credit;
-  const foreignCalls = state.foreignCalls;
+  const outbox = state.outbox;
   const settings = state.settings;
   const caller = action.caller;
 
@@ -19,10 +19,9 @@ export const Withdraw = (state: StateInterface, action: ActionInterface) => {
     "Caller does not have enough balance."
   );
 
-  foreignCalls.push({
+  outbox.push({
     txID: SmartWeave.transaction.id,
-    contract: settings.foreignContracts.governance,
-    input: {
+    invocation: {
       function: "transfer",
       target: caller,
       qty,
@@ -30,5 +29,5 @@ export const Withdraw = (state: StateInterface, action: ActionInterface) => {
   });
   credit[caller].amount -= qty;
 
-  return { ...state, credit, foreignCalls };
+  return { ...state, credit, outbox };
 };
