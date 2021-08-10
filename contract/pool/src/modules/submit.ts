@@ -161,6 +161,9 @@ export const Submit = async (
       txs[txID].status = "dropped";
     }
     txs[txID].finalizedAt = SmartWeave.block.height;
+
+    // TODO: Maybe come up with a better solution ...
+    if (txs[txID].status === "valid") delete txs[txID];
   }
 
   // Handle slashing
