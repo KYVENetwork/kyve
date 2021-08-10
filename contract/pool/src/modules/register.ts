@@ -18,7 +18,7 @@ export const Register = async (
   );
 
   const ids: string[] = [];
-  const tags: { name: string, value: string }[] = SmartWeave.transaction.tags;
+  const tags: { name: string; value: string }[] = SmartWeave.transaction.tags;
 
   if (
     tags.findIndex(

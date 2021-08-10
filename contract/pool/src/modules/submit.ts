@@ -65,13 +65,13 @@ export const Submit = async (
     );
 
   const weights = await WeightedBalances(settings.foreignContracts.governance);
+  const bytes = await GetBytes(unhandledTxs.map(([id, data]) => id));
 
   for (const [txID, data] of unhandledTxs) {
     if (data.yays.length + data.nays.length > 0.5 * data.voters.length) {
       // Enough people voted
-      const bytes = await GetBytes(txID);
       const tokens = Round(
-        settings.payout.kyvePerByte * bytes + settings.payout.idleCost
+        settings.payout.kyvePerByte * bytes[txID] + settings.payout.idleCost
       );
       // The pool does not have enough balance to perform payout
       if (
@@ -197,30 +197,50 @@ export const Submit = async (
   return { ...state, credit, outbox, settings, txs };
 };
 
-const GetBytes = async (txID: string) => {
-  const res = await SmartWeave.unsafeClient.api.post(
-    "graphql",
-    {
-      query: `
-      query($txID: ID!) {
-        transactions(ids: [$txID]) {
-          edges {
-            node {
-              data {
-                size
+const GetBytes = async (ids: string[]) => {
+  let hasNextPage = true;
+  let edges: { id: string; data: { size: string } }[] = [];
+  let cursor: string = "";
+
+  while (hasNextPage) {
+    const raw = await SmartWeave.unsafeClient.api.post(
+      "graphql",
+      {
+        query: `
+        query($ids: [ID!], $cursor: String) {
+          transactions(ids: $ids, after: $cursor) {
+            edges {
+              cursor
+              node {
+                id
+                data {
+                  size
+                }
               }
+            }
+            pageInfo {
+              hasNextPage
             }
           }
         }
-      }
-  `,
-      variables: { txID },
-    },
-    { headers: { "content-type": "application/json" } }
-  );
+    `,
+        variables: { ids, cursor },
+      },
+      { headers: { "content-type": "application/json" } }
+    );
+    const res = raw.data.data.transactions;
 
-  // Only return the data size
-  return res.data.data.transactions.edges[0].node.data.size as number;
+    if (res.edges && res.edges.length) {
+      edges = edges.concat(res.edges);
+      cursor = res.edges[res.edges.length - 1].cursor;
+    }
+    hasNextPage = res.pageInfo.hasNextPage;
+  }
+
+  const bytes: { [id: string]: number } = {};
+  edges.map((edge) => (bytes[edge.id] = +edge.data.size));
+
+  return bytes;
 };
 
 const Round = (input: number) => {
