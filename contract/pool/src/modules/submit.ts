@@ -136,7 +136,8 @@ export const Submit = async (
 
       if (data.yays.length >= data.nays.length) {
         // Transaction is valid
-        txs[txID].status = "valid";
+        // TODO: Maybe find a better solution ...
+        delete txs[txID];
 
         // Increase validator warnings
         for (const address of data.voters.filter(
