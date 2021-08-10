@@ -10,7 +10,7 @@ export const Prune = async (
   const settings = state.settings;
 
   const governanceState = await SmartWeave.contracts.readContractState(
-    settings.foriegnContracts.governance
+    settings.foreignContracts.governance
   );
   const lastParsedTx =
     (governanceState.invocations[SmartWeave.contract.id] as string) || "";

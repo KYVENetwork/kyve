@@ -20,7 +20,7 @@ export interface SettingsInterface {
   runtime: string; // e.g. "@kyve/smartweave"
   version: string;
   logo: string;
-  foriegnContracts: {
+  foreignContracts: {
     governance: string;
     treasury: string;
   };

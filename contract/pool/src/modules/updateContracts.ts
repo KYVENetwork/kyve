@@ -10,7 +10,7 @@ export const UpdateContracts = (
   state: StateInterface,
   action: ActionInterface
 ) => {
-  const contracts = state.settings.foriegnContracts;
+  const contracts = state.settings.foreignContracts;
   const caller = action.caller;
 
   const input: UpdateContractsInterface = action.input;
@@ -27,6 +27,6 @@ export const UpdateContracts = (
 
   return {
     ...state,
-    settings: { ...state.settings, foriegnContracts: contracts },
+    settings: { ...state.settings, foreignContracts: contracts },
   };
 };

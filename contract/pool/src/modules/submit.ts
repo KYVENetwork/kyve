@@ -64,7 +64,7 @@ export const Submit = async (
             value.submittedAt + 2 * settings.gracePeriod)
     );
 
-  const weights = await WeightedBalances(settings.foriegnContracts.governance);
+  const weights = await WeightedBalances(settings.foreignContracts.governance);
 
   for (const [txID, data] of unhandledTxs) {
     if (data.yays.length + data.nays.length > 0.5 * data.voters.length) {
@@ -99,7 +99,7 @@ export const Submit = async (
       const holder = RandomHolder(
         weights,
         txID,
-        settings.foriegnContracts.treasury
+        settings.foreignContracts.treasury
       );
       outbox.push({
         txID: `${SmartWeave.transaction.id}//${outbox.length}`,
@@ -116,7 +116,7 @@ export const Submit = async (
         txID: `${SmartWeave.transaction.id}//${outbox.length}`,
         invocation: {
           function: "transfer",
-          target: settings.foriegnContracts.treasury,
+          target: settings.foreignContracts.treasury,
           qty: treasuryPayout,
         },
       });
@@ -188,7 +188,7 @@ export const Submit = async (
       txID: `${SmartWeave.transaction.id}//${outbox.length}`,
       invocation: {
         function: "transfer",
-        target: settings.foriegnContracts.treasury,
+        target: settings.foreignContracts.treasury,
         qty: totalSlashed,
       },
     });

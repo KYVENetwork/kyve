@@ -15,7 +15,7 @@ export const Deposit = async (
   const index = tags.findIndex(
     (tag) =>
       tag.name === "Contract" &&
-      tag.value === settings.foriegnContracts.governance
+      tag.value === settings.foreignContracts.governance
   );
   ContractAssert(
     index !== -1,
@@ -29,7 +29,7 @@ export const Deposit = async (
   );
   const validity = (
     await SmartWeave.contracts.readContractState(
-      settings.foriegnContracts.governance,
+      settings.foreignContracts.governance,
       undefined,
       true
     )

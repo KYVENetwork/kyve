@@ -21,7 +21,7 @@ export const Withdraw = (state: StateInterface, action: ActionInterface) => {
 
   foreignCalls.push({
     txID: SmartWeave.transaction.id,
-    contract: settings.foriegnContracts.governance,
+    contract: settings.foreignContracts.governance,
     input: {
       function: "transfer",
       target: caller,
