@@ -25,7 +25,7 @@ export const Deposit = async (
   const input = JSON.parse(tags[index + 1].value);
   ContractAssert(
     input.function === "transfer" && input.target === SmartWeave.contract.id,
-    "Invalid interaction with governance contract."
+    "Caller did not transfer funds to the current contract."
   );
   const validity = (
     await SmartWeave.contracts.readContractState(
@@ -36,7 +36,7 @@ export const Deposit = async (
   ).validity;
   ContractAssert(
     validity[SmartWeave.transaction.id],
-    "Invalid interaction with governance contract."
+    "Interaction on the governance contract resulted in an error."
   );
 
   if (caller in credit) {
