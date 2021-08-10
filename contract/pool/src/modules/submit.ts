@@ -64,9 +64,7 @@ export const Submit = async (
             value.submittedAt + 2 * settings.gracePeriod)
     );
 
-  const governanceState = await SmartWeave.contracts.readContractState(
-    settings.foriegnContracts.governance
-  );
+  const weights = await WeightedBalances(settings.foriegnContracts.governance);
 
   for (const [txID, data] of unhandledTxs) {
     if (data.yays.length + data.nays.length > 0.5 * data.voters.length) {
@@ -98,8 +96,9 @@ export const Submit = async (
 
       // Payout governance (1%)
       const governancePayout = Round(tokens * 0.01);
-      const holder = await RandomHolder(
-        governanceState,
+      const holder = RandomHolder(
+        weights,
+        txID,
         settings.foriegnContracts.treasury
       );
       outbox.push({
@@ -225,7 +224,9 @@ const Round = (input: number) => {
   return Math.floor(input * 10 ** 12) / 10 ** 12;
 };
 
-const RandomHolder = async (state: any, treasury: string) => {
+const WeightedBalances = async (governance: string) => {
+  const state = await SmartWeave.contracts.readContractState(governance);
+
   const balances: { [address: string]: number } = {};
   const vault: {
     [address: string]: {
@@ -253,12 +254,20 @@ const RandomHolder = async (state: any, treasury: string) => {
     weighted[addr] = balances[addr] / totalTokens;
   }
 
-  let sum = 0;
-  const r = new Prando(SmartWeave.transaction.id).next();
+  return weighted;
+};
 
-  for (const key of Object.keys(weighted)) {
-    sum += weighted[key];
-    if (r <= sum && weighted[key] > 0) {
+const RandomHolder = (
+  weights: { [address: string]: number },
+  txID: string,
+  treasury: string
+) => {
+  let sum = 0;
+  const r = new Prando(txID).next();
+
+  for (const key of Object.keys(weights)) {
+    sum += weights[key];
+    if (r <= sum && weights[key] > 0) {
       return key;
     }
   }
