@@ -102,7 +102,7 @@ const gateway = new ArLocal(undefined, false, "db");
         kyvePerByte: 1,
         idleCost: 0,
       },
-      foriegnContracts: {
+      foreignContracts: {
         governance,
         treasury: "kyveKYVEkyve",
       },
