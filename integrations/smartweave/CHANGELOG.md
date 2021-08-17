@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.19](https://github.com/KYVENetwork/smartweave/compare/@kyve/smartweave@0.0.0-alpha.18...@kyve/smartweave@0.0.0-alpha.19) (2021-08-17)
+
+
+### Bug Fixes
+
+* fixed typo [#2](https://github.com/KYVENetwork/smartweave/issues/2) ([6ed4ad6](https://github.com/KYVENetwork/smartweave/commit/6ed4ad6741fda431422c1ed3b4dc7e2cd97c5dad))
+
+
+
+
+
 # [0.0.0-alpha.18](https://github.com/KYVENetwork/smartweave/compare/@kyve/smartweave@0.0.0-alpha.17...@kyve/smartweave@0.0.0-alpha.18) (2021-08-09)
 
 **Note:** Version bump only for package @kyve/smartweave

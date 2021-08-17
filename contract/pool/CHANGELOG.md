@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.3](https://github.com/KYVENetwork/kyve/compare/@kyve/contract-pool@1.0.0-alpha.2...@kyve/contract-pool@1.0.0-alpha.3) (2021-08-17)
+
+
+### Bug Fixes
+
+* correctly iterate over gql response ([fc7f4a1](https://github.com/KYVENetwork/kyve/commit/fc7f4a16cd4eb8ba23522d36be0d9c2a2cd4290b))
+* correctly push to outbox when withdrawing ([b1c3cf9](https://github.com/KYVENetwork/kyve/commit/b1c3cf967f66a28d46ebb79770865236f39aa387))
+* fixed typo ([ea3a041](https://github.com/KYVENetwork/kyve/commit/ea3a041d6774e64365d397aa61e33e887a8565d0))
+
+
+### Features
+
+* deploy new contracts ([51fbb07](https://github.com/KYVENetwork/kyve/commit/51fbb0702971191f46c519f7fd3be6c28e4a9810))
+* **wip:** start on pruning ([7b17eaa](https://github.com/KYVENetwork/kyve/commit/7b17eaa433ac11487d77a68b40557bc6d977ea15))
+
+
+
+
+
 # [1.0.0-alpha.2](https://github.com/KYVENetwork/kyve/compare/@kyve/contract-pool@1.0.0-alpha.1...@kyve/contract-pool@1.0.0-alpha.2) (2021-08-09)
 
 

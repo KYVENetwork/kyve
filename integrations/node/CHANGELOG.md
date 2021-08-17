@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.24](https://github.com/KYVENetwork/kyve/compare/@kyve/node@0.0.0-alpha.23...@kyve/node@0.0.0-alpha.24) (2021-08-17)
+
+
+### Features
+
+* deploy new contracts ([51fbb07](https://github.com/KYVENetwork/kyve/commit/51fbb0702971191f46c519f7fd3be6c28e4a9810))
+
+
+
+
+
 # [0.0.0-alpha.23](https://github.com/KYVENetwork/kyve/compare/@kyve/node@0.0.0-alpha.22...@kyve/node@0.0.0-alpha.23) (2021-08-09)
 
 

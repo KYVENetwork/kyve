@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.17](https://github.com/KYVENetwork/kyve/compare/@kyve/contract-lib@0.1.0-alpha.16...@kyve/contract-lib@0.1.0-alpha.17) (2021-08-17)
+
+
+### Features
+
+* deploy new contracts ([51fbb07](https://github.com/KYVENetwork/kyve/commit/51fbb0702971191f46c519f7fd3be6c28e4a9810))
+
+
+
+
+
 # [0.1.0-alpha.16](https://github.com/KYVENetwork/kyve/compare/@kyve/contract-lib@0.1.0-alpha.15...@kyve/contract-lib@0.1.0-alpha.16) (2021-08-09)
 
 
