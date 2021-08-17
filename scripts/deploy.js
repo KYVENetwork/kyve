@@ -35,7 +35,7 @@ const client = new Arweave({
     balances: {
       vxUdiv2fGHMiIoek5E4l3M5qSuKCZtSaOBYjMRc94JU: 999000,
       "s-hGrOFm1YysWGC3wXkNaFVpyrjdinVpRKiVnhbo2so": 999000,
-      "74hAWLfZgfGaLBdNAnONmRAsT0LkyQTFGlhZZorc7tg": 421000,
+      "74hAWLfZgfGaLBdNAnONmRAsT0LkyQTFGlhZZorc7tg": 416000,
       "5OWzyT1suRfinzRPuGpXbqwsxlDdy4SloRLCq5gJHi8": 1000,
       "cv-M77pENN2DnThamX6gKyXxZEdPvOWQScb4IUX23eQ": 1000,
       Go2jUnC6Fc_yAmSGIc3kzs2oh7o4KMSFMSIXXQqsKes: 1000,
@@ -613,6 +613,11 @@ const client = new Arweave({
       "lSxP6nuLSvR9b6-uS5GDaMzUHvnySIPLtRpOGtEn-G4": 1000,
       Qfod6da7zH3LLUrys6jmjsUJJtbcikDVK7m3dVEoxG0: 1000,
       bEwTZqYZWPVWubOQAetJZTn0RUAuUqnmxqfHIJWAy_s: 1000,
+      wGQWTOJ3axkebA5ZuidlepTlk9WGn1fEJDaje10IpoU: 1000,
+      "0RWuHL1469WYh146-x-5IKtes0WQweqv8d9OehyxFKw": 1000,
+      kmtKTyd_S_eZO3gag2qAspIMtAopJ_wN6qQ5Np0HQVo: 1000,
+      "waGdO_7V0hUsm5v7lUFC-bT0tSXQG7g_K1s2bheistk": 1000,
+      "fpr2iOeyXcYJIx9eUr4IdPY9MEbu9fNrktWhsw-8EJs": 1000,
     },
     vault: {
       vxUdiv2fGHMiIoek5E4l3M5qSuKCZtSaOBYjMRc94JU: [
@@ -643,7 +648,7 @@ const client = new Arweave({
       contracts: [],
       sources: [pool.id],
     },
-    invocations: [],
+    invocations: {},
     foreignCalls: [],
   };
 
