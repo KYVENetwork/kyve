@@ -188,7 +188,7 @@ export class Pool {
     return await interactWrite(
       this.client,
       this.wallet,
-      this.state!.settings.foriegnContracts.governance,
+      this.state!.settings.foreignContracts.governance,
       input,
       tags
     );

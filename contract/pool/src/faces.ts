@@ -48,6 +48,8 @@ export interface TransactionsFace {
     yays: string[];
     nays: string[];
     voters: string[];
+
+    bundle: boolean;
   };
 }
 

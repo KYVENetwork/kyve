@@ -17,7 +17,7 @@ export const Register = async (
     "Only the uploader can register data."
   );
 
-  const ids: string[] = [];
+  const ids: { id: string; bundle: boolean }[] = [];
   const tags: { name: string; value: string }[] = SmartWeave.transaction.tags;
 
   if (
@@ -37,19 +37,20 @@ export const Register = async (
     );
 
     const items = data.items as DataItemJson[];
-    items.forEach((item) => ids.push(item.id));
+    items.forEach((item) => ids.push({ id: item.id, bundle: true }));
   } else {
     // Transaction is not a bundle
-    ids.push(SmartWeave.transaction.id);
+    ids.push({ id: SmartWeave.transaction.id, bundle: false });
   }
 
-  for (const id of ids) {
+  for (const { id, bundle } of ids) {
     txs[id] = {
       status: "pending",
       submittedAt: SmartWeave.block.height,
       yays: [],
       nays: [],
       voters: [],
+      bundle,
     };
   }
 

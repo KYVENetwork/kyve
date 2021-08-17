@@ -69,7 +69,7 @@ export const Submit = async (
   for (const [txID, data] of unhandledTxs) {
     if (data.yays.length + data.nays.length > 0.5 * data.voters.length) {
       // Enough people voted
-      const bytes = await GetBytes(txID);
+      const bytes = await GetBytes(txID, data.bundle);
       const tokens = Round(
         settings.payout.kyvePerByte * bytes + settings.payout.idleCost
       );
@@ -197,9 +197,35 @@ export const Submit = async (
   return { ...state, credit, outbox, settings, txs };
 };
 
-const GetBytes = async (id: string) => {
-  const res = await SmartWeave.unsafeClient.api.get(`tx/${id}/data_size`);
-  return +res.data;
+const GetBytes = async (id: string, bundle: boolean) => {
+  if (bundle) {
+    const res = await SmartWeave.unsafeClient.api.post(
+      "graphql",
+      {
+        query: `
+        query($txID: ID!) {
+          transactions(ids: [$txID]) {
+            edges {
+              node {
+                data {
+                  size
+                }
+              }
+            }
+          }
+        }
+    `,
+        variables: { txID: id },
+      },
+      { headers: { "content-type": "application/json" } }
+    );
+
+    // Only return the data size
+    return res.data.data.transactions.edges[0].node.data.size as number;
+  } else {
+    const res = await SmartWeave.unsafeClient.api.get(`tx/${id}/data_size`);
+    return +res.data;
+  }
 };
 
 const Round = (input: number) => {
