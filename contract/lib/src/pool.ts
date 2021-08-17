@@ -21,7 +21,7 @@ export class Pool {
   public state?: StateInterface;
   public id?: string;
   public useCache: boolean;
-  public cacheUrl: string = "https://kyve.network/api";
+  public cacheUrl: string = "https://api.kyve.network";
 
   private src = POOL_SOURCE_CONTRACT_ID;
   private governance = GOVERNANCE_CONTRACT_ID;
