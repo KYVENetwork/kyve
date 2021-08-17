@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.20](https://github.com/KYVENetwork/kyve/compare/@kyve/contract-lib@0.1.0-alpha.19...@kyve/contract-lib@0.1.0-alpha.20) (2021-08-17)
+
+
+### Bug Fixes
+
+* added correct api route ([b5dcba8](https://github.com/KYVENetwork/kyve/commit/b5dcba8aee07c72e58df2e15128798148d5aac6a))
+
+
+
+
+
 # [0.1.0-alpha.19](https://github.com/KYVENetwork/kyve/compare/@kyve/contract-lib@0.1.0-alpha.18...@kyve/contract-lib@0.1.0-alpha.19) (2021-08-17)
 
 **Note:** Version bump only for package @kyve/contract-lib
