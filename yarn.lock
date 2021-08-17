@@ -8659,9 +8659,8 @@ smartweave@^0.4.27:
     sentencer "^0.2.1"
     yargs "^16.2.0"
 
-"smartweave@github:johnletey/SmartWeave#release", smartweave@johnletey/SmartWeave#release:
+smartweave@johnletey/SmartWeave#release:
   version "0.4.38"
-  uid adbfc2a8da22b3fcd71907a591c9faaf814e03be
   resolved "https://codeload.github.com/johnletey/SmartWeave/tar.gz/adbfc2a8da22b3fcd71907a591c9faaf814e03be"
   dependencies:
     "@types/clui" "^0.3.0"

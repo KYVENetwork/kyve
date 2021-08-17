@@ -20,15 +20,23 @@ export class Pool {
   public wallet: Keyfile;
   public state?: StateInterface;
   public id?: string;
+  public useCache: boolean;
+  public cacheUrl: string = "https://kyve.network/api";
 
   private src = POOL_SOURCE_CONTRACT_ID;
   private governance = GOVERNANCE_CONTRACT_ID;
   private treasury = TREASURY_CONTRACT_ID;
 
-  constructor(arweave: Arweave, wallet: Keyfile, id?: string) {
+  constructor(
+    arweave: Arweave,
+    wallet: Keyfile,
+    id?: string,
+    useCache: boolean = true
+  ) {
     this.client = arweave;
     this.wallet = wallet;
     this.id = id;
+    this.useCache = useCache;
   }
 
   async create(state: StateInterface): Promise<string> {
@@ -50,14 +58,14 @@ export class Pool {
     return this.id!;
   }
 
-  async getState(useCache: boolean = true): Promise<StateInterface> {
+  async getState(): Promise<StateInterface> {
     if (!this.id) throw new Error("No pool ID specified.");
 
     let res: StateInterface;
 
-    if (useCache) {
+    if (this.useCache) {
       const response = await fetch(
-        `https://kyve.network/api/pool?id=${this.id}&type=meta`
+        `${this.cacheUrl}/pool?id=${this.id}&type=meta`
       );
       if (response.ok) {
         res = await response.json();
@@ -73,17 +81,14 @@ export class Pool {
     return res;
   }
 
-  async getUnhandledTxs(
-    address: string,
-    useCache: boolean = true
-  ): Promise<string[]> {
+  async getUnhandledTxs(address: string): Promise<string[]> {
     if (!this.id) throw new Error("No pool ID specified.");
 
     let txs: TransactionsFace;
 
-    if (useCache) {
+    if (this.useCache) {
       const response = await fetch(
-        `https://kyve.network/api/pool?id=${this.id}&type=unhandledTxs`
+        `${this.cacheUrl}/pool?id=${this.id}&type=unhandledTxs`
       );
       if (response.ok) {
         txs = await response.json();
