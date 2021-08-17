@@ -48,7 +48,7 @@ export class Pool {
         ...state,
         settings: {
           ...state.settings,
-          foriegnContracts: {
+          foreignContracts: {
             governance: this.governance,
             treasury: this.treasury,
           },
