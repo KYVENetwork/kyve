@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.23](https://github.com/KYVENetwork/cosmos/compare/@kyve/cosmos@0.0.0-alpha.22...@kyve/cosmos@0.0.0-alpha.23) (2021-08-17)
+
+**Note:** Version bump only for package @kyve/cosmos
+
+
+
+
+
 # [0.0.0-alpha.22](https://github.com/KYVENetwork/cosmos/compare/@kyve/cosmos@0.0.0-alpha.21...@kyve/cosmos@0.0.0-alpha.22) (2021-08-17)
 
 **Note:** Version bump only for package @kyve/cosmos
