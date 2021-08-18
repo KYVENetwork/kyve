@@ -24,7 +24,7 @@
     "@kyve/core": "0.0.0-alpha.24",
     "arweave": "^1.10.14",
     "object-hash": "^2.1.1",
-    "smartweave": "johnletey/SmartWeave#john/redweave"
+    "smartweave": "redstone-finance/SmartWeave#ppe/redweave"
   },
   "devDependencies": {
     "@textury/arlocal": "^1.0.14",

@@ -2755,7 +2755,7 @@ arweave-bundles@^1.0.3:
   dependencies:
     arweave "^1.10.5"
 
-arweave@^1.10.11, arweave@^1.10.13, arweave@^1.10.14, arweave@^1.10.15, arweave@^1.10.5:
+arweave@^1.10.11, arweave@^1.10.13, arweave@^1.10.14, arweave@^1.10.15, arweave@^1.10.16, arweave@^1.10.5:
   version "1.10.16"
   resolved "https://registry.yarnpkg.com/arweave/-/arweave-1.10.16.tgz#b968590cb413242636196d2339562dd106840bb9"
   integrity sha512-j2UM7C/2MHO7Mv7wbzhihgVs8uN2+QltA+3cYaM82dNNEBBJylIClJUHHMqsK/2ejCnziQm4FofiUFbsQDdQDg==
@@ -8727,27 +8727,6 @@ smartweave@^0.4.27:
     sentencer "^0.2.1"
     yargs "^16.2.0"
 
-smartweave@johnletey/SmartWeave#john/redweave:
-  version "0.4.39"
-  resolved "https://codeload.github.com/johnletey/SmartWeave/tar.gz/fc97f326c92c39fd59747cbfbecb788dd663cd50"
-  dependencies:
-    "@types/clui" "^0.3.0"
-    "@types/inquirer" "^7.3.1"
-    "@weavery/clarity" "^0.1.5"
-    arweave "^1.10.15"
-    bignumber.js "^9.0.1"
-    bson "^4.4.1"
-    chalk "^4.1.0"
-    clui "^0.3.6"
-    figlet "^1.5.0"
-    inquirer "^7.3.3"
-    json-beautify "^1.1.1"
-    loglevel "^1.7.0"
-    mongodb "^4.0.1"
-    sentencer "^0.2.1"
-    typescript "^4.3.5"
-    yargs "^16.2.0"
-
 smartweave@johnletey/SmartWeave#release:
   version "0.4.38"
   resolved "https://codeload.github.com/johnletey/SmartWeave/tar.gz/adbfc2a8da22b3fcd71907a591c9faaf814e03be"
@@ -8764,6 +8743,27 @@ smartweave@johnletey/SmartWeave#release:
     json-beautify "^1.1.1"
     loglevel "^1.7.0"
     sentencer "^0.2.1"
+    yargs "^16.2.0"
+
+smartweave@redstone-finance/SmartWeave#ppe/redweave:
+  version "0.4.39"
+  resolved "https://codeload.github.com/redstone-finance/SmartWeave/tar.gz/82d1928d329bcabae918f742618e3fe2e26c4f17"
+  dependencies:
+    "@types/clui" "^0.3.0"
+    "@types/inquirer" "^7.3.1"
+    "@weavery/clarity" "^0.1.5"
+    arweave "^1.10.16"
+    bignumber.js "^9.0.1"
+    bson "^4.4.1"
+    chalk "^4.1.0"
+    clui "^0.3.6"
+    figlet "^1.5.0"
+    inquirer "^7.3.3"
+    json-beautify "^1.1.1"
+    loglevel "^1.7.0"
+    mongodb "^4.0.1"
+    sentencer "^0.2.1"
+    typescript "^4.3.5"
     yargs "^16.2.0"
 
 socks-proxy-agent@^5.0.0:
