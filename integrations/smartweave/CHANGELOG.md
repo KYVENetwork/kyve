@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.23](https://github.com/KYVENetwork/smartweave/compare/@kyve/smartweave@0.0.0-alpha.22...@kyve/smartweave@0.0.0-alpha.23) (2021-08-18)
+
+
+### Features
+
+* migrate to the Redstone SmartWeave ([9c5eb00](https://github.com/KYVENetwork/smartweave/commit/9c5eb002927fc116386aae64fc84166b55aaebc7))
+
+
+
+
+
 # [0.0.0-alpha.22](https://github.com/KYVENetwork/smartweave/compare/@kyve/smartweave@0.0.0-alpha.21...@kyve/smartweave@0.0.0-alpha.22) (2021-08-17)
 
 **Note:** Version bump only for package @kyve/smartweave

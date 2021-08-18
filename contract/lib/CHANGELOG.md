@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.21](https://github.com/KYVENetwork/kyve/compare/@kyve/contract-lib@0.1.0-alpha.20...@kyve/contract-lib@0.1.0-alpha.21) (2021-08-18)
+
+
+### Bug Fixes
+
+* fixed typo ([7ed9c48](https://github.com/KYVENetwork/kyve/commit/7ed9c488c7c4da56a40f9820e31a42427c2d3c23))
+
+
+### Features
+
+* migrate to the Redstone SmartWeave ([9c5eb00](https://github.com/KYVENetwork/kyve/commit/9c5eb002927fc116386aae64fc84166b55aaebc7))
+
+
+
+
+
 # [0.1.0-alpha.20](https://github.com/KYVENetwork/kyve/compare/@kyve/contract-lib@0.1.0-alpha.19...@kyve/contract-lib@0.1.0-alpha.20) (2021-08-17)
 
 
