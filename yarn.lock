@@ -630,40 +630,6 @@
   dependencies:
     vary "^1.1.2"
 
-"@kyve/avalanche@0.0.0-alpha.31":
-  version "0.0.0-alpha.31"
-  resolved "https://registry.yarnpkg.com/@kyve/avalanche/-/avalanche-0.0.0-alpha.31.tgz#e994534151edeefc51adf35610b307b1e879ee94"
-  integrity sha512-qEVJHlRnO5MdzpGPd2ZsDC46o/ff/BbFmT14ovZa4Cz43ho2mmrvub23M0yvvS3Br9eSaz003avOYyaMr2IRzA==
-  dependencies:
-    "@kyve/core" "0.0.0-alpha.17"
-    object-hash "^2.1.1"
-    web3 "^1.3.4"
-
-"@kyve/contract-lib@0.1.0-alpha.14":
-  version "0.1.0-alpha.14"
-  resolved "https://registry.yarnpkg.com/@kyve/contract-lib/-/contract-lib-0.1.0-alpha.14.tgz#9fa73317b18b668f8ac20e611adcdd789d75fc34"
-  integrity sha512-M4dYIZvR6tHGemeCA7FNjl+GYL4zs1BHpDxeu4E8mI7brnw1H35HiHcv8s1NZ9JbOu9quNgUGyfja6sBwLZ/Xg==
-  dependencies:
-    "@kyve/contract-pool" "^1.0.0-alpha.1"
-    arweave "^1.10.15"
-    cross-fetch "^3.1.4"
-    smartweave johnletey/SmartWeave#release
-
-"@kyve/core@0.0.0-alpha.17":
-  version "0.0.0-alpha.17"
-  resolved "https://registry.yarnpkg.com/@kyve/core/-/core-0.0.0-alpha.17.tgz#6131c341d0ee400607ee966a28cc2e7290b2a626"
-  integrity sha512-RLSRrQoLEINTNkdMagJa9fIbEUIQclLup8wI324/q03fMlQa1ez5UmIMaX6yG4CYxoXC6j0DBCIBeoEO0wX7EQ==
-  dependencies:
-    "@kyve/contract-lib" "0.1.0-alpha.14"
-    ardb "^1.0.8"
-    arweave "^1.10.11"
-    arweave-bundles "^1.0.3"
-    chalk "^4.1.1"
-    fecha "^4.2.1"
-    object-hash "^2.2.0"
-    rxjs "^6.6.6"
-    smartweave "^0.4.27"
-
 "@lerna/add@4.0.0":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@lerna/add/-/add-4.0.0.tgz#c36f57d132502a57b9e7058d1548b7a565ef183f"
@@ -3768,9 +3734,9 @@ copy-to@^2.0.1:
   integrity sha1-JoD7uAaKSNCGVrYJgJK9r8kG9KU=
 
 core-js-pure@^3.10.2:
-  version "3.16.1"
-  resolved "https://registry.yarnpkg.com/core-js-pure/-/core-js-pure-3.16.1.tgz#b997df2669c957a5b29f06e95813a171f993592e"
-  integrity sha512-TyofCdMzx0KMhi84mVRS8rL1XsRk2SPUNz2azmth53iRN0/08Uim9fdhQTaZTG1LqaXHYVci4RDHka6WrXfnvg==
+  version "3.16.2"
+  resolved "https://registry.yarnpkg.com/core-js-pure/-/core-js-pure-3.16.2.tgz#0ef4b79cabafb251ea86eb7d139b42bd98c533e8"
+  integrity sha512-oxKe64UH049mJqrKkynWp6Vu0Rlm/BTXO/bJZuN2mmR3RtOFNepLlSWDd1eo16PzHpQAoNG97rLU1V/YxesJjw==
 
 core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
@@ -4226,9 +4192,9 @@ ee-first@1.1.1:
   integrity sha1-WQxhFWsK4vTwJVcyoViyZrxWsh0=
 
 electron-to-chromium@^1.3.793:
-  version "1.3.807"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.807.tgz#c2eb803f4f094869b1a24151184ffbbdbf688b1f"
-  integrity sha512-p8uxxg2a23zRsvQ2uwA/OOI+O4BQxzaR7YKMIGGGQCpYmkFX2CVF5f0/hxLMV7yCr7nnJViCwHLhPfs52rIYCA==
+  version "1.3.810"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.810.tgz#23e340507e13e48debdb7445d2f8fbfab681c4df"
+  integrity sha512-NteznMlGtkIZCJNM2X6AVm3oMqWAdq7TjqagZhmVLPwd9mtrIq+rRxGHerjFAOFIqQJYQUMT72ncd/lVcH1cOw==
 
 elliptic@6.5.4, elliptic@^6.4.0, elliptic@^6.5.0, elliptic@^6.5.2, elliptic@^6.5.3, elliptic@^6.5.4:
   version "6.5.4"
@@ -5676,9 +5642,9 @@ is-class@0.0.4:
   integrity sha1-4FdFFwW7NOOePjNZjJOpg3KWtzY=
 
 is-core-module@^2.2.0:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/is-core-module/-/is-core-module-2.5.0.tgz#f754843617c70bfd29b7bd87327400cda5c18491"
-  integrity sha512-TXCMSDsEHMEEZ6eCA8rwRDbLu55MRGmrctljsBX/2v1d9/GzqHOxW5c5oPSgrUt2vBFXebu9rGqckXGPWOlYpg==
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/is-core-module/-/is-core-module-2.6.0.tgz#d7553b2526fe59b92ba3e40c8df757ec8a709e19"
+  integrity sha512-wShG8vs60jKfPWpF2KZRaAtvt3a20OAn7+IJ6hLPECpSABLcKtFKTTI4ZtH5QcBruBHlq+WsdHWyz0BCZW7svQ==
   dependencies:
     has "^1.0.3"
 
@@ -8727,24 +8693,6 @@ smartweave@^0.4.27:
     sentencer "^0.2.1"
     yargs "^16.2.0"
 
-smartweave@johnletey/SmartWeave#release:
-  version "0.4.38"
-  resolved "https://codeload.github.com/johnletey/SmartWeave/tar.gz/adbfc2a8da22b3fcd71907a591c9faaf814e03be"
-  dependencies:
-    "@types/clui" "^0.3.0"
-    "@types/inquirer" "^7.3.1"
-    "@weavery/clarity" "^0.1.5"
-    arweave "^1.10.15"
-    bignumber.js "^9.0.1"
-    chalk "^4.1.0"
-    clui "^0.3.6"
-    figlet "^1.5.0"
-    inquirer "^7.3.3"
-    json-beautify "^1.1.1"
-    loglevel "^1.7.0"
-    sentencer "^0.2.1"
-    yargs "^16.2.0"
-
 smartweave@redstone-finance/SmartWeave#ppe/redweave:
   version "0.4.39"
   resolved "https://codeload.github.com/redstone-finance/SmartWeave/tar.gz/82d1928d329bcabae918f742618e3fe2e26c4f17"
@@ -9939,7 +9887,7 @@ web3-utils@1.5.2:
     randombytes "^2.1.0"
     utf8 "3.0.0"
 
-web3@^1.3.4, web3@^1.4.0:
+web3@^1.4.0:
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/web3/-/web3-1.5.2.tgz#736ca2f39048c63964203dd811f519400973e78d"
   integrity sha512-aapKLdO8t7Cos6tZLeeQUtCJvTiPMlLcHsHHDLSBZ/VaJEucSTxzun32M8sp3BmF4waDEmhY+iyUM1BKvtAcVQ==
