@@ -5,7 +5,8 @@ import {
 } from "@kyve/contract-pool/dist/faces";
 import Arweave from "arweave";
 import { JWKInterface } from "arweave/node/lib/wallet";
-import { createContractFromTx, interactWrite, readContract } from "smartweave";
+import { createContractFromTx, interactWrite } from "smartweave";
+import { SwcClient, SwClientFactory } from "smartweave/lib/v2";
 import { fetch } from "cross-fetch";
 import {
   GOVERNANCE_CONTRACT_ID,
@@ -16,7 +17,8 @@ import {
 type Keyfile = JWKInterface | "use_wallet";
 
 export class Pool {
-  public client: Arweave;
+  public inst: Arweave;
+  public client: SwcClient;
   public wallet: Keyfile;
   public state?: StateInterface;
   public id?: string;
@@ -33,7 +35,8 @@ export class Pool {
     id?: string,
     useCache: boolean = true
   ) {
-    this.client = arweave;
+    this.inst = arweave;
+    this.client = SwClientFactory.memCacheClient(arweave);
     this.wallet = wallet;
     this.id = id;
     this.useCache = useCache;
@@ -41,7 +44,7 @@ export class Pool {
 
   async create(state: StateInterface): Promise<string> {
     this.id = await createContractFromTx(
-      this.client,
+      this.inst,
       this.wallet,
       this.src,
       JSON.stringify({
@@ -73,7 +76,11 @@ export class Pool {
         throw new Error(`Couldn't read state for ${this.id} from cache.`);
       }
     } else {
-      res = await readContract(this.client, this.id);
+      res = (
+        await this.client.readState(this.id, undefined, undefined, {
+          ignoreExceptions: true,
+        })
+      ).state;
     }
 
     this.state = res;
@@ -98,7 +105,11 @@ export class Pool {
         );
       }
     } else {
-      const state: StateInterface = await readContract(this.client, this.id);
+      const state: StateInterface = (
+        await this.client.readState(this.id, undefined, undefined, {
+          ignoreExceptions: true,
+        })
+      ).state;
       txs = state.txs;
     }
 
@@ -191,7 +202,7 @@ export class Pool {
     await this.getState();
 
     return await interactWrite(
-      this.client,
+      this.inst,
       this.wallet,
       this.state!.settings.foreignContracts.governance,
       input,
@@ -205,6 +216,6 @@ export class Pool {
   ): Promise<string> {
     await this.getState();
 
-    return await interactWrite(this.client, this.wallet, this.id!, input, tags);
+    return await interactWrite(this.inst, this.wallet, this.id!, input, tags);
   }
 }

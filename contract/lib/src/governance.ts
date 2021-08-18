@@ -1,6 +1,6 @@
 import Arweave from "arweave";
 import { JWKInterface } from "arweave/node/lib/wallet";
-import { readContract } from "smartweave";
+import { SwcClient, SwClientFactory } from "smartweave/lib/v2";
 import { fetch } from "cross-fetch";
 import { GOVERNANCE_CONTRACT_ID } from "./constants";
 
@@ -11,13 +11,15 @@ interface GovernanceState {
 }
 
 export class Governance {
-  public client: Arweave;
+  public inst: Arweave;
+  public client: SwcClient;
   public wallet: Keyfile;
   public state?: GovernanceState;
   public readonly id = GOVERNANCE_CONTRACT_ID;
 
   constructor(arweave: Arweave, wallet: Keyfile) {
-    this.client = arweave;
+    this.inst = arweave;
+    this.client = SwClientFactory.memCacheClient(arweave);
     this.wallet = wallet;
   }
 
@@ -26,7 +28,7 @@ export class Governance {
 
     if (useCache) {
       const response = await fetch(
-        `https://kyve.network/api/pool?id=${this.id}&type=meta`
+        `https://api.kyve.network/pool?id=${this.id}&type=meta`
       );
       if (response.ok) {
         res = await response.json();
@@ -36,7 +38,11 @@ export class Governance {
         );
       }
     } else {
-      res = await readContract(this.client, this.id);
+      res = (
+        await this.client.readState(this.id, undefined, undefined, {
+          ignoreExceptions: true,
+        })
+      ).state;
     }
 
     this.state = res;

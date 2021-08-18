@@ -5,18 +5,20 @@ import {
   ValidateFunctionSubscriber,
 } from "@kyve/core/dist/faces";
 import Arweave from "arweave";
-import { readContract } from "smartweave";
+import { SwClientFactory } from "smartweave/lib/v2";
 import hash from "object-hash";
 import KYVE from "@kyve/core";
 import Log from "@kyve/core/dist/logger";
 import { JWKInterface } from "arweave/node/lib/wallet";
 import { GQLTagInterface } from "smartweave/lib/interfaces/gqlResult";
 
-const client = new Arweave({
+const inst = new Arweave({
   host: "arweave.net",
   port: 443,
   protocol: "https",
 });
+
+const client = SwClientFactory.memCacheClient(inst);
 
 const logger = new Log("SmartWeave");
 
@@ -29,14 +31,16 @@ export const upload = async (
   let contracts: { [id: string]: string } = {};
 
   const main = async (previousHeight: number) => {
-    const currentHeight = (await client.network.getInfo()).height;
+    const currentHeight = (await inst.network.getInfo()).height;
     logger.info(
       `Current-Height: ${currentHeight} - Previous-Height: ${previousHeight}`
     );
 
     if (previousHeight !== currentHeight) {
       for (const id of config.contracts) {
-        const res = await readContract(client, id, currentHeight, true);
+        const res = await client.readState(id, currentHeight, undefined, {
+          ignoreExceptions: true,
+        });
 
         // if no hash in local storage, upload a new state
         if (contracts[id]) {
@@ -68,7 +72,7 @@ export const upload = async (
   };
 
   // start with latest block height
-  const height = (await client.network.getInfo()).height;
+  const height = (await inst.network.getInfo()).height;
   main(height);
 };
 
@@ -95,7 +99,9 @@ export const validate = async (
     }
 
     // read the contract to the height passed by the uploader
-    const state = await readContract(client, contract, block, true);
+    const state = await client.readState(contract, block, undefined, {
+      ignoreExceptions: true,
+    });
     const localHash = hash(state);
     const compareHash = hash(JSON.parse(res.data));
 
@@ -110,7 +116,7 @@ export default function main(pool: string, stake: number, jwk: JWKInterface) {
       pool,
       stake,
       jwk,
-      arweave: client,
+      arweave: inst,
     },
     upload,
     validate
