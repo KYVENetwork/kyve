@@ -1,7 +1,7 @@
 {
   "name": "@kyve/evm",
   "description": "The official KYVE node for EVM compatible chains",
-  "version": "0.0.0-alpha.8",
+  "version": "0.0.0-alpha.9",
   "author": "John Letey <john@kyve.network>, Fabian Riewe <fabian@kyve.network>",
   "repository": "https://github.com/KYVENetwork/kyve/tree/master/integrations/evm",
   "license": "MIT",
@@ -19,7 +19,7 @@
   "main": "dist/index",
   "types": "dist/index",
   "dependencies": {
-    "@kyve/core": "0.0.0-alpha.26",
+    "@kyve/core": "0.0.0-alpha.27",
     "object-hash": "^2.2.0",
     "web3": "^1.4.0"
   },

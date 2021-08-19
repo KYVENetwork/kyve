@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.27](https://github.com/KYVENetwork/logic/compare/@kyve/core@0.0.0-alpha.26...@kyve/core@0.0.0-alpha.27) (2021-08-19)
+
+
+### Bug Fixes
+
+* fixed tx skipping ([75dca52](https://github.com/KYVENetwork/logic/commit/75dca52c31d44f3b942f3dc2444df8ed110a2509))
+
+
+
+
+
 # [0.0.0-alpha.26](https://github.com/KYVENetwork/logic/compare/@kyve/core@0.0.0-alpha.25...@kyve/core@0.0.0-alpha.26) (2021-08-19)
 
 
