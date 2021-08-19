@@ -16,19 +16,22 @@ export class Governance {
   public wallet: Keyfile;
   public state?: GovernanceState;
   public readonly id = GOVERNANCE_CONTRACT_ID;
+  public useCache: boolean;
+  public cacheUrl: string = "https://api.kyve.network";
 
-  constructor(arweave: Arweave, wallet: Keyfile) {
+  constructor(arweave: Arweave, wallet: Keyfile, useCache: boolean = true) {
     this.inst = arweave;
     this.client = SwClientFactory.memCacheClient(arweave);
     this.wallet = wallet;
+    this.useCache = useCache;
   }
 
-  async getState(useCache: boolean = true): Promise<GovernanceState> {
+  async getState(): Promise<GovernanceState> {
     let res: GovernanceState;
 
-    if (useCache) {
+    if (this.useCache) {
       const response = await fetch(
-        `https://api.kyve.network/pool?id=${this.id}&type=meta`
+        `${this.cacheUrl}/pool?id=${this.id}&type=meta`
       );
       if (response.ok) {
         res = await response.json();
