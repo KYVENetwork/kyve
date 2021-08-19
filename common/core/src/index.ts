@@ -36,6 +36,8 @@ export default class KYVE {
   private uploaderBuffer: UploadFunctionReturn[] = [];
   private validatorBuffer: ValidateFunctionReturn[] = [];
 
+  private submittedTxs: string[] = [];
+
   private readonly refetchInterval: number = 5 * 60 * 1000;
 
   public poolID: string;
@@ -151,6 +153,10 @@ export default class KYVE {
           const unhandledTxs = await this.pool.getUnhandledTxs(address);
 
           for (const id of unhandledTxs) {
+            // Skip if transaction got already submitted but
+            // has not been mined yet
+            if (this.submittedTxs.indexOf(id) === -1) continue;
+
             const res = (await this.ardb
               .search()
               .id(id)
@@ -168,6 +174,7 @@ export default class KYVE {
                 transaction: node,
                 block: node.block.height,
               });
+              this.submittedTxs.push(id);
             } catch (e) {
               log.warn(`Error while fetching data for transaction: ${id}`);
             }
