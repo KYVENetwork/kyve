@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.8](https://github.com/KYVENetwork/kyve/compare/@kyve/evm@0.0.0-alpha.7...@kyve/evm@0.0.0-alpha.8) (2021-08-19)
+
+**Note:** Version bump only for package @kyve/evm
+
+
+
+
+
 # [0.0.0-alpha.7](https://github.com/KYVENetwork/kyve/compare/@kyve/evm@0.0.0-alpha.6...@kyve/evm@0.0.0-alpha.7) (2021-08-18)
 
 **Note:** Version bump only for package @kyve/evm

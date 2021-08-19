@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.24](https://github.com/KYVENetwork/solana/compare/@kyve/solana@0.0.0-alpha.23...@kyve/solana@0.0.0-alpha.24) (2021-08-19)
+
+**Note:** Version bump only for package @kyve/solana
+
+
+
+
+
 # [0.0.0-alpha.23](https://github.com/KYVENetwork/solana/compare/@kyve/solana@0.0.0-alpha.22...@kyve/solana@0.0.0-alpha.23) (2021-08-18)
 
 **Note:** Version bump only for package @kyve/solana

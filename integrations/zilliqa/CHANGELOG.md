@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.23](https://github.com/KYVENetwork/zilliqa/compare/@kyve/zilliqa@0.0.0-alpha.22...@kyve/zilliqa@0.0.0-alpha.23) (2021-08-19)
+
+**Note:** Version bump only for package @kyve/zilliqa
+
+
+
+
+
 # [0.0.0-alpha.22](https://github.com/KYVENetwork/zilliqa/compare/@kyve/zilliqa@0.0.0-alpha.21...@kyve/zilliqa@0.0.0-alpha.22) (2021-08-18)
 
 **Note:** Version bump only for package @kyve/zilliqa

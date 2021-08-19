@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.22](https://github.com/KYVENetwork/kyve/compare/@kyve/contract-lib@0.1.0-alpha.21...@kyve/contract-lib@0.1.0-alpha.22) (2021-08-19)
+
+
+### Bug Fixes
+
+* refactored governance.ts ([94b395e](https://github.com/KYVENetwork/kyve/commit/94b395ead54c78863074d0011cff4c6c701eac08))
+
+
+
+
+
 # [0.1.0-alpha.21](https://github.com/KYVENetwork/kyve/compare/@kyve/contract-lib@0.1.0-alpha.20...@kyve/contract-lib@0.1.0-alpha.21) (2021-08-18)
 
 

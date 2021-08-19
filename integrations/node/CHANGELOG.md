@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.29](https://github.com/KYVENetwork/kyve/compare/@kyve/node@0.0.0-alpha.28...@kyve/node@0.0.0-alpha.29) (2021-08-19)
+
+
+### Bug Fixes
+
+* fixed missing requirements ([3b59a80](https://github.com/KYVENetwork/kyve/commit/3b59a8051a4d5d6700ddc63738c357567add4842))
+
+
+
+
+
 # [0.0.0-alpha.28](https://github.com/KYVENetwork/kyve/compare/@kyve/node@0.0.0-alpha.27...@kyve/node@0.0.0-alpha.28) (2021-08-18)
 
 **Note:** Version bump only for package @kyve/node

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.26](https://github.com/KYVENetwork/logic/compare/@kyve/core@0.0.0-alpha.25...@kyve/core@0.0.0-alpha.26) (2021-08-19)
+
+
+### Bug Fixes
+
+* prevent transaction to get submitted twice ([93050c3](https://github.com/KYVENetwork/logic/commit/93050c36b3a8c541a0ced218d0830c52367a7aca))
+
+
+
+
+
 # [0.0.0-alpha.25](https://github.com/KYVENetwork/logic/compare/@kyve/core@0.0.0-alpha.24...@kyve/core@0.0.0-alpha.25) (2021-08-18)
 
 **Note:** Version bump only for package @kyve/core
