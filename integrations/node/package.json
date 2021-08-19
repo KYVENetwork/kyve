@@ -1,6 +1,6 @@
 {
   "name": "@kyve/node",
-  "version": "0.0.0-alpha.30",
+  "version": "0.0.0-alpha.31",
   "private": true,
   "scripts": {
     "build": "tsc",
@@ -23,7 +23,7 @@
     "@kyve/evm-events": "0.0.0-alpha.9",
     "@kyve/octopus": "0.0.0-alpha.9",
     "@kyve/polkadot": "0.0.0-alpha.30",
-    "@kyve/smartweave": "0.0.0-alpha.25",
+    "@kyve/smartweave": "0.0.0-alpha.26",
     "@kyve/solana": "0.0.0-alpha.25",
     "@kyve/solana-snapshots": "0.0.0-alpha.9",
     "@kyve/zilliqa": "0.0.0-alpha.24",

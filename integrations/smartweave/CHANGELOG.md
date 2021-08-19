@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.26](https://github.com/KYVENetwork/smartweave/compare/@kyve/smartweave@0.0.0-alpha.25...@kyve/smartweave@0.0.0-alpha.26) (2021-08-19)
+
+
+### Bug Fixes
+
+* make integration SmartWeave 2 compatible ([d95fae9](https://github.com/KYVENetwork/smartweave/commit/d95fae9b33b8855b1febee886ecd110fc78bcc3e))
+* make integration SmartWeave 2 compatible ([2955229](https://github.com/KYVENetwork/smartweave/commit/2955229eaa9c82b6274a49b9261938cc0cda2020))
+
+
+
+
+
 # [0.0.0-alpha.25](https://github.com/KYVENetwork/smartweave/compare/@kyve/smartweave@0.0.0-alpha.24...@kyve/smartweave@0.0.0-alpha.25) (2021-08-19)
 
 **Note:** Version bump only for package @kyve/smartweave
