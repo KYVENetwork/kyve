@@ -38,9 +38,12 @@ export const upload = async (
 
     if (previousHeight !== currentHeight) {
       for (const id of config.contracts) {
-        const res = await client.readState(id, currentHeight, undefined, {
+        const state = await client.readState(id, currentHeight, undefined, {
           ignoreExceptions: true,
         });
+
+        // stringify result
+        const res = JSON.stringify(state)
 
         // if no hash in local storage, upload a new state
         if (contracts[id]) {
@@ -102,7 +105,8 @@ export const validate = async (
     const state = await client.readState(contract, block, undefined, {
       ignoreExceptions: true,
     });
-    const localHash = hash(state);
+
+    const localHash = hash(JSON.parse(JSON.stringify(state)));
     const compareHash = hash(JSON.parse(res.data));
 
     // state is valid, if the two hashes are equal

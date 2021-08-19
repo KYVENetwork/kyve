@@ -29,7 +29,7 @@ const instance = new TestInstance(
 
 (async () => {
   const res = await instance.validateTx(
-    "RsJdbDLEDwGk8HQawTN8N6UX7V0mFHx_xChE98sDAx0"
+    "FCFNuYAMwizcCQpjApVDlZHdEdDG0cArV1aIVZkGDYM"
   );
   console.log(res);
 })();
