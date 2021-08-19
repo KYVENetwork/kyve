@@ -2,7 +2,7 @@ import TestInstance from "@kyve/core/dist/testing";
 import { upload, validate } from "../src";
 
 const pool = {
-  id: 400,
+  id: "400",
   pool: {
     name: "TestPool",
     architecture: "SmartWeave",
