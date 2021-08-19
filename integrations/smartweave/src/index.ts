@@ -43,7 +43,7 @@ export const upload = async (
         });
 
         // stringify result
-        const res = JSON.stringify(state)
+        const res = JSON.stringify(state);
 
         // if no hash in local storage, upload a new state
         if (contracts[id]) {
