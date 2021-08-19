@@ -155,7 +155,7 @@ export default class KYVE {
           for (const id of unhandledTxs) {
             // Skip if transaction got already submitted but
             // has not been mined yet
-            if (this.submittedTxs.indexOf(id) === -1) continue;
+            if (this.submittedTxs.indexOf(id) > -1) continue;
 
             const res = (await this.ardb
               .search()
