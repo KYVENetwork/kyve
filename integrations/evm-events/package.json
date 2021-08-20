@@ -1,7 +1,7 @@
 {
   "name": "@kyve/evm-events",
   "description": "The official KYVE node for EVM contract events",
-  "version": "0.0.0-alpha.10",
+  "version": "0.0.0-alpha.11",
   "author": "John Letey <john@kyve.network>, Fabian Riewe <fabian@kyve.network>",
   "repository": "https://github.com/KYVENetwork/kyve/tree/master/integrations/evm-events",
   "license": "MIT",
@@ -19,7 +19,7 @@
   "main": "dist/index",
   "types": "dist/index",
   "dependencies": {
-    "@kyve/core": "0.0.0-alpha.28",
+    "@kyve/core": "0.0.0-alpha.29",
     "object-hash": "^2.2.0",
     "web3": "^1.4.0"
   },

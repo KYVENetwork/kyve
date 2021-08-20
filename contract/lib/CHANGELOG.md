@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.24](https://github.com/KYVENetwork/kyve/compare/@kyve/contract-lib@0.1.0-alpha.23...@kyve/contract-lib@0.1.0-alpha.24) (2021-08-20)
+
+
+### Bug Fixes
+
+* downgrade smartweave for now ([bc1eee4](https://github.com/KYVENetwork/kyve/commit/bc1eee4a7e031892d3ec1bff2fe7cbe4545baba6))
+
+
+
+
+
 # [0.1.0-alpha.23](https://github.com/KYVENetwork/kyve/compare/@kyve/contract-lib@0.1.0-alpha.22...@kyve/contract-lib@0.1.0-alpha.23) (2021-08-20)
 
 **Note:** Version bump only for package @kyve/contract-lib
