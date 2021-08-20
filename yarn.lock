@@ -8695,7 +8695,7 @@ smartweave@^0.4.27:
 
 smartweave@redstone-finance/SmartWeave#ppe/redweave:
   version "0.4.39"
-  resolved "https://codeload.github.com/redstone-finance/SmartWeave/tar.gz/82d1928d329bcabae918f742618e3fe2e26c4f17"
+  resolved "https://codeload.github.com/redstone-finance/SmartWeave/tar.gz/e84015e9399600b05c3794899b071e4e217ac3a6"
   dependencies:
     "@types/clui" "^0.3.0"
     "@types/inquirer" "^7.3.1"
