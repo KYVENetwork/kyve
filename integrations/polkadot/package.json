@@ -1,7 +1,7 @@
 {
   "name": "@kyve/polkadot",
   "description": "The official KYVE node for Polkadot",
-  "version": "0.0.0-alpha.30",
+  "version": "0.0.0-alpha.31",
   "author": "John Letey <john@kyve.network>, Fabian Riewe <fabian@kyve.network>",
   "repository": "https://github.com/KYVENetwork/polkadot",
   "license": "MIT",
@@ -21,7 +21,7 @@
   "main": "dist/index",
   "types": "dist/index",
   "dependencies": {
-    "@kyve/core": "0.0.0-alpha.27",
+    "@kyve/core": "0.0.0-alpha.28",
     "@polkadot/api": "^5.0.1",
     "object-hash": "^2.1.1"
   },

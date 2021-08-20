@@ -1,6 +1,6 @@
 {
   "name": "@kyve/contract-lib",
-  "version": "0.1.0-alpha.22",
+  "version": "0.1.0-alpha.23",
   "main": "dist/index",
   "types": "dist/index",
   "files": [
@@ -16,7 +16,7 @@
     "test": "yarn run build"
   },
   "dependencies": {
-    "@kyve/contract-pool": "1.0.0-alpha.3",
+    "@kyve/contract-pool": "1.0.0-alpha.4",
     "arweave": "^1.10.15",
     "cross-fetch": "^3.1.4",
     "smartweave": "redstone-finance/SmartWeave#ppe/redweave"
