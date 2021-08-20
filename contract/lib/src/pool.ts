@@ -5,8 +5,7 @@ import {
 } from "@kyve/contract-pool/dist/faces";
 import Arweave from "arweave";
 import { JWKInterface } from "arweave/node/lib/wallet";
-import { createContractFromTx, interactWrite } from "smartweave";
-import { SwcClient, SwClientFactory } from "smartweave/lib/v2";
+import { createContractFromTx, interactWrite, readContract } from "smartweave";
 import { fetch } from "cross-fetch";
 import {
   GOVERNANCE_CONTRACT_ID,
@@ -18,7 +17,6 @@ type Keyfile = JWKInterface | "use_wallet";
 
 export class Pool {
   public inst: Arweave;
-  public client: SwcClient;
   public wallet: Keyfile;
   public state?: StateInterface;
   public id?: string;
@@ -36,7 +34,6 @@ export class Pool {
     useCache: boolean = true
   ) {
     this.inst = arweave;
-    this.client = SwClientFactory.memCacheClient(arweave);
     this.wallet = wallet;
     this.id = id;
     this.useCache = useCache;
@@ -76,11 +73,7 @@ export class Pool {
         throw new Error(`Couldn't read state for ${this.id} from cache.`);
       }
     } else {
-      res = (
-        await this.client.readState(this.id, undefined, undefined, {
-          ignoreExceptions: true,
-        })
-      ).state;
+      res = await readContract(this.inst, this.id);
     }
 
     this.state = res;
@@ -105,11 +98,7 @@ export class Pool {
         );
       }
     } else {
-      const state: StateInterface = (
-        await this.client.readState(this.id, undefined, undefined, {
-          ignoreExceptions: true,
-        })
-      ).state;
+      const state: StateInterface = await readContract(this.inst, this.id);
       txs = state.txs;
     }
 

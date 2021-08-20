@@ -19,7 +19,7 @@
     "@kyve/contract-pool": "1.0.0-alpha.4",
     "arweave": "^1.10.15",
     "cross-fetch": "^3.1.4",
-    "smartweave": "redstone-finance/SmartWeave#ppe/redweave"
+    "smartweave": "^0.4.41"
   },
   "devDependencies": {
     "@types/yargs": "^16.0.0",

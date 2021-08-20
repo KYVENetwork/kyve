@@ -1,7 +1,7 @@
 import Arweave from "arweave";
 import { JWKInterface } from "arweave/node/lib/wallet";
-import { SwcClient, SwClientFactory } from "smartweave/lib/v2";
 import { fetch } from "cross-fetch";
+import { readContract } from "smartweave";
 import { GOVERNANCE_CONTRACT_ID } from "./constants";
 
 type Keyfile = JWKInterface | "use_wallet";
@@ -12,7 +12,6 @@ interface GovernanceState {
 
 export class Governance {
   public inst: Arweave;
-  public client: SwcClient;
   public wallet: Keyfile;
   public state?: GovernanceState;
   public readonly id = GOVERNANCE_CONTRACT_ID;
@@ -21,7 +20,6 @@ export class Governance {
 
   constructor(arweave: Arweave, wallet: Keyfile, useCache: boolean = true) {
     this.inst = arweave;
-    this.client = SwClientFactory.memCacheClient(arweave);
     this.wallet = wallet;
     this.useCache = useCache;
   }
@@ -41,11 +39,7 @@ export class Governance {
         );
       }
     } else {
-      res = (
-        await this.client.readState(this.id, undefined, undefined, {
-          ignoreExceptions: true,
-        })
-      ).state;
+      res = await readContract(this.inst, this.id);
     }
 
     this.state = res;
