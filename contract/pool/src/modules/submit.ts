@@ -1,4 +1,5 @@
 import { ActionInterface, StateInterface } from "../faces";
+import { Query } from "../utils/gql";
 import Prando from "prando";
 
 declare const ContractAssert: any;
@@ -199,25 +200,19 @@ export const Submit = async (
 
 const GetBytes = async (id: string, bundle: boolean) => {
   if (bundle) {
-    const res = await SmartWeave.unsafeClient.api.post(
-      "graphql",
-      {
-        query: `
-        query($txID: ID!) {
-          transactions(ids: [$txID]) {
-            edges {
-              node {
-                data {
-                  size
-                }
-              }
+    const res = await Query(
+      `query($txID: ID!) {
+      transactions(ids: [$txID]) {
+        edges {
+          node {
+            data {
+              size
             }
           }
         }
-    `,
-        variables: { txID: id },
-      },
-      { headers: { "content-type": "application/json" } }
+      }
+    }`,
+      { txID: id }
     );
 
     // Only return the data size

@@ -539,32 +539,16 @@ export async function handle(state, action) {
   if (input.function === "readOutbox") {
     const contracts = [...state.trusted.contracts];
     if (input.contract) {
-      const res = await SmartWeave.unsafeClient.api.post(
-        "graphql",
-        {
-          query: `
-          query($contract: ID!) {
-            transactions(ids: [$contract]) {
-              edges {
-                node {
-                  tags {
-                    name
-                    value
-                  }
-                }
-              }
-            }
-          }
-      `,
-          variables: { contract: input.contract },
-        },
-        { headers: { "content-type": "application/json" } }
+      const { data: tags } = await SmartWeave.unsafeClient.api.get(
+        `tx/${input.contract}/tags`
       );
-      if (res.data.data.transactions.edges.length) {
-        const tags = res.data.data.transactions.edges[0].node.tags;
-        const sourceTag = tags.find((tag) => tag.name === "Contract-Src");
-        if (sourceTag) {
-          const index = state.trusted.sources.indexOf(sourceTag.value);
+
+      for (const tag of tags) {
+        const name = SmartWeave.unsafeClient.utils.b64UrlToString(tag.name);
+        const value = SmartWeave.unsafeClient.utils.b64UrlToString(tag.value);
+
+        if (name === "Contract-Src") {
+          const index = state.trusted.sources.indexOf(value);
           if (index > -1) contracts.push(input.contract);
         }
       }
