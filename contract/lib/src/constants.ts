@@ -1,6 +1,6 @@
 export const GOVERNANCE_CONTRACT_ID =
-  "bf8TMruaXAAeymJbe9HIzf8edTe2kmLr5iPC_qNfkeQ";
+  "LkfzZvdl_vfjRXZOPjnov18cGnnK3aDKj0qSQCgkCX8";
 export const TREASURY_CONTRACT_ID =
-  "7-yOavDvzo86K4dZOki5ZV9CRL332x40ceZlNP3O-2Y";
+  "Gj5peOLt14Mi9ARipHg9Vml3JK5Kebz5TaMGXdRgNUo";
 export const POOL_SOURCE_CONTRACT_ID =
-  "mabqUxCEReY56Iec1O3SnwxJ82VsrQR1IsYLT-ify0A";
+  "slRfB7WKAEQb5SiO7e-G_FWoAZ4LkoyAYE31ToPXTV8";

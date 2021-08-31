@@ -103,8 +103,7 @@ export class Pool {
     }
 
     const unhandledTxs = Object.entries(txs).filter(
-      ([key, value]) =>
-        value.status === "pending" && !value.voters.includes(address)
+      ([key, value]) => !value.voters.includes(address)
     );
 
     return unhandledTxs.map((tx) => tx[0]);

@@ -12,6 +12,7 @@ export const Register = async (
   const settings = state.settings;
   const caller = action.caller;
 
+  ContractAssert(!settings.paused, "Pool is currently paused.");
   ContractAssert(
     caller === settings.uploader,
     "Only the uploader can register data."
@@ -45,7 +46,6 @@ export const Register = async (
 
   for (const { id, bundle } of ids) {
     txs[id] = {
-      status: "pending",
       submittedAt: SmartWeave.block.height,
       yays: [],
       nays: [],

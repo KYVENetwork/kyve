@@ -12,6 +12,14 @@ export interface StateInterface {
   };
 
   txs: TransactionsFace;
+  events: (
+    | {
+        txID: string;
+        status: "dropped" | "invalid" | "valid";
+        finalizedAt: number;
+      }
+    | any
+  )[];
   outbox: { txID: string; invocation: any }[];
 }
 
@@ -40,10 +48,8 @@ export interface SettingsInterface {
 
 export interface TransactionsFace {
   [id: string]: {
-    status: "pending" | "dropped" | "valid" | "invalid";
     submittedAt: number;
     closesAt?: number;
-    finalizedAt?: number;
 
     yays: string[];
     nays: string[];

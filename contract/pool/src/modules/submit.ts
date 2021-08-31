@@ -13,6 +13,7 @@ export const Submit = async (
   const outbox = state.outbox;
   const settings = state.settings;
   const txs = state.txs;
+  const events = state.events;
   // Finds all addresses with stake in the pool
   const voters = Object.entries(credit)
     .filter(([key, value]) => value.stake && key !== settings.uploader)
@@ -21,48 +22,13 @@ export const Submit = async (
 
   ContractAssert(voters.includes(caller), "Caller has no stake in the pool.");
 
-  const data: { txID: string; valid: boolean }[] = JSON.parse(
-    await SmartWeave.unsafeClient.transactions.getData(
-      SmartWeave.transaction.id,
-      { decode: true, string: true }
-    )
-  );
-
-  for (const { txID, valid } of data) {
-    ContractAssert(
-      !(txs[txID].yays.includes(caller) || txs[txID].nays.includes(caller)),
-      "Caller has already voted."
-    );
-
-    ContractAssert(
-      SmartWeave.block.height <=
-        txs[txID].submittedAt + 2 * settings.gracePeriod,
-      "Transaction has been dropped."
-    );
-
-    if (txs[txID].closesAt) {
-      ContractAssert(
-        SmartWeave.block.height <= txs[txID].closesAt,
-        "Grace period has ended."
-      );
-    } else {
-      txs[txID].closesAt = SmartWeave.block.height + settings.gracePeriod;
-    }
-
-    if (valid) txs[txID].yays.push(caller);
-    else txs[txID].nays.push(caller);
-    txs[txID].voters = voters;
-  }
-
   // Finalize any previous transactions
   const unhandledTxs = Object.entries(txs)
     .sort((a, b) => a[1].closesAt - b[1].closesAt)
     .filter(
       ([key, value]) =>
-        value.status === "pending" &&
-        (SmartWeave.block.height > value.closesAt ||
-          SmartWeave.block.height >
-            value.submittedAt + 2 * settings.gracePeriod)
+        SmartWeave.block.height > value.closesAt ||
+        SmartWeave.block.height > value.submittedAt + 2 * settings.gracePeriod
     );
 
   const weights = await WeightedBalances(settings.foreignContracts.governance);
@@ -70,6 +36,40 @@ export const Submit = async (
   for (const [txID, data] of unhandledTxs) {
     if (data.yays.length + data.nays.length > 0.5 * data.voters.length) {
       // Enough people voted
+      let valid: boolean;
+      if (data.yays.length >= data.nays.length) {
+        // Transaction is valid
+        valid = true;
+        events.push({
+          txID,
+          status: "valid",
+          finalizedAt: SmartWeave.block.height,
+        });
+
+        // Increase validator warnings
+        for (const address of data.voters.filter(
+          (item) => data.yays.indexOf(item) === -1
+        )) {
+          credit[address].points += 1;
+        }
+      } else {
+        // Transaction is invalid
+        valid = false;
+        events.push({
+          txID,
+          status: "invalid",
+          finalizedAt: SmartWeave.block.height,
+        });
+
+        if (settings.uploader) credit[settings.uploader].points += 1;
+        // Increase validator warnings
+        for (const address of data.voters.filter(
+          (item) => data.nays.indexOf(item) === -1
+        )) {
+          credit[address].points += 1;
+        }
+      }
+
       const bytes = await GetBytes(txID, data.bundle);
       const tokens = Round(
         settings.payout.kyvePerByte * bytes + settings.payout.idleCost
@@ -111,6 +111,12 @@ export const Submit = async (
         },
       });
 
+      // Payout uploader (68%)
+      const uploaderPayout = Round(tokens * 0.68);
+      if (settings.uploader && valid) {
+        credit[settings.uploader].amount += uploaderPayout;
+      }
+
       // Payout treasury (1%)
       const treasuryPayout = Round(tokens * 0.01);
       outbox.push({
@@ -118,13 +124,12 @@ export const Submit = async (
         invocation: {
           function: "transfer",
           target: settings.foreignContracts.treasury,
-          qty: treasuryPayout,
+          qty:
+            settings.uploader && valid
+              ? treasuryPayout
+              : treasuryPayout + uploaderPayout,
         },
       });
-
-      // Payout uploader (68%)
-      const uploaderPayout = Round(tokens * 0.68);
-      credit[settings.uploader].amount += uploaderPayout;
 
       // Payout validators (30%)
       const validatorsPayout =
@@ -134,37 +139,16 @@ export const Submit = async (
           validatorsPayout / (data.yays.length + data.nays.length)
         );
       }
-
-      if (data.yays.length >= data.nays.length) {
-        // Transaction is valid
-        txs[txID].status = "valid";
-
-        // Increase validator warnings
-        for (const address of data.voters.filter(
-          (item) => data.yays.indexOf(item) === -1
-        )) {
-          credit[address].points += 1;
-        }
-      } else {
-        // Transaction is invalid
-        txs[txID].status = "invalid";
-
-        credit[settings.uploader].points += 1;
-        // Increase validator warnings
-        for (const address of data.voters.filter(
-          (item) => data.nays.indexOf(item) === -1
-        )) {
-          credit[address].points += 1;
-        }
-      }
     } else {
       // Dropped (quorum failed)
-      txs[txID].status = "dropped";
+      events.push({
+        txID,
+        status: "dropped",
+        finalizedAt: SmartWeave.block.height,
+      });
     }
-    txs[txID].finalizedAt = SmartWeave.block.height;
 
-    // TODO: Maybe come up with a better solution ...
-    if (txs[txID].status === "valid") delete txs[txID];
+    delete txs[txID];
   }
 
   // Handle slashing
@@ -193,6 +177,31 @@ export const Submit = async (
         qty: totalSlashed,
       },
     });
+  }
+
+  // Handle voting
+  const data: { txID: string; valid: boolean }[] = JSON.parse(
+    await SmartWeave.unsafeClient.transactions.getData(
+      SmartWeave.transaction.id,
+      { decode: true, string: true }
+    )
+  );
+
+  for (const { txID, valid } of data) {
+    if (!txs[txID]) continue;
+
+    if (txs[txID].yays.includes(caller) || txs[txID].nays.includes(caller)) {
+      // Caller has already voted.
+      continue;
+    }
+
+    if (!txs[txID].closesAt) {
+      txs[txID].closesAt = SmartWeave.block.height + settings.gracePeriod;
+    }
+
+    if (valid) txs[txID].yays.push(caller);
+    else txs[txID].nays.push(caller);
+    txs[txID].voters = voters;
   }
 
   return { ...state, credit, outbox, settings, txs };

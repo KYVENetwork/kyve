@@ -12,6 +12,14 @@ import { UpdateContracts } from "./modules/updateContracts";
 import { Withdraw } from "./modules/withdraw";
 
 export async function handle(state: StateInterface, action: ActionInterface) {
+  // Pause the pool if we have more than 100 pending bundles.
+  if (Object.keys(state.txs).length >= 100 * state.settings.bundleSize) {
+    state.settings.paused = true;
+  }
+
+  // Clear the event log on each interaction.
+  state.events = [];
+
   switch (action.input.function) {
     case "deposit":
       return { state: await Deposit(state, action) };
