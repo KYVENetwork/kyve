@@ -1,7 +1,7 @@
 {
   "name": "@kyve/cosmos",
   "description": "The official KYVE node for Cosmos",
-  "version": "0.0.0-alpha.30",
+  "version": "0.0.0-alpha.31",
   "author": "John Letey <john@kyve.network>, Fabian Riewe <fabian@kyve.network>",
   "repository": "https://github.com/KYVENetwork/cosmos",
   "license": "MIT",
@@ -19,7 +19,7 @@
   "main": "dist/index",
   "types": "dist/index",
   "dependencies": {
-    "@kyve/core": "0.0.0-alpha.29",
+    "@kyve/core": "0.0.0-alpha.30",
     "node-fetch": "^2.6.1",
     "object-hash": "^2.1.1"
   },

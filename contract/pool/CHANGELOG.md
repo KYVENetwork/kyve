@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.5](https://github.com/KYVENetwork/kyve/compare/@kyve/contract-pool@1.0.0-alpha.4...@kyve/contract-pool@1.0.0-alpha.5) (2021-08-31)
+
+
+### Features
+
+* new contracts ([8304e15](https://github.com/KYVENetwork/kyve/commit/8304e152cd8b1d2bfc3e72253cb19d0839958c73))
+
+
+
+
+
 # [1.0.0-alpha.4](https://github.com/KYVENetwork/kyve/compare/@kyve/contract-pool@1.0.0-alpha.3...@kyve/contract-pool@1.0.0-alpha.4) (2021-08-20)
 
 **Note:** Version bump only for package @kyve/contract-pool
