@@ -103,7 +103,8 @@ export class Pool {
     }
 
     const unhandledTxs = Object.entries(txs).filter(
-      ([key, value]) => !value.voters.includes(address)
+      ([key, value]) =>
+        !(value.yays.includes(address) || value.nays.includes(address))
     );
 
     return unhandledTxs.map((tx) => tx[0]);
