@@ -24,12 +24,11 @@
     "@kyve/core": "0.0.0-alpha.30",
     "arweave": "^1.10.14",
     "object-hash": "^2.1.1",
-    "smartweave": "redstone-finance/SmartWeave#ppe/redweave"
+    "redstone-smartweave": "^0.3.6-alpha.1",
+    "ws": "^8.2.1"
   },
   "devDependencies": {
     "@textury/arlocal": "^1.0.14",
-    "@types/object-hash": "^2.1.0",
-    "@types/yargs": "^16.0.0",
-    "yargs": "^16.2.0"
+    "@types/object-hash": "^2.1.0"
   }
 }
