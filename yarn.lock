@@ -9887,7 +9887,7 @@ web3-utils@1.5.2:
     randombytes "^2.1.0"
     utf8 "3.0.0"
 
-web3@^1.4.0:
+web3@^1.4.0, web3@^1.5.2:
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/web3/-/web3-1.5.2.tgz#736ca2f39048c63964203dd811f519400973e78d"
   integrity sha512-aapKLdO8t7Cos6tZLeeQUtCJvTiPMlLcHsHHDLSBZ/VaJEucSTxzun32M8sp3BmF4waDEmhY+iyUM1BKvtAcVQ==
