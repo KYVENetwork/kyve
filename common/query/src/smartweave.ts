@@ -1,6 +1,6 @@
 import { getData } from "@kyve/core";
 import { arweaveClient } from "@kyve/core/dist/extensions";
-import ArdbTransaction from "@textury/ardb/lib/models/transaction";
+import ArdbTransaction from "ardb/lib/models/transaction";
 import {
   BlockHeightCacheResult,
   BlockHeightKey,

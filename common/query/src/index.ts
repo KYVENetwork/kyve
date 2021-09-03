@@ -1,7 +1,7 @@
 import { APP_NAME, getData } from "@kyve/core";
 import { arweaveClient } from "@kyve/core/dist/extensions";
-import ArDB from "@textury/ardb";
-import ArdbTransaction from "@textury/ardb/lib/models/transaction";
+import ArDB from "ardb";
+import ArdbTransaction from "ardb/lib/models/transaction";
 import Arweave from "arweave";
 export { KyveBlockHeightCache } from "./smartweave";
 

@@ -8,7 +8,7 @@ import {
 import Log from "@kyve/core/dist/logger";
 import { Query } from "@kyve/query";
 import { BlockResponse, Connection } from "@solana/web3.js";
-import ArdbTransaction from "@textury/ardb/lib/models/transaction";
+import ArdbTransaction from "ardb/lib/models/transaction";
 import { JWKInterface } from "arweave/node/lib/wallet";
 import cliProgress from "cli-progress";
 import hash from "object-hash";
