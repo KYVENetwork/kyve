@@ -218,6 +218,7 @@ export default class KYVE {
       const tags = [
         { name: "Application", value: APP_NAME },
         { name: "Pool", value: this.pool.id! },
+        { name: "Content-Type", value: "application/json" },
         { name: "App-Name", value: "SmartWeaveAction" },
         { name: "App-Version", value: "0.3.0" },
         { name: "Contract", value: this.pool.id! },
@@ -252,6 +253,7 @@ export default class KYVE {
               tags: [
                 { name: "Application", value: APP_NAME },
                 { name: "Pool", value: this.poolID.toString() },
+                { name: "Content-Type", value: "application/json" },
                 ...(entry.tags || []),
               ],
             },
@@ -322,6 +324,7 @@ export default class KYVE {
         this.keyfile
       );
 
+      transaction.addTag("Content-Type", "application/json");
       transaction.addTag("App-Name", "SmartWeaveAction");
       transaction.addTag("App-Version", "0.3.0");
       transaction.addTag("Contract", this.pool.id!);
