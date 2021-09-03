@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.14](https://github.com/KYVENetwork/kyve/compare/@kyve/octopus@0.0.0-alpha.13...@kyve/octopus@0.0.0-alpha.14) (2021-09-03)
+
+**Note:** Version bump only for package @kyve/octopus
+
+
+
+
+
 # [0.0.0-alpha.13](https://github.com/KYVENetwork/kyve/compare/@kyve/octopus@0.0.0-alpha.12...@kyve/octopus@0.0.0-alpha.13) (2021-09-03)
 
 **Note:** Version bump only for package @kyve/octopus
