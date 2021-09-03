@@ -8180,10 +8180,10 @@ redent@^3.0.0:
     indent-string "^4.0.0"
     strip-indent "^3.0.0"
 
-redstone-smartweave@^0.3.6-alpha.1:
-  version "0.3.6-alpha.1"
-  resolved "https://registry.yarnpkg.com/redstone-smartweave/-/redstone-smartweave-0.3.6-alpha.1.tgz#e78001e3173c88f92650dc8916e4af40480f498c"
-  integrity sha512-lk9cHqnt/qi9d1wN5g3Gf8XIKosQp/+ft6NwUAZURwUV6L65UVIcz7aerq56+EdFM4LRXqJivE4hB99oGPj8YQ==
+redstone-smartweave@^0.3.7-alpha.1:
+  version "0.3.7-alpha.1"
+  resolved "https://registry.yarnpkg.com/redstone-smartweave/-/redstone-smartweave-0.3.7-alpha.1.tgz#9e11d88c7d1b501dc4588f5ed37e7ab404b1e060"
+  integrity sha512-rx4YxxFgeNDK2BfRo5TRaxxFjKrgLKDejT2kAOsXYUqjbSUqWLkbSC7xXpzoAIZ59jRWvHsEYulGvk2Eig6PdQ==
   dependencies:
     "@weavery/clarity" "^0.1.5"
     arweave "^1.10.16"

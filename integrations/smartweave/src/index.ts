@@ -43,7 +43,7 @@ export const upload = async (
 
       logger.info("Contract changed, uploading new result...");
       uploader.next({
-        data: JSON.stringify(res),
+        data: res,
         tags: [
           { name: "Target-Contract", value: id },
           { name: "Block", value: height.toString() },

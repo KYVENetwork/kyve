@@ -24,7 +24,7 @@
     "@kyve/core": "0.0.0-alpha.30",
     "arweave": "^1.10.14",
     "object-hash": "^2.1.1",
-    "redstone-smartweave": "^0.3.6-alpha.1",
+    "redstone-smartweave": "^0.3.7-alpha.1",
     "ws": "^8.2.1"
   },
   "devDependencies": {
