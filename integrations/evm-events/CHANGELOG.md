@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.13](https://github.com/KYVENetwork/kyve/compare/@kyve/evm-events@0.0.0-alpha.12...@kyve/evm-events@0.0.0-alpha.13) (2021-09-03)
+
+**Note:** Version bump only for package @kyve/evm-events
+
+
+
+
+
 # [0.0.0-alpha.12](https://github.com/KYVENetwork/kyve/compare/@kyve/evm-events@0.0.0-alpha.11...@kyve/evm-events@0.0.0-alpha.12) (2021-08-31)
 
 **Note:** Version bump only for package @kyve/evm-events

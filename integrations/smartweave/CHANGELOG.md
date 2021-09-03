@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.30](https://github.com/KYVENetwork/smartweave/compare/@kyve/smartweave@0.0.0-alpha.29...@kyve/smartweave@0.0.0-alpha.30) (2021-09-03)
+
+
+### Bug Fixes
+
+* don't stringify the state result ([39cf912](https://github.com/KYVENetwork/smartweave/commit/39cf91252a9b61afde4fe8b03944afaa8aa97789))
+
+
+### Features
+
+* switch to v2 smartweave ([3060e96](https://github.com/KYVENetwork/smartweave/commit/3060e9683bb4a58cc01d19fef75ffd4f1fd9efe1))
+
+
+
+
+
 # [0.0.0-alpha.29](https://github.com/KYVENetwork/smartweave/compare/@kyve/smartweave@0.0.0-alpha.28...@kyve/smartweave@0.0.0-alpha.29) (2021-08-31)
 
 **Note:** Version bump only for package @kyve/smartweave
