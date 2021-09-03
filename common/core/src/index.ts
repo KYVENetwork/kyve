@@ -228,6 +228,8 @@ export default class KYVE {
         transaction.addTag(name, value);
       }
 
+      transaction.reward = (parseInt(transaction.reward) * 2).toString();
+
       await this.arweave.transactions.sign(transaction, this.keyfile);
       await this.arweave.transactions.post(transaction);
 
@@ -271,6 +273,8 @@ export default class KYVE {
         transaction.addTag("App-Version", "0.3.0");
         transaction.addTag("Contract", this.pool.id!);
         transaction.addTag("Input", JSON.stringify({ function: "register" }));
+
+        transaction.reward = (parseInt(transaction.reward) * 2).toString();
 
         await this.arweave.transactions.sign(transaction, this.keyfile);
         await this.arweave.transactions.post(transaction);
@@ -327,6 +331,8 @@ export default class KYVE {
         "Input",
         JSON.stringify({ function: "readOutbox", contract: this.pool.id! })
       );
+
+      transaction.reward = (parseInt(transaction.reward) * 2).toString();
 
       await this.arweave.transactions.sign(transaction, this.keyfile);
       await this.arweave.transactions.post(transaction);
