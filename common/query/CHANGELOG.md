@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.40](https://github.com/KYVENetwork/logic/compare/@kyve/query@0.0.0-alpha.39...@kyve/query@0.0.0-alpha.40) (2021-09-03)
+
+
+### Bug Fixes
+
+* actually pass in an arweave client ([32cb517](https://github.com/KYVENetwork/logic/commit/32cb51735f42b57056b4c89a85431ce9705a2907))
+
+
+
+
+
 # [0.0.0-alpha.39](https://github.com/KYVENetwork/logic/compare/@kyve/query@0.0.0-alpha.38...@kyve/query@0.0.0-alpha.39) (2021-09-03)
 
 
