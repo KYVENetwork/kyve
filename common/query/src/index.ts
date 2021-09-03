@@ -1,9 +1,9 @@
-import ArDB from "ardb";
 import { APP_NAME, getData } from "@kyve/core";
 import { arweaveClient } from "@kyve/core/dist/extensions";
-import { GQLEdgeTransactionInterface } from "ardb/lib/faces/gql";
+import ArDB from "@textury/ardb";
+import ArdbTransaction from "@textury/ardb/lib/models/transaction";
 import Arweave from "arweave";
-export { interactRead, readContract } from "./smartweave";
+export { KyveBlockHeightCache } from "./smartweave";
 
 type TransactionID = string;
 type TransactionData = string;
@@ -28,31 +28,30 @@ export class Query extends ArDB {
   async find() {
     super.tag("Application", APP_NAME);
     super.tag("Pool", this.poolID);
-    const res = (await super.find()) as GQLEdgeTransactionInterface[];
+    const res = (await super.find()) as ArdbTransaction[];
     const ret: any[] = [];
 
-    for (let { node } of res) {
+    for (let tx of res) {
       if (this.deRef) {
-        const data = await getData(node.id);
+        const data = await getData(tx.id);
         ret.push(data);
       } else {
-        ret.push(node);
+        ret.push(tx);
       }
     }
     return ret;
   }
 
   async next() {
-    const res = (await super.next()) as GQLEdgeTransactionInterface[];
+    const res = (await super.next()) as ArdbTransaction[];
     const ret: any[] = [];
 
-    for (let { node } of res) {
-      const txID = node.id;
+    for (let { id } of res) {
       if (this.deRef) {
-        const data = await getData(txID);
+        const data = await getData(id);
         ret.push(data);
       } else {
-        ret.push(txID);
+        ret.push(id);
       }
     }
     return ret;

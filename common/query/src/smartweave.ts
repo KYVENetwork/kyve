@@ -1,259 +1,112 @@
-import Arweave from "arweave";
-import { Query } from "./index";
 import { getData } from "@kyve/core";
-import { arweaveClient } from "@kyve/core/dist/extensions";
-import ArDB from "ardb";
-import { ContractInteraction, execute } from "smartweave/lib/contract-step";
-import { InteractionTx } from "smartweave/lib/interaction-tx";
-import { arrayToHex, formatTags } from "smartweave/lib/utils";
-import { GQLEdgeTransactionInterface } from "ardb/lib/faces/gql";
-import { loadContract } from "smartweave";
-import { JWKInterface } from "arweave/node/lib/wallet";
-import { BlockData } from "arweave/node/blocks";
-import Transaction from "arweave/node/lib/transaction";
-import { CreateTransactionInterface } from "arweave/node/common";
+import { arweaveBundles } from "@kyve/core/dist/extensions";
+import ArdbTransaction from "@textury/ardb/lib/models/transaction";
+import {
+  BlockHeightCacheResult,
+  BlockHeightKey,
+  BlockHeightSwCache,
+} from "redstone-smartweave";
+import { Query } from ".";
 
-export const readContract = async (
-  poolID: string,
-  contractID: string,
-  returnValidity: boolean,
-  arweave: Arweave = arweaveClient
-) => {
-  // load last KYVE state for this contract
-  const query = new Query(poolID, false, arweave);
+export class KyveBlockHeightCache<V = any> implements BlockHeightSwCache<V> {
+  private query: Query;
 
-  const result = await query
-    .tag("Target-Contract", contractID)
-    .only(["id", "tags", "tags.name", "tags.value"])
-    .limit(1)
-    .find();
-
-  if (!result) {
-    throw new Error("No matching transactions in pool found.");
+  constructor(pool: string) {
+    // @ts-ignore
+    this.query = new Query(pool, false, arweaveBundles);
   }
 
-  const transaction = result[0];
+  async getLast(key: string): Promise<BlockHeightCacheResult<V> | null> {
+    const res = (await this.query
+      .tag("Target-Contract", key)
+      .only(["id", "tags", "tags.name", "tags.value"])
+      .findOne()) as ArdbTransaction | null;
 
-  // find 'Block' tag
-  const latestArchivedBlock = parseInt(
-    transaction.tags.find(
-      (tag: { name: string; value: string }) => tag.name == "Block"
-    ).value
-  );
+    let cachedHeight: number | null = null;
+    let cachedValue: V | null = null;
 
-  const data: { state: object; validity: { [txID: string]: boolean } } =
-    JSON.parse(await getData(transaction.id));
-  let state = data.state;
-  let validity = data.validity;
+    if (res) {
+      const tags = res.tags;
+      const blockTag = tags.find((tag) => tag.name === "Block");
 
-  // find txs which have not been added to state
-
-  // get latest network height
-  const networkInfo = await arweave.network.getInfo();
-  const height = networkInfo.height;
-
-  const ardb = new ArDB(arweave);
-  const missingTXs = (await ardb
-    .sort("HEIGHT_ASC")
-    .min(latestArchivedBlock + 1)
-    .max(height)
-    .tags([
-      { name: "App-Name", values: ["SmartWeaveAction"] },
-      { name: "Contract", values: [contractID] },
-    ])
-    .findAll()) as GQLEdgeTransactionInterface[];
-
-  if (missingTXs.length == 0) {
-    // return immediately to avoid call to loadContract function (which is slooooow)
-    return returnValidity ? { state, validity } : state;
-  }
-
-  // from https://github.com/ArweaveTeam/SmartWeave/blob/master/src/contract-read.ts#L56
-  // TODO: FIX ONCE https://github.com/ArweaveTeam/SmartWeave/pull/82 is merged
-
-  await sortTransactions(arweave, missingTXs);
-
-  const contractInfo = await loadContract(arweave, contractID);
-  const { handler, swGlobal } = contractInfo;
-
-  for (const txInfo of missingTXs) {
-    const tags = formatTags(txInfo.node.tags);
-
-    const currentTx: InteractionTx = {
-      ...txInfo.node,
-      tags,
-    };
-
-    let input = currentTx.tags.Input;
-
-    // Check that input is not an array. If a tx has multiple input tags, it will be an array
-    if (Array.isArray(input)) {
-      console.warn(`Skipping tx with multiple Input tags - ${currentTx.id}`);
-      continue;
+      if (blockTag) {
+        cachedHeight = +blockTag.value;
+        cachedValue = JSON.parse(await getData(res.id));
+      }
     }
 
-    try {
-      input = JSON.parse(input);
-    } catch (e) {
-      console.log(e);
-      continue;
-    }
-
-    if (!input) {
-      console.log(
-        `Skipping tx with missing or invalid Input tag - ${currentTx.id}`
-      );
-      continue;
-    }
-
-    const interaction: ContractInteraction = {
-      input,
-      caller: currentTx.owner.address,
-    };
-
-    swGlobal._activeTx = currentTx;
-
-    const result = await execute(handler, interaction, state);
-
-    if (result.type === "exception") {
-      console.warn(
-        `Executing of interaction: ${currentTx.id} threw exception.`
-      );
-      console.warn(`${result.result}`);
-    }
-    if (result.type === "error") {
-      console.warn(`Executing of interaction: ${currentTx.id} returned error.`);
-      console.warn(`${result.result}`);
-    }
-
-    validity[currentTx.id] = result.type === "ok";
-
-    state = result.state;
-  }
-
-  return returnValidity ? { state, validity } : state;
-};
-
-export const interactRead = async (
-  poolID: string,
-  contractID: string,
-  input: any,
-  wallet: JWKInterface | "use_wallet" | undefined,
-  tags: { name: string; value: string }[] = [],
-  target: string = "",
-  winstonQty: string = "",
-  arweave: Arweave = arweaveClient
-) => {
-  const latestState = await readContract(poolID, contractID, false, arweave);
-  const { handler, swGlobal } = await loadContract(arweave, contractID);
-  const from = wallet ? await arweave.wallets.getAddress(wallet) : "";
-
-  const interaction: ContractInteraction = {
-    input,
-    caller: from,
-  };
-
-  const tx = await createTx(
-    arweave,
-    wallet,
-    contractID,
-    input,
-    tags,
-    target,
-    winstonQty
-  );
-  const currentBlock: BlockData = await arweave.blocks.getCurrent();
-
-  // @ts-ignore
-  swGlobal._activeTx = createDummyTx(tx, from, currentBlock);
-
-  const result = await execute(handler, interaction, latestState);
-
-  return result.result;
-};
-
-// Sort the transactions based on the sort key generated in addSortKey()
-async function sortTransactions(arweave: Arweave, txInfos: any[]) {
-  const addKeysFuncs = txInfos.map((tx) => addSortKey(arweave, tx));
-  await Promise.all(addKeysFuncs);
-
-  txInfos.sort((a, b) => a.sortKey.localeCompare(b.sortKey));
-}
-
-// Construct a string that will lexographically sort.
-// { block_height, sha256(block_indep_hash + txid) }
-// pad block height to 12 digits and convert hash value
-// to a hex string.
-async function addSortKey(arweave: Arweave, txInfo: any) {
-  const { node } = txInfo;
-
-  const blockHashBytes = arweave.utils.b64UrlToBuffer(node.block.id);
-  const txIdBytes = arweave.utils.b64UrlToBuffer(node.id);
-  const concatted = arweave.utils.concatBuffers([blockHashBytes, txIdBytes]);
-  const hashed = arrayToHex(await arweave.crypto.hash(concatted));
-  const blockHeight = `000000${node.block.height}`.slice(-12);
-
-  txInfo.sortKey = `${blockHeight},${hashed}`;
-}
-
-async function createTx(
-  arweave: Arweave,
-  wallet: JWKInterface | "use_wallet" | undefined,
-  contractId: string,
-  input: any,
-  tags: { name: string; value: string }[],
-  target: string = "",
-  winstonQty: string = "0"
-): Promise<Transaction> {
-  const options: Partial<CreateTransactionInterface> = {
-    data: Math.random().toString().slice(-4),
-  };
-
-  if (target && target.length) {
-    options.target = target.toString();
-    if (winstonQty && +winstonQty > 0) {
-      options.quantity = winstonQty.toString();
+    if (cachedHeight && cachedValue) {
+      return { cachedHeight, cachedValue };
+    } else {
+      return null;
     }
   }
 
-  const interactionTx = await arweave.createTransaction(options, wallet);
+  async getLessOrEqual(
+    key: string,
+    blockHeight: number
+  ): Promise<BlockHeightCacheResult<V> | null> {
+    const res = (await this.query
+      .tag("Target-Contract", key)
+      .only(["id", "tags", "tags.name", "tags.value"])
+      .findAll()) as ArdbTransaction[];
 
-  if (!input) {
-    throw new Error(`Input should be a truthy value: ${JSON.stringify(input)}`);
-  }
+    const cache: { id: string; height: number }[] = [];
+    res.forEach((tx) => {
+      const tags = tx.tags;
+      const blockTag = tags.find((tag) => tag.name === "Block");
 
-  if (tags && tags.length) {
-    for (const tag of tags) {
-      interactionTx.addTag(tag.name.toString(), tag.value.toString());
+      if (blockTag) {
+        cache.push({ id: tx.id, height: +blockTag.value });
+      }
+    });
+
+    const val = cache
+      .filter((item) => item.height <= blockHeight)
+      .sort((a, b) => b.height - a.height)
+      .shift();
+
+    if (val) {
+      return {
+        cachedHeight: val.height,
+        cachedValue: JSON.parse(await getData(val.id)),
+      };
+    } else {
+      return null;
     }
   }
-  interactionTx.addTag("App-Name", "SmartWeaveAction");
-  interactionTx.addTag("App-Version", "0.3.0");
-  interactionTx.addTag("Contract", contractId);
-  interactionTx.addTag("Input", JSON.stringify(input));
 
-  await arweave.transactions.sign(interactionTx, wallet);
-  return interactionTx;
-}
+  async put(
+    { cacheKey, blockHeight }: BlockHeightKey,
+    value: V
+  ): Promise<void> {
+    throw new Error("Not implemented yet");
+  }
 
-function createDummyTx(tx: Transaction, from: string, block: BlockData) {
-  return {
-    id: tx.id,
-    owner: {
-      address: from,
-    },
-    recipient: tx.target,
-    tags: tx.tags,
-    fee: {
-      winston: tx.reward,
-    },
-    quantity: {
-      winston: tx.quantity,
-    },
-    block: {
-      id: block.indep_hash,
-      height: block.height,
-      timestamp: block.timestamp,
-    },
-  };
+  async contains(key: string): Promise<boolean> {
+    throw new Error("Not implemented yet");
+  }
+
+  async get(
+    key: string,
+    blockHeight: number
+  ): Promise<BlockHeightCacheResult<V> | null> {
+    const res = (await this.query
+      .tag("Target-Contract", key)
+      .tag("Block", blockHeight.toString())
+      .only("id")
+      .findOne()) as ArdbTransaction | null;
+
+    let cachedValue: V | null = null;
+
+    if (res) {
+      cachedValue = JSON.parse(await getData(res.id));
+    }
+
+    if (cachedValue) {
+      return { cachedHeight: blockHeight, cachedValue };
+    } else {
+      return null;
+    }
+  }
 }

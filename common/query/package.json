@@ -21,11 +21,11 @@
   "dependencies": {
     "@kyve/contract-lib": "0.1.0-alpha.26",
     "@kyve/core": "0.0.0-alpha.32",
-    "ardb": "^1.0.8",
+    "@textury/ardb": "^1.1.3",
     "arweave": "^1.10.11",
     "arweave-bundles": "^1.0.3",
-    "rxjs": "^6.6.6",
-    "smartweave": "^0.4.27"
+    "redstone-smartweave": "^0.3.8-alpha.1",
+    "rxjs": "^6.6.6"
   },
   "devDependencies": {
     "@types/chai": "^4.2.16",

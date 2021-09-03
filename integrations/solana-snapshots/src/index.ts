@@ -8,6 +8,7 @@ import {
 import Log from "@kyve/core/dist/logger";
 import { Query } from "@kyve/query";
 import { BlockResponse, Connection } from "@solana/web3.js";
+import ArdbTransaction from "@textury/ardb/lib/models/transaction";
 import { JWKInterface } from "arweave/node/lib/wallet";
 import cliProgress from "cli-progress";
 import hash from "object-hash";
@@ -36,13 +37,12 @@ const upload = async (
   let height = 0;
 
   const query = new Query(pool, false);
-  const res = await query
+  const res = (await query
     .only(["tags", "tags.name", "tags.value"])
-    .limit(1)
-    .find();
+    .findOne()) as ArdbTransaction | null;
 
-  if (res.length) {
-    const tags: { name: string; value: string }[] = res[0].tags;
+  if (res) {
+    const tags = res.tags;
     const index = tags.findIndex((tag) => tag.name === "Maximum-Height");
 
     if (index > -1) height = parseInt(tags[index].value) + 1;
