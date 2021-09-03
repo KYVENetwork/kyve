@@ -1,5 +1,5 @@
 import { getData } from "@kyve/core";
-import { arweaveBundles } from "@kyve/core/dist/extensions";
+import { arweaveClient } from "@kyve/core/dist/extensions";
 import ArdbTransaction from "@textury/ardb/lib/models/transaction";
 import {
   BlockHeightCacheResult,
@@ -13,8 +13,7 @@ export class KyveBlockHeightCache<V = any> implements BlockHeightSwCache<V> {
   private storage: { [key: string]: Map<number, V> } = {};
 
   constructor(pool: string) {
-    // @ts-ignore
-    this.query = new Query(pool, false, arweaveBundles);
+    this.query = new Query(pool, false, arweaveClient);
   }
 
   async getLast(key: string): Promise<BlockHeightCacheResult<V> | null> {
