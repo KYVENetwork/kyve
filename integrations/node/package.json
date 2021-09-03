@@ -1,6 +1,6 @@
 {
   "name": "@kyve/node",
-  "version": "0.0.0-alpha.38",
+  "version": "0.0.0-alpha.39",
   "private": true,
   "scripts": {
     "build": "tsc",
@@ -25,7 +25,7 @@
     "@kyve/polkadot": "0.0.0-alpha.35",
     "@kyve/smartweave": "0.0.0-alpha.31",
     "@kyve/solana": "0.0.0-alpha.30",
-    "@kyve/solana-snapshots": "0.0.0-alpha.16",
+    "@kyve/solana-snapshots": "0.0.0-alpha.17",
     "@kyve/zilliqa": "0.0.0-alpha.29",
     "@sentry/integrations": "^6.5.0",
     "@sentry/node": "^6.5.0",

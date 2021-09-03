@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.41](https://github.com/KYVENetwork/logic/compare/@kyve/query@0.0.0-alpha.40...@kyve/query@0.0.0-alpha.41) (2021-09-03)
+
+
+### Bug Fixes
+
+* use the correct ardb package ([2bcebfe](https://github.com/KYVENetwork/logic/commit/2bcebfef161362629838ff6533cbae5e80637ae3))
+
+
+
+
+
 # [0.0.0-alpha.40](https://github.com/KYVENetwork/logic/compare/@kyve/query@0.0.0-alpha.39...@kyve/query@0.0.0-alpha.40) (2021-09-03)
 
 
