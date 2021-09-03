@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.39](https://github.com/KYVENetwork/logic/compare/@kyve/query@0.0.0-alpha.38...@kyve/query@0.0.0-alpha.39) (2021-09-03)
+
+
+### Features
+
+* finish smartweave plugin ([f04de3d](https://github.com/KYVENetwork/logic/commit/f04de3de5f5b2b515b6a661a1ed77da0a9123019))
+* **wip:** plugin for SmartWeave v2 ([94d7a98](https://github.com/KYVENetwork/logic/commit/94d7a98c9df7a897cc4c6b33062ef73e124e34b8))
+
+
+
+
+
 # [0.0.0-alpha.38](https://github.com/KYVENetwork/logic/compare/@kyve/query@0.0.0-alpha.37...@kyve/query@0.0.0-alpha.38) (2021-09-03)
 
 **Note:** Version bump only for package @kyve/query

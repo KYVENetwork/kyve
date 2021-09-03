@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.15](https://github.com/KYVENetwork/kyve/compare/@kyve/solana-snapshots@0.0.0-alpha.14...@kyve/solana-snapshots@0.0.0-alpha.15) (2021-09-03)
+
+
+### Features
+
+* **wip:** plugin for SmartWeave v2 ([94d7a98](https://github.com/KYVENetwork/kyve/commit/94d7a98c9df7a897cc4c6b33062ef73e124e34b8))
+
+
+
+
+
 # [0.0.0-alpha.14](https://github.com/KYVENetwork/kyve/compare/@kyve/solana-snapshots@0.0.0-alpha.13...@kyve/solana-snapshots@0.0.0-alpha.14) (2021-09-03)
 
 **Note:** Version bump only for package @kyve/solana-snapshots
