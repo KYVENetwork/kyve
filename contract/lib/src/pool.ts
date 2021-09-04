@@ -190,13 +190,28 @@ export class Pool {
   ): Promise<string> {
     await this.getState();
 
-    return await interactWrite(
-      this.inst,
-      this.wallet,
-      this.state!.settings.foreignContracts.governance,
-      input,
-      tags
+    const transaction = await this.inst.createTransaction({
+      data: Math.random().toString().slice(-4),
+    });
+
+    transaction.addTag("App-Name", "SmartWeaveAction");
+    transaction.addTag("App-Version", "0.3.0");
+    transaction.addTag(
+      "Contract",
+      this.state!.settings.foreignContracts.governance
     );
+    transaction.addTag("Input", JSON.stringify(input));
+    if (tags) {
+      tags.forEach((tag) => transaction.addTag(tag.name, tag.value));
+    }
+
+    // Bump the reward for higher chance of mining.
+    transaction.reward = (+transaction.reward * 2).toString();
+
+    await this.inst.transactions.sign(transaction, this.wallet);
+    await this.inst.transactions.post(transaction);
+
+    return transaction.id;
   }
 
   private async interactWithPool(
@@ -205,6 +220,24 @@ export class Pool {
   ): Promise<string> {
     await this.getState();
 
-    return await interactWrite(this.inst, this.wallet, this.id!, input, tags);
+    const transaction = await this.inst.createTransaction({
+      data: Math.random().toString().slice(-4),
+    });
+
+    transaction.addTag("App-Name", "SmartWeaveAction");
+    transaction.addTag("App-Version", "0.3.0");
+    transaction.addTag("Contract", this.id!);
+    transaction.addTag("Input", JSON.stringify(input));
+    if (tags) {
+      tags.forEach((tag) => transaction.addTag(tag.name, tag.value));
+    }
+
+    // Bump the reward for higher chance of mining.
+    transaction.reward = (+transaction.reward * 2).toString();
+
+    await this.inst.transactions.sign(transaction, this.wallet);
+    await this.inst.transactions.post(transaction);
+
+    return transaction.id;
   }
 }
