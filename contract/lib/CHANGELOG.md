@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.27](https://github.com/KYVENetwork/kyve/compare/@kyve/contract-lib@0.1.0-alpha.26...@kyve/contract-lib@0.1.0-alpha.27) (2021-09-04)
+
+**Note:** Version bump only for package @kyve/contract-lib
+
+
+
+
+
 # [0.1.0-alpha.26](https://github.com/KYVENetwork/kyve/compare/@kyve/contract-lib@0.1.0-alpha.25...@kyve/contract-lib@0.1.0-alpha.26) (2021-09-03)
 
 
