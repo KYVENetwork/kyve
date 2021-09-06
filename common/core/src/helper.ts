@@ -1,6 +1,7 @@
 import Arweave from "arweave";
 import Log from "./logger";
 import { Governance, Pool } from "@kyve/contract-lib";
+import WebSocket from "ws";
 
 const log = new Log("node");
 
@@ -30,6 +31,25 @@ export const untilMined = async (
   }
 };
 
+export const untilCached = async (
+  txID: string,
+  type: "credit" | "stake"
+): Promise<void> => {
+  const endpoint = `wss://kyve.ws/${type}`;
+  const client = new WebSocket(endpoint);
+
+  client.on("message", (msg) => {
+    const event = JSON.parse(msg.toString());
+
+    if (event.transaction === txID) {
+      client.close();
+      return;
+    }
+  });
+
+  client.on("ping", () => client.pong);
+}
+
 export const deposit = async (
   amount: number,
   address: string,
@@ -50,5 +70,6 @@ export const deposit = async (
     `Depositing ${amount} $KYVE into pool: ${pool.id!}. Transaction ${depositID}`
   );
   await untilMined(depositID, arweave);
+  await untilCached(depositID, "credit");
   log.info("Successfully deposited tokens.");
 };

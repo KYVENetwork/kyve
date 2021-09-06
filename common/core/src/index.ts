@@ -15,10 +15,9 @@ import { arweaveBundles as bundles, arweaveClient } from "./extensions";
 
 import { Pool, Governance } from "@kyve/contract-lib";
 import { GQLEdgeTransactionInterface } from "ardb/lib/faces/gql";
-import { deposit, untilMined } from "./helper";
+import { deposit, untilCached, untilMined } from "./helper";
 
 import Log from "./logger";
-import { create } from "arweave-bundles";
 
 export const APP_NAME = "KYVE - DEV";
 
@@ -114,6 +113,7 @@ export default class KYVE {
         `Staking ${diff} $KYVE in pool ${this.pool.id}. Transaction: ${id}`
       );
       await untilMined(id, this.arweave);
+      await untilCached(id, "stake");
       log.info("Successfully staked tokens");
     } else {
       const id = await this.pool.unstake(diff);
@@ -121,6 +121,7 @@ export default class KYVE {
         `Unstaking ${diff} $KYVE in pool ${this.pool.id}. Transaction: ${id}`
       );
       await untilMined(id, this.arweave);
+      await untilCached(id, "stake");
       log.info("Successfully unstaked tokens");
     }
 

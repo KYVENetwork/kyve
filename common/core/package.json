@@ -27,7 +27,8 @@
     "fecha": "^4.2.1",
     "object-hash": "^2.2.0",
     "rxjs": "^7.2.0",
-    "smartweave": "^0.4.27"
+    "smartweave": "^0.4.27",
+    "ws": "^8.2.1"
   },
   "devDependencies": {
     "@types/chai": "^4.2.16",
