@@ -48,7 +48,7 @@ export const untilCached = async (
   });
 
   client.on("ping", () => client.pong);
-}
+};
 
 export const deposit = async (
   amount: number,
