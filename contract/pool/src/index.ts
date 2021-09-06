@@ -1,5 +1,4 @@
 import { ActionInterface, StateInterface } from "./faces";
-import { Deposit } from "./modules/deposit";
 import { Fund } from "./modules/fund";
 import { Prune } from "./modules/prune";
 import { Register } from "./modules/register";
@@ -21,18 +20,16 @@ export async function handle(state: StateInterface, action: ActionInterface) {
   state.events = [];
 
   switch (action.input.function) {
-    case "deposit":
-      return { state: await Deposit(state, action) };
-    case "withdraw":
-      return { state: Withdraw(state, action) };
     case "fund":
-      return { state: Fund(state, action) };
+      return { state: await Fund(state, action) };
     case "unfund":
       return { state: Unfund(state, action) };
     case "stake":
-      return { state: Stake(state, action) };
+      return { state: await Stake(state, action) };
     case "unstake":
       return { state: Unstake(state, action) };
+    case "withdraw":
+      return { state: Withdraw(state, action) };
 
     case "register":
       return { state: await Register(state, action) };

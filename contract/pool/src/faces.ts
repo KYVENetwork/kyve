@@ -67,8 +67,8 @@ export interface ActionInterface {
 // Module Interfaces
 
 export interface CreditInterface {
-  function: "deposit" | "withdraw" | "fund" | "unfund" | "stake" | "unstake";
-  // deposit and unstake don't require qty
+  function: "fund" | "unfund" | "stake" | "unstake" | "withdraw";
+  // fund and stake don't require qty
   qty?: number;
 }
 

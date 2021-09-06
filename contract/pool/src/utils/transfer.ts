@@ -1,15 +1,12 @@
-import { ActionInterface, StateInterface } from "../faces";
+import { StateInterface } from "../faces";
 
 declare const ContractAssert: any;
 declare const SmartWeave: any;
 
-export const Deposit = async (
-  state: StateInterface,
-  action: ActionInterface
-) => {
-  const credit = state.credit;
+export const GetTransferAmount = async (
+  state: StateInterface
+): Promise<number> => {
   const settings = state.settings;
-  const caller = action.caller;
 
   const tags: { name: string; value: string }[] = SmartWeave.transaction.tags;
   const index = tags.findIndex(
@@ -39,16 +36,5 @@ export const Deposit = async (
     "Interaction on the governance contract resulted in an error."
   );
 
-  if (caller in credit) {
-    credit[caller].amount += input.qty;
-  } else {
-    credit[caller] = {
-      amount: input.qty,
-      stake: 0,
-      fund: 0,
-      points: 0,
-    };
-  }
-
-  return { ...state, credit };
+  return input.qty;
 };

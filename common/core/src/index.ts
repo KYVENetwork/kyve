@@ -15,7 +15,7 @@ import { arweaveBundles as bundles, arweaveClient } from "./extensions";
 
 import { Pool, Governance } from "@kyve/contract-lib";
 import { GQLEdgeTransactionInterface } from "ardb/lib/faces/gql";
-import { deposit, untilCached, untilMined } from "./helper";
+import { untilMined } from "./helper";
 
 import Log from "./logger";
 
@@ -83,18 +83,9 @@ export default class KYVE {
 
     const address = await this.arweave.wallets.getAddress(this.keyfile);
 
-    // check if node has deposited tokens
-    if (!Object.keys(state.credit).includes(address)) {
-      await deposit(
-        this.stake,
-        address,
-        this.governance,
-        this.pool,
-        this.arweave
-      );
-    }
-
-    const currentStake = state.credit[address].stake;
+    const currentStake = state.credit[address]
+      ? state.credit[address].stake
+      : 0;
     const diff = Math.abs(this.stake - currentStake);
 
     if (this.stake === currentStake) {
@@ -102,18 +93,12 @@ export default class KYVE {
         `Already staked with ${this.stake} $KYVE in pool ${this.pool.id}.`
       );
     } else if (this.stake > currentStake) {
-      // if node has not enough tokens to stake, deposit missing ones
-      if (state.credit[address].amount < diff) {
-        await deposit(diff, address, this.governance, this.pool, this.arweave);
-      }
-
       // stake missing tokens
       const id = await this.pool.stake(diff);
       log.info(
         `Staking ${diff} $KYVE in pool ${this.pool.id}. Transaction: ${id}`
       );
       await untilMined(id, this.arweave);
-      await untilCached(id, "stake");
       log.info("Successfully staked tokens");
     } else {
       const id = await this.pool.unstake(diff);
@@ -121,7 +106,6 @@ export default class KYVE {
         `Unstaking ${diff} $KYVE in pool ${this.pool.id}. Transaction: ${id}`
       );
       await untilMined(id, this.arweave);
-      await untilCached(id, "stake");
       log.info("Successfully unstaked tokens");
     }
 

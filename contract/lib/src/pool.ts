@@ -117,7 +117,7 @@ export class Pool {
     });
   }
 
-  async deposit(qty: number): Promise<string> {
+  async fund(qty: number): Promise<string> {
     return await this.interactWithGovernance(
       {
         function: "transfer",
@@ -126,9 +126,41 @@ export class Pool {
       },
       [
         { name: "Contract", value: this.id! },
-        { name: "Input", value: JSON.stringify({ function: "deposit" }) },
+        { name: "Input", value: JSON.stringify({ function: "fund" }) },
       ]
     );
+  }
+
+  async unfund(qty: number): Promise<string> {
+    const input: CreditInterface = {
+      function: "unfund",
+      qty,
+    };
+
+    return await this.interactWithPool(input);
+  }
+
+  async stake(qty: number): Promise<string> {
+    return await this.interactWithGovernance(
+      {
+        function: "transfer",
+        target: this.id,
+        qty,
+      },
+      [
+        { name: "Contract", value: this.id! },
+        { name: "Input", value: JSON.stringify({ function: "stake" }) },
+      ]
+    );
+  }
+
+  async unstake(qty: number): Promise<string> {
+    const input: CreditInterface = {
+      function: "unstake",
+      qty,
+    };
+
+    return await this.interactWithPool(input);
   }
 
   async withdraw(qty: number): Promise<string> {
@@ -144,42 +176,6 @@ export class Pool {
         value: JSON.stringify({ function: "readOutbox", contract: this.id! }),
       },
     ]);
-  }
-
-  async fund(qty: number): Promise<string> {
-    const input: CreditInterface = {
-      function: "fund",
-      qty,
-    };
-
-    return await this.interactWithPool(input);
-  }
-
-  async unfund(qty: number): Promise<string> {
-    const input: CreditInterface = {
-      function: "unfund",
-      qty,
-    };
-
-    return await this.interactWithPool(input);
-  }
-
-  async stake(qty: number): Promise<string> {
-    const input: CreditInterface = {
-      function: "stake",
-      qty,
-    };
-
-    return await this.interactWithPool(input);
-  }
-
-  async unstake(qty: number): Promise<string> {
-    const input: CreditInterface = {
-      function: "unstake",
-      qty,
-    };
-
-    return await this.interactWithPool(input);
   }
 
   // === Private Functions ===

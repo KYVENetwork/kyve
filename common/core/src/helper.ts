@@ -1,6 +1,5 @@
 import Arweave from "arweave";
 import Log from "./logger";
-import { Governance, Pool } from "@kyve/contract-lib";
 import WebSocket from "ws";
 
 const log = new Log("node");
@@ -48,28 +47,4 @@ export const untilCached = async (
   });
 
   client.on("ping", () => client.pong);
-};
-
-export const deposit = async (
-  amount: number,
-  address: string,
-  governance: Governance,
-  pool: Pool,
-  arweave: Arweave
-): Promise<void> => {
-  // check if node has enough balance
-  const governanceState = await governance.getState();
-  if (governanceState.balances[address] < amount) {
-    throw new Error(
-      "Not enough $KYVE. Get free tokens here: https://docs.kyve.network/usdkyve-token#get-free-tokens"
-    );
-  }
-  // deposit tokens into the pool
-  const depositID = await pool.deposit(amount);
-  log.info(
-    `Depositing ${amount} $KYVE into pool: ${pool.id!}. Transaction ${depositID}`
-  );
-  await untilMined(depositID, arweave);
-  await untilCached(depositID, "credit");
-  log.info("Successfully deposited tokens.");
 };
