@@ -30,21 +30,20 @@ export const untilMined = async (
   }
 };
 
-export const untilCached = async (
-  txID: string,
-  type: "credit" | "stake"
-): Promise<void> => {
-  const endpoint = `wss://kyve.ws/${type}`;
-  const client = new WebSocket(endpoint);
+export const untilCached = async (txID: string): Promise<void> => {
+  return new Promise((resolve) => {
+    const endpoint = `wss://kyve.ws/stake`;
+    const client = new WebSocket(endpoint);
 
-  client.on("message", (msg) => {
-    const event = JSON.parse(msg.toString());
+    client.on("message", (msg) => {
+      const event = JSON.parse(msg.toString());
 
-    if (event.transaction === txID) {
-      client.close();
-      return;
-    }
+      if (event.transaction === txID) {
+        client.close();
+        resolve();
+      }
+    });
+
+    client.on("ping", () => client.pong);
   });
-
-  client.on("ping", () => client.pong);
 };
