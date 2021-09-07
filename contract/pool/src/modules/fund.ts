@@ -9,10 +9,10 @@ export const Fund = async (state: StateInterface, action: ActionInterface) => {
 
   const input: CreditInterface = action.input;
   let qty: number;
-  
+
   if (input.qty) {
     qty = input.qty;
-    
+
     ContractAssert(caller in credit, "Caller has no balance in the pool.");
     ContractAssert(
       credit[caller].amount >= qty,
