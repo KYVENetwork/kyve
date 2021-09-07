@@ -1,11 +1,28 @@
-import { ActionInterface, StateInterface } from "../faces";
+import { ActionInterface, CreditInterface, StateInterface } from "../faces";
 import { GetTransferAmount } from "../utils/transfer";
+
+declare const ContractAssert: any;
 
 export const Stake = async (state: StateInterface, action: ActionInterface) => {
   const credit = state.credit;
   const caller = action.caller;
 
-  const qty = await GetTransferAmount(state);
+  const input: CreditInterface = action.input;
+  let qty: number;
+  
+  if (input.qty) {
+    qty = input.qty;
+    
+    ContractAssert(caller in credit, "Caller has no balance in the pool.");
+    ContractAssert(
+      credit[caller].amount >= qty,
+      "Caller can't stake more than they have."
+    );
+
+    credit[caller].amount -= qty;
+  } else {
+    qty = await GetTransferAmount(state);
+  }
 
   if (caller in credit) {
     credit[caller].stake += qty;
