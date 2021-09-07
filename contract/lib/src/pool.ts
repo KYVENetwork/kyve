@@ -117,18 +117,25 @@ export class Pool {
     });
   }
 
-  async fund(qty: number): Promise<string> {
-    return await this.interactWithGovernance(
-      {
-        function: "transfer",
-        target: this.id,
+  async fund(qty: number, useCredit: boolean = false): Promise<string> {
+    if (useCredit) {
+      return await this.interactWithPool({
+        function: "fund",
         qty,
-      },
-      [
-        { name: "Contract", value: this.id! },
-        { name: "Input", value: JSON.stringify({ function: "fund" }) },
-      ]
-    );
+      });
+    } else {
+      return await this.interactWithGovernance(
+        {
+          function: "transfer",
+          target: this.id,
+          qty,
+        },
+        [
+          { name: "Contract", value: this.id! },
+          { name: "Input", value: JSON.stringify({ function: "fund" }) },
+        ]
+      );
+    }
   }
 
   async unfund(qty: number): Promise<string> {
@@ -140,18 +147,25 @@ export class Pool {
     return await this.interactWithPool(input);
   }
 
-  async stake(qty: number): Promise<string> {
-    return await this.interactWithGovernance(
-      {
-        function: "transfer",
-        target: this.id,
+  async stake(qty: number, useCredit: boolean = false): Promise<string> {
+    if (useCredit) {
+      return await this.interactWithPool({
+        function: "stake",
         qty,
-      },
-      [
-        { name: "Contract", value: this.id! },
-        { name: "Input", value: JSON.stringify({ function: "stake" }) },
-      ]
-    );
+      });
+    } else {
+      return await this.interactWithGovernance(
+        {
+          function: "transfer",
+          target: this.id,
+          qty,
+        },
+        [
+          { name: "Contract", value: this.id! },
+          { name: "Input", value: JSON.stringify({ function: "stake" }) },
+        ]
+      );
+    }
   }
 
   async unstake(qty: number): Promise<string> {
