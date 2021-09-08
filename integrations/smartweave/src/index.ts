@@ -10,7 +10,7 @@ import KYVE from "@kyve/core";
 import Log from "@kyve/core/dist/logger";
 import { JWKInterface } from "arweave/node/lib/wallet";
 import { GQLTagInterface } from "smartweave/lib/interfaces/gqlResult";
-import { SmartWeaveNodeFactory } from "redstone-smartweave";
+import { LoggerFactory, SmartWeaveNodeFactory } from "redstone-smartweave";
 import WebSocket from "ws";
 
 const inst = new Arweave({
@@ -20,6 +20,7 @@ const inst = new Arweave({
 });
 
 const swcClient = SmartWeaveNodeFactory.memCached(inst);
+LoggerFactory.INST.logLevel("error");
 
 const logger = new Log("SmartWeave");
 
