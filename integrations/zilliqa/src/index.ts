@@ -21,6 +21,9 @@ export interface ZilliqaBlock extends TxBlockObj{
   transactions: TransactionObj[]
 }
 */
+function sleep(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 export const upload = async (
   uploader: UploadFunctionSubscriber,
@@ -35,6 +38,9 @@ export const upload = async (
   subscriber.emitter.on("NewBlock", async (event: any) => {
     const hash = event.value.TxBlock.body.BlockHash;
     const BlockNum = event.value.TxBlock.header.BlockNum.toString();
+    console.log("Hash", hash, "BlockNum", BlockNum);
+
+    //await sleep(500);
 
     /*
     let block = (await zilliqa.blockchain.getTxBlock(BlockNum)).result as ZilliqaBlock;
@@ -42,25 +48,85 @@ export const upload = async (
       BlockNum
     )).result as TransactionObj[];
      */
-    let block = (await zilliqa.blockchain.getTxBlock(BlockNum)).result as any;
 
-    const transactions = await zilliqa.blockchain.getTxnBodiesForTxBlock(
-      BlockNum
-    );
+    let block: any;
+    try {
+      let resBlock = (await zilliqa.blockchain.getTxBlock(BlockNum)) as any;
+      if(resBlock.result === undefined){
+        console.log("block error", resBlock.error);
+        return;
+      }else{
+        block = resBlock.result;
+      }
+    } catch (error) {
+      // in case of an error don't send any data
+      console.log("block", error);
+      return;
+    }
 
     // use empty-array in case of no transactions
-    block.transactions = transactions.result || ([] as any[]);
+    block.transactions = [] as any[];
 
-    const tags = [
-      { name: "Block", value: hash },
-      { name: "BlockNum", value: BlockNum.toString() },
-    ];
+    if (block.header.NumTxns === 0) {
+      // If there are no transactions page will be 1.
+      // We always want to upload a block.
+      const tags = [
+        { name: "Block", value: hash },
+        { name: "BlockNum", value: BlockNum.toString() },
+        { name: "Page", value: "1" },
+        { name: "Max-Pages", value: "1" },
+      ];
 
-    block.transactions.map((transaction: any) =>
-      tags.push({ name: "Transaction", value: transaction.ID })
-    );
+      uploader.next({ data: block, tags });
+    } else {
 
-    uploader.next({ data: block, tags });
+      //await sleep(500);
+
+      let transactions: any[] = [];
+      // fetch transactions
+      try {
+        let resTransactions = (
+          await zilliqa.blockchain.getTxnBodiesForTxBlock(BlockNum)
+        ) as any;
+        if(resTransactions.result === undefined){
+          console.log("transaction error",resTransactions.error);
+          return;
+        }else{
+          transactions = resTransactions.result;
+        }
+      } catch (error) {
+        // in case of an error don't send any data
+        console.log("transactions", error);
+        return;
+      }
+
+      let page = 1;
+
+      const chunkSize = 50;
+      const maxPages = Math.ceil(transactions.length / chunkSize);
+
+      for (let i = 0; i < transactions.length; i += chunkSize) {
+        // slice transactions into chunks and map them into the block
+        block.transactions = transactions
+          .slice(i, i + chunkSize);
+
+        // upload chunk
+        const tags = [
+          { name: "Block", value: hash },
+          { name: "BlockNum", value: BlockNum.toString() },
+          { name: "Page", value: page.toString() },
+          { name: "Max-Pages", value: maxPages.toString() },
+        ];
+
+        block.transactions.map((transaction: any) =>
+          tags.push({ name: "Transaction", value: transaction.ID })
+        );
+
+        uploader.next({ data: block, tags });
+
+        page += 1;
+      }
+    }
   });
 
   subscriber.start();
@@ -80,18 +146,39 @@ export const validate = async (
         tag.name === "Block" && tag.value === res.data.body.BlockHash
     );
     const BlockNum = parseInt(res.transaction.tags[index + 1].value);
+    const page = parseInt(res.transaction.tags[index + 2].value);
 
     /*
     let block = (await zilliqa.blockchain.getTxBlock(BlockNum)).result as ZilliqaBlock;
     block.transactions = (await zilliqa.blockchain.getTxnBodiesForTxBlock(
       BlockNum
     )).result as TransactionObj[];
-     */
+    */
 
     let block = (await zilliqa.blockchain.getTxBlock(BlockNum)).result as any;
-    block.transactions = (
-      await zilliqa.blockchain.getTxnBodiesForTxBlock(BlockNum)
-    ).result as any[];
+    block.transactions = [] as any[];
+
+    if (block.header.NumTxns > 0) {
+      let transactions: any[] = [];
+      try {
+        transactions = (
+          await zilliqa.blockchain.getTxnBodiesForTxBlock(BlockNum)
+        ).result as any;
+      } catch (error) {
+        // in case of an error don't send any data
+        console.log("transactions", error);
+        return;
+      }
+
+      const chunkSize = 50;
+      let i = (page - 1) * chunkSize;
+      let maxPages = Math.ceil(transactions.length / chunkSize);
+      maxPages = maxPages == 0 ? 1 : maxPages;
+      if (transactions != null && transactions.length > 0) {
+        block.transactions = transactions
+          .slice(i, i + chunkSize);
+      }
+    }
 
     const localHash = hash(block);
     const compareHash = hash(res.data);
