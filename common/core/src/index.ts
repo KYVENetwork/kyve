@@ -14,9 +14,9 @@ import {
   ValidateFunction,
   ValidateFunctionReturn,
 } from "./faces";
-import Log from "./logger";
 import { client } from "./utils/arweave";
 import { Pool, wallet } from "./utils/ethers";
+import Log from "./utils/logger";
 import Snapshot, { Query, ws } from "./utils/snapshot";
 
 export const APP_NAME = "KYVE - DEV";

@@ -9128,7 +9128,7 @@ smartweave@KYVENetwork/SmartWeave#release:
     sentencer "^0.2.1"
     yargs "^16.2.0"
 
-smartweave@^0.4.27, smartweave@^0.4.41:
+smartweave@^0.4.41:
   version "0.4.41"
   resolved "https://registry.yarnpkg.com/smartweave/-/smartweave-0.4.41.tgz#40a2cad2f443091b4fe5c8e6bf565d980fe91403"
   integrity sha512-xixp9Nfuiy/2e2JmU0IICKI9iU0KMDbLKsS/SLOwpgj7LDUwIhfGzaOHWAcK5OJ2iij9dHYSmGPRjRk+wurKqA==
