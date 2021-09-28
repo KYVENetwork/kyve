@@ -20,21 +20,29 @@
   "types": "dist/index",
   "dependencies": {
     "@kyve/contract-lib": "0.1.0-alpha.27",
-    "ardb": "^1.0.8",
+    "@snapshot-labs/snapshot.js": "^0.2.9",
+    "arbundles": "^0.2.7",
+    "ardb": "^1.1.7",
     "arweave": "^1.10.11",
     "arweave-bundles": "^1.0.3",
+    "base64url": "^3.0.1",
     "chalk": "^4.1.1",
+    "cross-fetch": "^3.1.4",
+    "ethers": "^5.4.7",
     "fecha": "^4.2.1",
+    "graphql": "^15.6.0",
+    "graphql-request": "^3.5.0",
     "object-hash": "^2.2.0",
     "rxjs": "^7.2.0",
     "smartweave": "^0.4.27",
-    "ws": "^8.2.1"
+    "ws": "^8.2.2"
   },
   "devDependencies": {
     "@types/chai": "^4.2.16",
     "@types/mocha": "^8.2.2",
     "chai": "^4.3.4",
     "chai-as-promised": "^7.1.1",
+    "dotenv": "^10.0.0",
     "mocha": "^8.3.2",
     "nyc": "^15.1.0",
     "ts-node": "^9.1.1"

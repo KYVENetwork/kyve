@@ -21,6 +21,7 @@ export type UploadFunction = (
 // Types for the validate function
 
 export interface ListenFunctionReturn {
+  proposal: string;
   id: string;
   data: any;
   transaction: GQLTransactionInterface;
@@ -30,8 +31,8 @@ export interface ListenFunctionReturn {
 export type ListenFunctionObservable = Observable<ListenFunctionReturn>;
 
 export interface ValidateFunctionReturn {
+  proposal: string;
   valid: boolean;
-  id: string;
 }
 
 export type ValidateFunctionSubscriber = Subscriber<ValidateFunctionReturn>;
@@ -49,5 +50,4 @@ export interface Options {
   stake: number;
   jwk: JWKInterface;
   arweave?: Arweave;
-  refetchInterval?: number;
 }
