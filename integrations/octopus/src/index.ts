@@ -58,7 +58,10 @@ export const validate = async (
     const data = await getData(res.id);
     const compareHash = hash(JSON.parse(data.toString()));
 
-    validator.next({ valid: localHash === compareHash, id: res.id });
+    validator.next({
+      proposal: res.proposal,
+      valid: localHash === compareHash,
+    });
   });
 };
 

@@ -7,7 +7,7 @@ import {
 import Arweave from "arweave";
 import hash from "object-hash";
 import KYVE from "@kyve/core";
-import Log from "@kyve/core/dist/logger";
+import Log from "@kyve/core/dist/utils/logger";
 import { JWKInterface } from "arweave/node/lib/wallet";
 import { GQLTagInterface } from "smartweave/lib/interfaces/gqlResult";
 import { LoggerFactory, SmartWeaveNodeFactory } from "redstone-smartweave";
@@ -87,7 +87,10 @@ export const validate = async (
     const compareHash = hash(JSON.parse(res.data));
 
     // state is valid, if the two hashes are equal
-    validator.next({ valid: localHash === compareHash, id: res.id });
+    validator.next({
+      proposal: res.proposal,
+      valid: localHash === compareHash,
+    });
   });
 };
 

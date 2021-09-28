@@ -1,5 +1,5 @@
 import { APP_NAME, getData } from "@kyve/core";
-import { arweaveClient } from "@kyve/core/dist/extensions";
+import { client } from "@kyve/core/dist/utils/arweave";
 import ArDB from "ardb";
 import ArdbTransaction from "ardb/lib/models/transaction";
 import Arweave from "arweave";
@@ -15,7 +15,7 @@ export class Query extends ArDB {
   constructor(
     poolID: string,
     deRef: boolean = true,
-    arweave: Arweave = arweaveClient
+    arweave: Arweave = client
   ) {
     super(arweave);
     // default tags

@@ -5,7 +5,7 @@ import {
   UploadFunctionSubscriber,
   ValidateFunctionSubscriber,
 } from "@kyve/core/dist/faces";
-import Log from "@kyve/core/dist/logger";
+import Log from "@kyve/core/dist/utils/logger";
 import { JWKInterface } from "arweave/node/lib/wallet";
 import hash from "object-hash";
 import Web3 from "web3";
@@ -65,7 +65,10 @@ const validate = async (
     const localHash = hash(JSON.stringify(block));
     const uploaderHash = hash(res.data);
 
-    validator.next({ valid: localHash === uploaderHash, id: res.id });
+    validator.next({
+      proposal: res.proposal,
+      valid: localHash === uploaderHash,
+    });
   });
 };
 

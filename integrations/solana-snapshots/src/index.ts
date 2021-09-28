@@ -5,7 +5,7 @@ import {
   UploadFunctionSubscriber,
   ValidateFunctionSubscriber,
 } from "@kyve/core/dist/faces";
-import Log from "@kyve/core/dist/logger";
+import Log from "@kyve/core/dist/utils/logger";
 import { Query } from "@kyve/query";
 import { BlockResponse, Connection } from "@solana/web3.js";
 import ArdbTransaction from "ardb/lib/models/transaction";
@@ -156,7 +156,7 @@ const validate = async (
         const uploaderHash = hash(JSON.parse(res.data));
 
         handledTxs.push(res.id);
-        return { valid: localHash === uploaderHash, id: res.id };
+        return { proposal: res.proposal, valid: localHash === uploaderHash };
       })
     )
     .subscribe((res) => {

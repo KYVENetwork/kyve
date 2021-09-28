@@ -21,7 +21,7 @@
   "dependencies": {
     "@kyve/contract-lib": "0.1.0-alpha.27",
     "@kyve/core": "0.0.0-alpha.33",
-    "ardb": "^1.1.6",
+    "ardb": "KYVENetwork/ardb",
     "arweave": "^1.10.11",
     "arweave-bundles": "^1.0.3",
     "redstone-smartweave": "^0.3.8-alpha.1",

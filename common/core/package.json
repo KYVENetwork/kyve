@@ -21,7 +21,7 @@
   "dependencies": {
     "@snapshot-labs/snapshot.js": "^0.2.9",
     "arbundles": "^0.2.7",
-    "ardb": "^1.1.7",
+    "ardb": "KYVENetwork/ardb",
     "arweave": "^1.10.11",
     "base64url": "^3.0.1",
     "chalk": "^4.1.1",

@@ -22,7 +22,7 @@
     "@kyve/core": "0.0.0-alpha.33",
     "@kyve/query": "0.0.0-alpha.42",
     "@solana/web3.js": "^1.21.0",
-    "ardb": "^1.1.6",
+    "ardb": "KYVENetwork/ardb",
     "arweave": "^1.10.15",
     "cli-progress": "^3.9.0",
     "object-hash": "^2.2.0",

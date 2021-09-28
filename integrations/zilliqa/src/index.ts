@@ -96,7 +96,10 @@ export const validate = async (
     const localHash = hash(block);
     const compareHash = hash(res.data);
 
-    validator.next({ valid: localHash === compareHash, id: res.id });
+    validator.next({
+      proposal: res.proposal,
+      valid: localHash === compareHash,
+    });
   });
 };
 
