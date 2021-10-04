@@ -23,7 +23,7 @@ import Log from "./utils/logger";
 import Snapshot, { Query, ws } from "./utils/snapshot";
 
 export const APP_NAME = "KYVE - DEV";
-export const SPACE = "test.johnletey.eth";
+export const SPACE = "nodes";
 export { Pool } from "./utils/ethers";
 
 export default class KYVE {
