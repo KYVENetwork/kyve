@@ -26,10 +26,12 @@ const upload = async (
     logger.info(`Recieved block, pulling data. height = ${height}`);
 
     const block = await client.getBlockWithTransactions(height);
-    block.transactions.forEach(
-      // @ts-ignore
-      (transaction) => delete transaction.confirmations
-    );
+    if (block.transactions.length) {
+      block.transactions.forEach(
+        // @ts-ignore
+        (transaction) => delete transaction.confirmations
+      );
+    }
 
     const tags = [
       { name: "Block", value: block.hash },
@@ -62,10 +64,12 @@ const validate = async (
     logger.info(`Found block. hash = ${blockHash}`);
 
     const block = await client.getBlockWithTransactions(blockHash);
-    block.transactions.forEach(
-      // @ts-ignore
-      (transaction) => delete transaction.confirmations
-    );
+    if (block.transactions.length) {
+      block.transactions.forEach(
+        // @ts-ignore
+        (transaction) => delete transaction.confirmations
+      );
+    }
 
     const localHash = hash(JSON.parse(JSON.stringify(block)));
     const uploaderHash = hash(res.data);
