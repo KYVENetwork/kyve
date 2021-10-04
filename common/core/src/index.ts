@@ -1,9 +1,12 @@
-import { getBlockNumber } from "@snapshot-labs/snapshot.js/dist/utils/web3";
-import { ArweaveSigner, createData } from "arbundles";
-import ArDB from "ardb";
-import ArdbTransaction from "ardb/lib/models/transaction";
+import {
+  ArweaveSigner,
+  Bundle,
+  bundleAndSignData,
+  createData,
+  DataItem,
+} from "arbundles";
+import { JWKInterface } from "arbundles/build/interface-jwk";
 import Arweave from "arweave";
-import base64url from "base64url";
 import { Contract, ContractTransaction } from "ethers";
 import { Observable } from "rxjs";
 import {
@@ -20,13 +23,14 @@ import Log from "./utils/logger";
 import Snapshot, { Query, ws } from "./utils/snapshot";
 
 export const APP_NAME = "KYVE - DEV";
-export const SPACE = "nodes.kyve.eth";
+export const SPACE = "test.johnletey.eth";
+export { Pool } from "./utils/ethers";
 
 export default class KYVE {
   // Arweave variables.
   public arweave: Arweave = client;
+  protected keyfile: JWKInterface;
   protected signer: ArweaveSigner;
-  public ardb: ArDB;
 
   // Pool variables.
   public pool: Contract;
@@ -38,6 +42,7 @@ export default class KYVE {
   public snapshot: Snapshot;
   public uploadFunc: UploadFunction;
   public validateFunc: ValidateFunction;
+  private buffer: DataItem[] = [];
 
   // Constants.
   public APP_NAME = APP_NAME;
@@ -51,8 +56,8 @@ export default class KYVE {
     if (options.arweave) {
       this.arweave = options.arweave;
     }
+    this.keyfile = options.jwk;
     this.signer = new ArweaveSigner(options.jwk);
-    this.ardb = new ArDB(this.arweave);
 
     this.pool = Pool(options.pool);
     this.stake = options.stake;
@@ -101,47 +106,65 @@ export default class KYVE {
 
     return new Observable<ListenFunctionReturn>((subscriber) => {
       ws.on(
-        "data",
+        "proposal/created",
         async (message: {
           id: string;
           event: "proposal/created";
           space: string;
           expire: number;
         }) => {
-          if (
-            message.space === this.SPACE &&
-            message.event === "proposal/created"
-          ) {
+          if (message.space === this.SPACE) {
             const proposal = message.id.slice(9);
-            const body = await Query(proposal);
-            const content = JSON.parse(body) as {
-              transaction: string;
-              bytes: number;
-            };
+            const { author, body } = await Query(proposal);
 
-            const res = (await this.ardb
-              .search()
-              .id(content.transaction)
-              .findAll()) as ArdbTransaction[];
+            if (author === (await this.pool._uploader())) {
+              const content = JSON.parse(body) as {
+                transaction: string;
+                bundle?: string;
+                bytes: number;
+                pool: string;
+              };
 
-            if (res.length) {
-              const transaction = res[0];
+              if (content.pool === this.pool.address) {
+                let res: any;
 
-              if (transaction.data.size === content.bytes) {
-                try {
-                  const data = await getData(content.transaction);
+                if (content.bundle) {
+                  const bundle = new Bundle(
+                    Buffer.from(
+                      await this.arweave.transactions.getData(content.bundle, {
+                        decode: true,
+                      })
+                    )
+                  );
 
+                  // TODO: const item = bundle.get(content.transaction);
+                  const item = bundle.items.find(
+                    (item) => item.id === content.transaction
+                  )!;
+                  res = JSON.parse(item.rawData.toString());
+                } else {
+                  res = JSON.parse(
+                    (
+                      await this.arweave.transactions.getData(
+                        content.transaction,
+                        {
+                          decode: true,
+                          string: true,
+                        }
+                      )
+                    ).toString()
+                  );
+                }
+
+                if (
+                  content.bytes === Buffer.from(JSON.stringify(res)).byteLength
+                ) {
                   subscriber.next({
                     proposal,
                     id: content.transaction,
-                    data,
-                    transaction,
-                    block: transaction.block.height,
+                    data: res.data,
+                    tags: res.tags,
                   });
-                } catch (e) {
-                  log.warn(
-                    `Error while fetching data for transaction: ${content.transaction}`
-                  );
                 }
               }
             }
@@ -160,30 +183,45 @@ export default class KYVE {
   }
 
   private async register(input: UploadFunctionReturn) {
-    // Upload data to Arweave.
-    const item = createData(JSON.stringify(input.data), this.signer, {
-      tags: input.tags,
-    });
-    await item.sign(this.signer);
-    await item.sendToBundler();
+    if (this.settings.bundleSize === 1) {
+      // Upload input directly to Arweave.
+      // Don't use bundles.
+      const transaction = await this.arweave.createTransaction({
+        data: JSON.stringify({
+          data: input.data,
+          tags: input.tags || [],
+        }),
+      });
 
-    // Submit a new proposal on Snapshot.
-    const timestamp = +(Date.now() / 1e3).toFixed();
-    const payload = {
-      name: item.id,
-      body: JSON.stringify({
-        transaction: item.id,
-        bytes: item.data.length,
-      }),
-      choices: ["Valid", "Invalid"],
-      start: timestamp,
-      end: timestamp + this.settings.gracePeriod,
-      snapshot: await getBlockNumber(wallet.provider),
-      type: "single-choice",
-      metadata: {
-        plugins: {},
-        network: 1287,
-        strategies: [
+      const tags = [
+        { name: "Application", value: this.APP_NAME },
+        { name: "Pool", value: this.pool.address },
+        { name: "Content-Type", value: "application/json" },
+        ...(input.tags || []),
+      ];
+      for (const tag of tags) {
+        transaction.addTag(tag.name, tag.value);
+      }
+
+      await this.arweave.transactions.sign(transaction, this.keyfile);
+      await this.arweave.transactions.post(transaction);
+
+      const timestamp = +(Date.now() / 1e3).toFixed();
+      const message = {
+        space: this.SPACE,
+        type: "single-choice",
+        title: transaction.id,
+        body: JSON.stringify({
+          transaction: transaction.id,
+          bytes: transaction.data_size,
+          pool: this.pool.address,
+        }),
+        choices: ["Valid", "Invalid"],
+        start: timestamp,
+        end: timestamp + this.settings.gracePeriod * 60,
+        snapshot: await wallet.provider.getBlockNumber(),
+        network: "1287",
+        strategies: JSON.stringify([
           {
             name: "contract-call",
             params: {
@@ -211,10 +249,102 @@ export default class KYVE {
               },
             },
           },
-        ],
-      },
-    };
-    await this.snapshot.proposal(wallet, this.SPACE, payload);
+        ]),
+        plugins: JSON.stringify({}),
+        metadata: JSON.stringify({}),
+      };
+      await this.snapshot.proposal(wallet, await wallet.getAddress(), message);
+    } else {
+      // Encode the input and add it to the buffer.
+      const item = createData(
+        JSON.stringify({
+          data: input.data,
+          tags: input.tags || [],
+        }),
+        this.signer,
+        {
+          tags: [
+            { name: "Application", value: this.APP_NAME },
+            { name: "Pool", value: this.pool.address },
+            { name: "Content-Type", value: "application/json" },
+            ...(input.tags || []),
+          ],
+        }
+      );
+      await item.sign(this.signer);
+      this.buffer.push(item);
+
+      // Check the size of the buffer.
+      if (this.buffer.length >= this.settings.bundleSize) {
+        // Upload bundle to Arweave.
+        const bundle = await bundleAndSignData(this.buffer, this.signer);
+        this.buffer = [];
+
+        const transaction = await bundle.toTransaction(
+          this.arweave,
+          this.keyfile
+        );
+        await this.arweave.transactions.sign(transaction, this.keyfile);
+        await this.arweave.transactions.post(transaction);
+
+        // Create new proposals on Snapshot.
+        for (const item of bundle.items) {
+          const timestamp = +(Date.now() / 1e3).toFixed();
+          const message = {
+            space: this.SPACE,
+            type: "single-choice",
+            title: item.id,
+            body: JSON.stringify({
+              transaction: item.id,
+              bundle: transaction.id,
+              bytes: item.rawData.byteLength,
+              pool: this.pool.address,
+            }),
+            choices: ["Valid", "Invalid"],
+            start: timestamp,
+            end: timestamp + this.settings.gracePeriod * 60,
+            snapshot: await wallet.provider.getBlockNumber(),
+            network: "1287",
+            strategies: JSON.stringify([
+              {
+                name: "contract-call",
+                params: {
+                  address: this.pool.address,
+                  decimals: 0,
+                  symbol: "vote(s)",
+                  methodABI: {
+                    inputs: [
+                      {
+                        internalType: "address",
+                        name: "node",
+                        type: "address",
+                      },
+                    ],
+                    name: "isValidator",
+                    outputs: [
+                      {
+                        internalType: "uint256",
+                        name: "",
+                        type: "uint256",
+                      },
+                    ],
+                    stateMutability: "view",
+                    type: "function",
+                  },
+                },
+              },
+            ]),
+            plugins: JSON.stringify({}),
+            metadata: JSON.stringify({}),
+          };
+          await this.snapshot.proposal(
+            wallet,
+            await wallet.getAddress(),
+            message
+          );
+        }
+      }
+    }
   }
 
   protected validator() {
@@ -227,23 +357,24 @@ export default class KYVE {
       )
     );
 
-    node.subscribe((res) => {
-      const payload = {
-        proposal: res.proposal,
-        choice: res.valid ? 1 : 0,
-      };
-      this.snapshot.vote(wallet, this.SPACE, payload);
-    });
+    node.subscribe((res) => this.submit(res));
+  }
+
+  private async submit(input: ValidateFunctionReturn) {
+    const message = {
+      space: this.SPACE,
+      proposal: input.proposal,
+      type: "vote",
+      choice: input.valid ? 1 : 2,
+      metadata: JSON.stringify({}),
+    };
+    await this.snapshot.vote(wallet, await wallet.getAddress(), message);
   }
 
   // Private Helpers
-  private async syncMetadata(input?: string) {
-    const rawId = input || ((await this.pool._metadata()) as string);
-    const id = base64url.encode(rawId.slice(2), "hex");
-
-    const data = JSON.parse(await getData(id));
-    this.settings = data.settings;
-    this.config = data.config;
+  private async syncMetadata() {
+    this.settings = JSON.parse(await this.pool._settings());
+    this.config = JSON.parse(await this.pool._config());
   }
 }
 

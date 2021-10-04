@@ -7,35 +7,39 @@ import {
 } from "@kyve/core/dist/faces";
 import Log from "@kyve/core/dist/utils/logger";
 import { JWKInterface } from "arweave/node/lib/wallet";
+import { ethers } from "ethers";
 import hash from "object-hash";
-import Web3 from "web3";
 
 const logger = new Log("EVM");
 
 const upload = async (
   uploader: UploadFunctionSubscriber,
   pool: string,
-  config: { endpoint: string }
+  config: { rpc: string; wss: string }
 ) => {
   // Connect to the WebSocket endpoint.
-  const client = new Web3(
-    new Web3.providers.WebsocketProvider(config.endpoint)
-  );
-  logger.info(`Connection created. endpoint = ${config.endpoint}`);
+  const client = new ethers.providers.WebSocketProvider(config.wss);
+  logger.info(`Connection created. endpoint = ${config.wss}`);
 
   // Subscribe to new blocks.
-  client.eth.subscribe("newBlockHeaders").on("data", async (blockHeader) => {
-    logger.info(`Recieved block, pulling data. height = ${blockHeader.number}`);
+  client.on("block", async (height: number) => {
+    logger.info(`Recieved block, pulling data. height = ${height}`);
+
+    const block = await client.getBlockWithTransactions(height);
+    block.transactions.forEach(
+      // @ts-ignore
+      (transaction) => delete transaction.confirmations
+    );
 
     const tags = [
-      { name: "Block", value: blockHeader.hash },
-      { name: "Height", value: blockHeader.number.toString() },
+      { name: "Block", value: block.hash },
+      { name: "Height", value: block.number.toString() },
     ];
-
-    let block = await client.eth.getBlock(blockHeader.hash, true);
-
-    block.transactions.map((transaction) =>
-      tags.push({ name: "Transaction", value: transaction.hash })
+    block.transactions.forEach((transaction) =>
+      tags.push({
+        name: "Transaction",
+        value: transaction.hash,
+      })
     );
 
     uploader.next({ data: block, tags });
@@ -46,23 +50,24 @@ const validate = async (
   listener: ListenFunctionObservable,
   validator: ValidateFunctionSubscriber,
   pool: string,
-  config: { endpoint: string }
+  config: { rpc: string; wss: string }
 ) => {
-  // Connect to the WebSocket endpoint.
-  const client = new Web3(
-    new Web3.providers.WebsocketProvider(config.endpoint)
-  );
-  logger.info(`Connection created. endpoint = ${config.endpoint}`);
+  // Connect to the RPC endpoint.
+  const client = new ethers.providers.StaticJsonRpcProvider(config.rpc);
+  logger.info(`Connection created. endpoint = ${config.rpc}`);
 
   // Subscribe to the listener.
   listener.subscribe(async (res: ListenFunctionReturn) => {
-    const blockHash = res.transaction.tags.find((tag) => tag.name === "Block")
-      ?.value!;
-
+    const blockHash = res.tags.find((tag) => tag.name === "Block")?.value!;
     logger.info(`Found block. hash = ${blockHash}`);
 
-    const block = await client.eth.getBlock(blockHash, true);
-    const localHash = hash(JSON.stringify(block));
+    const block = await client.getBlockWithTransactions(blockHash);
+    block.transactions.forEach(
+      // @ts-ignore
+      (transaction) => delete transaction.confirmations
+    );
+
+    const localHash = hash(JSON.parse(JSON.stringify(block)));
     const uploaderHash = hash(res.data);
 
     validator.next({

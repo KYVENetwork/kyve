@@ -24,8 +24,7 @@ export interface ListenFunctionReturn {
   proposal: string;
   id: string;
   data: any;
-  transaction: GQLTransactionInterface;
-  block: number;
+  tags: { name: string; value: string }[];
 }
 
 export type ListenFunctionObservable = Observable<ListenFunctionReturn>;

@@ -75,11 +75,11 @@ export const validate = async (
   const zilliqa = new Zilliqa(config.api);
 
   listener.subscribe(async (res: ListenFunctionReturn) => {
-    const index = res.transaction.tags.findIndex(
+    const index = res.tags.findIndex(
       (tag: GQLTagInterface) =>
         tag.name === "Block" && tag.value === res.data.body.BlockHash
     );
-    const BlockNum = parseInt(res.transaction.tags[index + 1].value);
+    const BlockNum = parseInt(res.tags[index + 1].value);
 
     /*
     let block = (await zilliqa.blockchain.getTxBlock(BlockNum)).result as ZilliqaBlock;

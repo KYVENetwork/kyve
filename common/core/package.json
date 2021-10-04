@@ -19,9 +19,8 @@
   "main": "dist/index",
   "types": "dist/index",
   "dependencies": {
-    "@snapshot-labs/snapshot.js": "^0.2.9",
+    "@snapshot-labs/snapshot.js": "^0.2.10",
     "arbundles": "^0.2.7",
-    "ardb": "KYVENetwork/ardb",
     "arweave": "^1.10.11",
     "base64url": "^3.0.1",
     "chalk": "^4.1.1",
@@ -31,7 +30,7 @@
     "graphql": "^15.6.0",
     "graphql-request": "^3.5.0",
     "rxjs": "^7.2.0",
-    "ws": "^8.2.2"
+    "socket.io-client": "^4.2.0"
   },
   "devDependencies": {
     "@types/chai": "^4.2.16",

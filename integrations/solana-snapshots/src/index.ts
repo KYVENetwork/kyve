@@ -127,12 +127,10 @@ const validate = async (
 
         // Fetch the slot range of the snapshot.
         const min = parseInt(
-          res.transaction.tags.find((tag) => tag.name === "Minimum-Height")
-            ?.value!
+          res.tags.find((tag) => tag.name === "Minimum-Height")?.value!
         );
         const max = parseInt(
-          res.transaction.tags.find((tag) => tag.name === "Maximum-Height")
-            ?.value!
+          res.tags.find((tag) => tag.name === "Maximum-Height")?.value!
         );
         logger.info(`Found snapshot. min = ${min}, max = ${max}`);
 

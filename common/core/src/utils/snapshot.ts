@@ -1,131 +1,141 @@
-import { version } from "@snapshot-labs/snapshot.js/src/constants.json";
-import hubs from "@snapshot-labs/snapshot.js/src/hubs.json";
 import fetch from "cross-fetch";
 import { Wallet } from "ethers";
 import { gql, request } from "graphql-request";
-import WebSocket from "ws";
+import io from "socket.io-client";
+import {
+  Space,
+  Proposal,
+  CancelProposal,
+  Vote,
+  Follow,
+  Unfollow,
+  Alias,
+  spaceTypes,
+  proposalTypes,
+  cancelProposalTypes,
+  cancelProposal2Types,
+  voteTypes,
+  voteArrayTypes,
+  voteStringTypes,
+  vote2Types,
+  voteArray2Types,
+  voteString2Types,
+  followTypes,
+  unfollowTypes,
+  aliasTypes,
+} from "./snapshotTypes";
+
+const NAME = "snapshot";
+const VERSION = "0.1.4";
+
+export const domain = {
+  name: NAME,
+  version: VERSION,
+  // chainId: 1,
+};
 
 export default class Client {
   readonly address: string;
 
-  constructor(address: string = hubs[0]) {
+  constructor(address: string = "https://hub.kyve.network") {
     this.address = address;
   }
 
-  request(command: string, body?: any) {
-    const url = `${this.address}/api/${command}`;
-    // @ts-ignore
-    let init;
-    if (body) {
-      init = {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
-      };
-    }
+  async sign(wallet: Wallet, address: string, message: any, types: any) {
+    if (!message.from) message.from = address;
+    if (!message.timestamp) message.timestamp = ~~(Date.now() / 1e3);
+    const data: any = { domain, types, message };
+    const sig = await wallet._signTypedData(domain, data.types, message);
+    // console.log("Sign", { address, sig, data });
+    return await this.send({ address, sig, data });
+  }
+
+  async send(envelop: any) {
+    const url = `${this.address}/api/msg`;
+    const init = {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(envelop),
+    };
     return new Promise((resolve, reject) => {
-      // @ts-ignore
       fetch(url, init)
         .then((res) => {
           if (res.ok) return resolve(res.json());
           throw res;
         })
-        // @ts-ignore
-        .catch((e) => e.json().then((json) => reject(json)));
+        .catch((e) => e.json().then((json: any) => reject(json)));
     });
   }
 
-  async send(msg: any) {
-    return this.request("message", msg);
+  async space(wallet: Wallet, address: string, message: Space) {
+    return await this.sign(wallet, address, message, spaceTypes);
   }
 
-  async getSpaces() {
-    return this.request("spaces");
+  async proposal(wallet: Wallet, address: string, message: Proposal) {
+    return await this.sign(wallet, address, message, proposalTypes);
   }
 
-  async broadcast(wallet: Wallet, space: string, type: string, payload: any) {
-    const msg: any = {
-      address: await wallet.getAddress(),
-      msg: JSON.stringify({
-        version,
-        timestamp: (Date.now() / 1e3).toFixed(),
-        space,
-        type,
-        payload,
-      }),
-    };
-    msg.sig = await wallet.signMessage(msg.msg);
-    return await this.send(msg);
-  }
-
-  // @ts-ignore
-  async vote(wallet: Wallet, space, { proposal, choice, metadata = {} }) {
-    return this.broadcast(wallet, space, "vote", {
-      proposal,
-      choice,
-      metadata,
-    });
-  }
-
-  async proposal(
+  async cancelProposal(
     wallet: Wallet,
-    space: string,
-    {
-      // @ts-ignore
-      name,
-      // @ts-ignore
-      body,
-      // @ts-ignore
-      choices,
-      // @ts-ignore
-      start,
-      // @ts-ignore
-      end,
-      // @ts-ignore
-      snapshot,
-      type = "single-choice",
-      metadata = {},
-    }
+    address: string,
+    message: CancelProposal
   ) {
-    return this.broadcast(wallet, space, "proposal", {
-      name,
-      body,
-      choices,
-      start,
-      end,
-      snapshot,
-      type,
-      metadata,
-    });
+    const type2 = message.proposal.startsWith("0x");
+    return await this.sign(
+      wallet,
+      address,
+      message,
+      type2 ? cancelProposal2Types : cancelProposalTypes
+    );
   }
 
-  // @ts-ignore
-  async deleteProposal(wallet: Wallet, space: string, { proposal }) {
-    return this.broadcast(wallet, space, "delete-proposal", {
-      proposal,
-    });
+  async vote(wallet: Wallet, address: string, message: Vote) {
+    const type2 = message.proposal.startsWith("0x");
+    let type = type2 ? vote2Types : voteTypes;
+    if (["approval", "ranked-choice"].includes(message.type))
+      type = type2 ? voteArray2Types : voteArrayTypes;
+    if (["quadratic", "weighted"].includes(message.type)) {
+      type = type2 ? voteString2Types : voteStringTypes;
+      message.choice = JSON.stringify(message.choice);
+    }
+    // @ts-ignore
+    delete message.type;
+    return await this.sign(wallet, address, message, type);
   }
 
-  // @ts-ignore
-  async settings(wallet: Wallet, space: string, settings) {
-    return this.broadcast(wallet, space, "settings", settings);
+  async follow(wallet: Wallet, address: string, message: Follow) {
+    return await this.sign(wallet, address, message, followTypes);
+  }
+
+  async unfollow(wallet: Wallet, address: string, message: Unfollow) {
+    return await this.sign(wallet, address, message, unfollowTypes);
+  }
+
+  async alias(wallet: Wallet, address: string, message: Alias) {
+    return await this.sign(wallet, address, message, aliasTypes);
   }
 }
 
-export const Query = async (proposal: string): Promise<string> => {
+export const Query = async (
+  proposal: string
+): Promise<{
+  author: string;
+  body: string;
+}> => {
   const query = gql`
     {
       proposal(id: "${proposal}") {
+        author
         body
       }
     }
   `;
 
-  const res = await request("https://hub.snapshot.org/graphql", query);
-  return res.data.proposal.body;
+  const res = await request("https://hub.kyve.network/graphql", query);
+  return res.proposal;
 };
 
-export const ws = new WebSocket(""); // TODO
+export const ws = io("https://kyve-operator.herokuapp.com");

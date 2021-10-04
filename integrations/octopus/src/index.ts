@@ -49,7 +49,7 @@ export const validate = async (
 
   listener.subscribe(async (res) => {
     const height = parseFloat(
-      res.transaction.tags.find((tag) => tag.name === "Height")?.value!
+      res.tags.find((tag) => tag.name === "Height")?.value!
     );
 
     const { block } = await parseBlockByNumber(height, api, client);

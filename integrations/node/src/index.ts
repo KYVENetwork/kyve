@@ -1,6 +1,5 @@
 require("dotenv").config({ silent: true });
-import KYVE from "@kyve/core";
-import { Pool } from "@kyve/contract-lib";
+import KYVE, { Pool } from "@kyve/core";
 import Arweave from "arweave";
 import SmartWeaveInstance from "@kyve/smartweave";
 import CosmosInstance from "@kyve/cosmos";
@@ -81,9 +80,9 @@ if (process.env.WALLET) {
     const stake = config.pools[poolID];
 
     // get pool runtime
-    const pool = new Pool(client, wallet, poolID);
-    const state = await pool.getState();
-    const runtime = state.settings.runtime;
+    const pool = Pool(poolID);
+    const settings = JSON.parse(await pool._settings());
+    const runtime = settings.runtime;
 
     // select correct instance based of the runtime
     switch (runtime) {

@@ -66,13 +66,12 @@ export const validate = async (
 ) => {
   listener.subscribe(async (res: ListenFunctionReturn) => {
     // find Target-Contract and Block in transaction tags
-    const contract = res.transaction.tags.find(
+    const contract = res.tags.find(
       (tag: GQLTagInterface) => tag.name === "Target-Contract"
     )?.value!;
 
     const block = parseInt(
-      res.transaction.tags.find((tag: GQLTagInterface) => tag.name === "Block")
-        ?.value!
+      res.tags.find((tag: GQLTagInterface) => tag.name === "Block")?.value!
     );
 
     if (!(contract && block)) {
