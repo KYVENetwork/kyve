@@ -37,12 +37,14 @@ const upload = async (
       { name: "Block", value: block.hash },
       { name: "Height", value: block.number.toString() },
     ];
-    block.transactions.forEach((transaction) =>
-      tags.push({
-        name: "Transaction",
-        value: transaction.hash,
-      })
-    );
+    if (block.transactions.length) {
+      block.transactions.forEach((transaction) =>
+        tags.push({
+          name: "Transaction",
+          value: transaction.hash,
+        })
+      );
+    }
 
     uploader.next({ data: block, tags });
   });
