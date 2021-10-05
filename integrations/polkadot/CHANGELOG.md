@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.37](https://github.com/KYVENetwork/polkadot/compare/@kyve/polkadot@0.0.0-alpha.36...@kyve/polkadot@0.0.0-alpha.37) (2021-10-05)
+
+
+### Bug Fixes
+
+* compile everything ([f8bab24](https://github.com/KYVENetwork/polkadot/commit/f8bab2444d26988ddefabc8fe098e21b90767fb6))
+
+
+### Features
+
+* loads of changes ([e8d54df](https://github.com/KYVENetwork/polkadot/commit/e8d54df2d93a56bfff1b3a931de3f2a7dd8e7ea3))
+
+
+
+
+
 # [0.0.0-alpha.36](https://github.com/KYVENetwork/polkadot/compare/@kyve/polkadot@0.0.0-alpha.35...@kyve/polkadot@0.0.0-alpha.36) (2021-09-04)
 
 **Note:** Version bump only for package @kyve/polkadot

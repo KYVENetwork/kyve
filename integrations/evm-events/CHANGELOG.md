@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.16](https://github.com/KYVENetwork/kyve/compare/@kyve/evm-events@0.0.0-alpha.15...@kyve/evm-events@0.0.0-alpha.16) (2021-10-05)
+
+
+### Bug Fixes
+
+* compile everything ([f8bab24](https://github.com/KYVENetwork/kyve/commit/f8bab2444d26988ddefabc8fe098e21b90767fb6))
+
+
+
+
+
 # [0.0.0-alpha.15](https://github.com/KYVENetwork/kyve/compare/@kyve/evm-events@0.0.0-alpha.14...@kyve/evm-events@0.0.0-alpha.15) (2021-09-04)
 
 **Note:** Version bump only for package @kyve/evm-events

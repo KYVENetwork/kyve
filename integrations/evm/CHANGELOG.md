@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.16](https://github.com/KYVENetwork/kyve/compare/@kyve/evm@0.0.0-alpha.15...@kyve/evm@0.0.0-alpha.16) (2021-10-05)
+
+
+### Bug Fixes
+
+* add another check if there are any txs ([be1b00b](https://github.com/KYVENetwork/kyve/commit/be1b00b1bd018eb9f5753799ae31bf70ae487a0e))
+* compile everything ([f8bab24](https://github.com/KYVENetwork/kyve/commit/f8bab2444d26988ddefabc8fe098e21b90767fb6))
+* only parse txs if they exist ([c6fb3ad](https://github.com/KYVENetwork/kyve/commit/c6fb3ad78cae351aa415717439d943c2cc746107))
+
+
+### Features
+
+* loads of changes ([e8d54df](https://github.com/KYVENetwork/kyve/commit/e8d54df2d93a56bfff1b3a931de3f2a7dd8e7ea3))
+
+
+
+
+
 # [0.0.0-alpha.15](https://github.com/KYVENetwork/kyve/compare/@kyve/evm@0.0.0-alpha.14...@kyve/evm@0.0.0-alpha.15) (2021-09-04)
 
 **Note:** Version bump only for package @kyve/evm
