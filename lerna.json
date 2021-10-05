@@ -7,7 +7,7 @@
     "version": {
       "conventionalCommits": true,
       "conventionalPrerelease": true,
-      "allowBranch": "master",
+      "allowBranch": "feat/snapshot",
       "exact": true,
       "message": "chore: released new version"
     }
