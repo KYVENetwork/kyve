@@ -7,7 +7,7 @@ import {
 } from "arbundles";
 import { JWKInterface } from "arbundles/build/interface-jwk";
 import Arweave from "arweave";
-import { Contract, ContractTransaction } from "ethers";
+import { BigNumber, Contract, ContractTransaction, ethers } from "ethers";
 import { Observable } from "rxjs";
 import {
   ListenFunctionReturn,
@@ -18,7 +18,7 @@ import {
   ValidateFunctionReturn,
 } from "./faces";
 import { client } from "./utils/arweave";
-import { Pool, wallet } from "./utils/ethers";
+import { Pool, Token, wallet } from "./utils/ethers";
 import Log from "./utils/logger";
 import Snapshot, { Query, ws } from "./utils/snapshot";
 
@@ -34,7 +34,8 @@ export default class KYVE {
 
   // Pool variables.
   public pool: Contract;
-  public stake: number;
+  public token: Contract | undefined;
+  public stake: BigNumber;
   public settings: any;
   public config: any;
 
@@ -60,7 +61,9 @@ export default class KYVE {
     this.signer = new ArweaveSigner(options.jwk);
 
     this.pool = Pool(options.pool);
-    this.stake = options.stake;
+    this.stake = ethers.BigNumber.from(options.stake).mul(
+      ethers.BigNumber.from(10).mul(18)
+    );
 
     this.snapshot = new Snapshot();
     this.uploadFunc = uploadFunc;
@@ -73,14 +76,23 @@ export default class KYVE {
     const address = await wallet.getAddress();
     await this.syncMetadata();
 
-    const currentStake = await this.pool._stakingAmounts(address);
-    const diff = Math.abs(this.stake - currentStake);
+    const currentStake = (await this.pool._stakingAmounts(
+      address
+    )) as BigNumber;
 
-    if (this.stake === currentStake) {
+    if (this.stake.eq(currentStake)) {
       log.info(
         `Already staked with ${this.stake} $KYVE in pool ${this.pool.address}.`
       );
-    } else if (this.stake > currentStake) {
+    } else if (this.stake.gt(currentStake)) {
+      const diff = this.stake.sub(currentStake);
+
+      const approveTransaction = (await this.token!.approve(
+        this.pool.address,
+        diff
+      )) as ContractTransaction;
+      await approveTransaction.wait();
+
       const transaction = (await this.pool.stake(diff)) as ContractTransaction;
       log.info(
         `Staking ${diff} $KYVE in pool ${this.pool.address}. Transaction: ${transaction.hash}.`
@@ -89,7 +101,17 @@ export default class KYVE {
       await transaction.wait();
       log.info("Successfully staked tokens.");
     } else {
-      // TODO: Unstake tokens.
+      const diff = currentStake.sub(this.stake);
+
+      const transaction = (await this.pool.unstake(
+        diff
+      )) as ContractTransaction;
+      log.info(
+        `Unstaking ${diff} $KYVE in pool ${this.pool.address}. Transaction: ${transaction.hash}.`
+      );
+
+      await transaction.wait();
+      log.info("Successfully unstaked tokens.");
     }
 
     if (address === (await this.pool._uploader())) {
@@ -361,20 +383,26 @@ export default class KYVE {
   }
 
   private async submit(input: ValidateFunctionReturn) {
-    const message = {
-      space: this.SPACE,
-      proposal: input.proposal,
-      type: "vote",
-      choice: input.valid ? 1 : 2,
-      metadata: JSON.stringify({}),
-    };
-    await this.snapshot.vote(wallet, await wallet.getAddress(), message);
+    const address = await wallet.getAddress();
+    const stake = (await this.pool._stakingAmounts(address)) as BigNumber;
+
+    if (stake.gt(0)) {
+      const message = {
+        space: this.SPACE,
+        proposal: input.proposal,
+        type: "vote",
+        choice: input.valid ? 1 : 2,
+        metadata: JSON.stringify({}),
+      };
+      await this.snapshot.vote(wallet, await wallet.getAddress(), message);
+    }
   }
 
   // Private Helpers
   private async syncMetadata() {
     this.settings = JSON.parse(await this.pool._settings());
     this.config = JSON.parse(await this.pool._config());
+    this.pool = Token(await this.pool._token());
   }
 }
 

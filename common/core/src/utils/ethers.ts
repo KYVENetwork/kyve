@@ -22,11 +22,27 @@ export const Pool = (address: string) => {
       "function _stakingAmounts(address node) external view returns (uint256)",
       "function _settings() external view returns (string)",
       "function _config() external view returns (string)",
+      "function _token() external view returns (string)",
       // Functions
       "function stake(uint256 amount) public",
+      "function unstake(uint256 amount) public",
     ],
     wallet
   );
 
   return pool;
+};
+
+// Helper for creating a Token instance.
+export const Token = (address: string) => {
+  const token = new Contract(
+    address,
+    [
+      // Functions
+      "function approve(address spender, uint256 amount) external returns (bool)",
+    ],
+    wallet
+  );
+
+  return token;
 };
