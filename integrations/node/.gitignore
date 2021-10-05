@@ -8,3 +8,5 @@ node_modules
 /createPool.js
 /transfer.js
 testnet-data
+/deploy-moonriver-on-heroku.sh
+/deploy-redstone-on-heroku.sh
