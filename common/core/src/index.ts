@@ -26,6 +26,8 @@ export const APP_NAME = "KYVE - DEV";
 export const SPACE = "nodes";
 export { Pool } from "./utils/ethers";
 
+const decimals = BigNumber.from(10).pow(18);
+
 export default class KYVE {
   // Arweave variables.
   public arweave: Arweave = client;
@@ -34,7 +36,7 @@ export default class KYVE {
 
   // Pool variables.
   public pool: Contract;
-  public token: Contract | undefined;
+  public token: Contract;
   public stake: BigNumber;
   public settings: any;
   public config: any;
@@ -61,9 +63,8 @@ export default class KYVE {
     this.signer = new ArweaveSigner(options.jwk);
 
     this.pool = Pool(options.pool);
-    this.stake = ethers.BigNumber.from(options.stake).mul(
-      ethers.BigNumber.from(10).mul(18)
-    );
+    this.token = Token("0x843C7378309DD8CD82C5013FAb63B6Ea86770433");
+    this.stake = BigNumber.from(options.stake).mul(decimals);
 
     this.snapshot = new Snapshot();
     this.uploadFunc = uploadFunc;
@@ -82,12 +83,14 @@ export default class KYVE {
 
     if (this.stake.eq(currentStake)) {
       log.info(
-        `Already staked with ${this.stake} $KYVE in pool ${this.pool.address}.`
+        `Already staked with ${this.stake
+          .div(decimals)
+          .toNumber()} $KYVE in pool ${this.pool.address}.`
       );
     } else if (this.stake.gt(currentStake)) {
       const diff = this.stake.sub(currentStake);
 
-      const approveTransaction = (await this.token!.approve(
+      const approveTransaction = (await this.token.approve(
         this.pool.address,
         diff
       )) as ContractTransaction;
@@ -95,7 +98,9 @@ export default class KYVE {
 
       const transaction = (await this.pool.stake(diff)) as ContractTransaction;
       log.info(
-        `Staking ${diff} $KYVE in pool ${this.pool.address}. Transaction: ${transaction.hash}.`
+        `Staking ${diff.div(decimals).toNumber()} $KYVE in pool ${
+          this.pool.address
+        }. Transaction: ${transaction.hash}.`
       );
 
       await transaction.wait();
@@ -107,7 +112,9 @@ export default class KYVE {
         diff
       )) as ContractTransaction;
       log.info(
-        `Unstaking ${diff} $KYVE in pool ${this.pool.address}. Transaction: ${transaction.hash}.`
+        `Unstaking ${diff.div(decimals).toNumber()} $KYVE in pool ${
+          this.pool.address
+        }. Transaction: ${transaction.hash}.`
       );
 
       await transaction.wait();
@@ -402,7 +409,6 @@ export default class KYVE {
   private async syncMetadata() {
     this.settings = JSON.parse(await this.pool._settings());
     this.config = JSON.parse(await this.pool._config());
-    this.pool = Token(await this.pool._token());
   }
 }
 
