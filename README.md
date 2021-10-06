@@ -10,8 +10,9 @@
 
 ### Requirements
 
-- Arweave Keyfile (use [ArConnect](https://arconnect.io) to generate one) with some AR in it
-- $KYVE tokens (you can get some for free [here](https://kyve.network/gov/tokens))
+- Arweave Keyfile (use [ArConnect](https://arconnect.io) to generate one).
+- Ethereum Keyfile.
+- $DEV + $KYVE tokens (you can get both for free [here](https://app.kyve.network/faucet)).
 
 ### Setup
 
