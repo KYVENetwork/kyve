@@ -2,7 +2,7 @@ FROM node:lts-alpine
 
 COPY package.json .
 
-RUN apk --no-cache --virtual build-dependencies add python make g++ libtool autoconf automake
+RUN apk --no-cache --virtual build-dependencies add python make g++ libtool autoconf automake git
 
 RUN yarn install
 
