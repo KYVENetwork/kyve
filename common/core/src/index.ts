@@ -142,6 +142,8 @@ export default class KYVE {
           space: string;
           expire: number;
         }) => {
+          log.info("Received new proposal.");
+
           if (message.space === this.SPACE) {
             const proposal = message.id.slice(9);
             const { author, body } = await Query(proposal);
@@ -153,6 +155,7 @@ export default class KYVE {
                 bytes: number;
                 pool: string;
               };
+              log.info(`Proposal: ${proposal}.`);
 
               if (content.pool === this.pool.address) {
                 let res: any;
@@ -188,11 +191,26 @@ export default class KYVE {
                 if (
                   content.bytes === Buffer.from(JSON.stringify(res)).byteLength
                 ) {
+                  log.info("Bytes match.");
+
                   subscriber.next({
                     proposal,
                     id: content.transaction,
                     data: res.data,
                     tags: res.tags,
+                  });
+                } else {
+                  log.info(
+                    `Bytes don't match. Bytes on proposal: ${
+                      content.bytes
+                    }. Bytes queried: ${
+                      Buffer.from(JSON.stringify(res)).byteLength
+                    }`
+                  );
+
+                  await this.submit({
+                    proposal,
+                    valid: false,
                   });
                 }
               }
