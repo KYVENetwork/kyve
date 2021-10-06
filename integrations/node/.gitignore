@@ -10,3 +10,4 @@ node_modules
 testnet-data
 /deploy-moonriver-on-heroku.sh
 /deploy-redstone-on-heroku.sh
+/deploy-avalanche-on-heroku.sh
