@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.35](https://github.com/KYVENetwork/logic/compare/@kyve/core@0.0.0-alpha.34...@kyve/core@0.0.0-alpha.35) (2021-10-06)
+
+
+### Bug Fixes
+
+* add logs to the listener ([c166889](https://github.com/KYVENetwork/logic/commit/c166889c9aa574b1c8d73f103cb945311b699cec))
+
+
+
+
+
 # [0.0.0-alpha.34](https://github.com/KYVENetwork/logic/compare/@kyve/core@0.0.0-alpha.33...@kyve/core@0.0.0-alpha.34) (2021-10-05)
 
 

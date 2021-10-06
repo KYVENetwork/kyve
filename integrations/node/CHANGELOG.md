@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.42](https://github.com/KYVENetwork/kyve/compare/@kyve/node@0.0.0-alpha.41...@kyve/node@0.0.0-alpha.42) (2021-10-06)
+
+**Note:** Version bump only for package @kyve/node
+
+
+
+
+
 # [0.0.0-alpha.41](https://github.com/KYVENetwork/kyve/compare/@kyve/node@0.0.0-alpha.40...@kyve/node@0.0.0-alpha.41) (2021-10-05)
 
 
