@@ -6,7 +6,11 @@ import { Contract, Wallet } from "ethers";
 
 // Provider for the Moonbase Alpha network.
 export const provider = new StaticJsonRpcProvider(
-  "https://moonbeam-alpha.api.onfinality.io/public"
+  "https://rpc.testnet.moonbeam.network",
+  {
+    name: "moonbase-alphanet",
+    chainId: 1287,
+  }
 );
 
 // Initialise the wallet class.
