@@ -160,31 +160,42 @@ export default class KYVE {
               if (content.pool === this.pool.address) {
                 let res: any;
 
-                if (content.bundle) {
-                  const bundle = new Bundle(
-                    Buffer.from(
-                      await this.arweave.transactions.getData(content.bundle, {
-                        decode: true,
-                      })
-                    )
-                  );
-
-                  // TODO: const item = bundle.get(content.transaction);
-                  const item = bundle.items.find(
-                    (item) => item.id === content.transaction
-                  )!;
-                  res = JSON.parse(item.rawData.toString());
-                } else {
-                  res = JSON.parse(
-                    (
-                      await this.arweave.transactions.getData(
-                        content.transaction,
-                        {
-                          decode: true,
-                          string: true,
-                        }
+                try {
+                  if (content.bundle) {
+                    const bundle = new Bundle(
+                      Buffer.from(
+                        await this.arweave.transactions.getData(
+                          content.bundle,
+                          {
+                            decode: true,
+                          }
+                        )
                       )
-                    ).toString()
+                    );
+
+                    // TODO: const item = bundle.get(content.transaction);
+                    const item = bundle.items.find(
+                      (item) => item.id === content.transaction
+                    )!;
+                    res = JSON.parse(item.rawData.toString());
+                  } else {
+                    res = JSON.parse(
+                      (
+                        await this.arweave.transactions.getData(
+                          content.transaction,
+                          {
+                            decode: true,
+                            string: true,
+                          }
+                        )
+                      ).toString()
+                    );
+                  }
+                } catch (e) {
+                  log.error(
+                    `Couldn't fetch data from Arweave. Error = ${JSON.stringify(
+                      e
+                    )}`
                   );
                 }
 
@@ -230,6 +241,8 @@ export default class KYVE {
   }
 
   private async register(input: UploadFunctionReturn) {
+    const log = new Log("uploader");
+
     if (this.settings.bundleSize === 1) {
       // Upload input directly to Arweave.
       // Don't use bundles.
@@ -252,6 +265,8 @@ export default class KYVE {
 
       await this.arweave.transactions.sign(transaction, this.keyfile);
       await this.arweave.transactions.post(transaction);
+
+      log.info(`Uploaded transaction. Transaction ID = ${transaction.id}.`);
 
       const timestamp = +(Date.now() / 1e3).toFixed();
       const message = {
@@ -300,7 +315,18 @@ export default class KYVE {
         plugins: JSON.stringify({}),
         metadata: JSON.stringify({}),
       };
-      await this.snapshot.proposal(wallet, await wallet.getAddress(), message);
+      try {
+        await this.snapshot.proposal(
+          wallet,
+          await wallet.getAddress(),
+          message
+        );
+        log.info(`Created a new proposal on Snapshot.`);
+      } catch (e) {
+        log.error(
+          `Couldn't create a proposal on Snapshot. Error = ${JSON.stringify(e)}`
+        );
+      }
     } else {
       // Encode the input and add it to the buffer.
       const item = createData(
@@ -333,6 +359,8 @@ export default class KYVE {
         );
         await this.arweave.transactions.sign(transaction, this.keyfile);
         await this.arweave.transactions.post(transaction);
+
+        log.info(`Uploaded bundle. Bundle ID = ${transaction.id}`);
 
         // Create new proposals on Snapshot.
         for (const item of bundle.items) {
@@ -384,11 +412,21 @@ export default class KYVE {
             plugins: JSON.stringify({}),
             metadata: JSON.stringify({}),
           };
-          await this.snapshot.proposal(
-            wallet,
-            await wallet.getAddress(),
-            message
-          );
+
+          try {
+            await this.snapshot.proposal(
+              wallet,
+              await wallet.getAddress(),
+              message
+            );
+            log.info(`Created a new proposal on Snapshot.`);
+          } catch (e) {
+            log.error(
+              `Couldn't create a proposal on Snapshot. Error = ${JSON.stringify(
+                e
+              )}`
+            );
+          }
         }
       }
     }
@@ -408,6 +446,8 @@ export default class KYVE {
   }
 
   private async submit(input: ValidateFunctionReturn) {
+    const log = new Log("validator");
+
     const address = await wallet.getAddress();
     const stake = (await this.pool._stakingAmounts(address)) as BigNumber;
 
@@ -419,7 +459,13 @@ export default class KYVE {
         choice: input.valid ? 1 : 2,
         metadata: JSON.stringify({}),
       };
-      await this.snapshot.vote(wallet, await wallet.getAddress(), message);
+
+      try {
+        await this.snapshot.vote(wallet, await wallet.getAddress(), message);
+        log.info(`Voted on Snapshot.`);
+      } catch (e) {
+        log.error(`Couldn't vote on Snapshot. Error = ${JSON.stringify(e)}`);
+      }
     }
   }
 

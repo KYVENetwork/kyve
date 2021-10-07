@@ -2,12 +2,12 @@ import { config } from "dotenv";
 config();
 
 import { StaticJsonRpcProvider } from "@ethersproject/providers";
-import Snapshot from "@snapshot-labs/snapshot.js";
 import { Contract, Wallet } from "ethers";
 
 // Provider for the Moonbase Alpha network.
-export const provider: StaticJsonRpcProvider =
-  Snapshot.utils.getProvider("1287");
+export const provider = new StaticJsonRpcProvider(
+  "https://moonbeam-alpha.api.onfinality.io/public"
+);
 
 // Initialise the wallet class.
 export const wallet = new Wallet(process.env.PK?.toString()!, provider);
