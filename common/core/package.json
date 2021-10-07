@@ -28,7 +28,6 @@
     "ethers": "^5.4.7",
     "fecha": "^4.2.1",
     "graphql": "^15.6.0",
-    "graphql-request": "^3.5.0",
     "rxjs": "^7.2.0",
     "socket.io-client": "^4.2.0"
   },

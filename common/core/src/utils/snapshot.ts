@@ -1,6 +1,5 @@
 import fetch from "cross-fetch";
 import { Wallet } from "ethers";
-import { gql, request } from "graphql-request";
 import io from "socket.io-client";
 import {
   Space,
@@ -118,24 +117,5 @@ export default class Client {
     return await this.sign(wallet, address, message, aliasTypes);
   }
 }
-
-export const Query = async (
-  proposal: string
-): Promise<{
-  author: string;
-  body: string;
-}> => {
-  const query = gql`
-    {
-      proposal(id: "${proposal}") {
-        author
-        body
-      }
-    }
-  `;
-
-  const res = await request("https://hub.kyve.network/graphql", query);
-  return res.proposal;
-};
 
 export const ws = io("https://kyve-operator.herokuapp.com");

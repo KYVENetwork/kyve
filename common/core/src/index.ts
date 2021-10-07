@@ -20,7 +20,7 @@ import {
 import { client } from "./utils/arweave";
 import { Pool, Token, wallet } from "./utils/ethers";
 import Log from "./utils/logger";
-import Snapshot, { Query, ws } from "./utils/snapshot";
+import Snapshot, { ws } from "./utils/snapshot";
 
 export const APP_NAME = "KYVE - DEV";
 export const SPACE = "nodes";
@@ -156,23 +156,25 @@ export default class KYVE {
           event: "proposal/created";
           space: string;
           expire: number;
+          proposal: {
+            id: string;
+            title: string;
+            body: string;
+            author: string;
+            snapshot: string;
+          };
         }) => {
-          log.info("Received new proposal.");
-
           if (message.space === this.SPACE) {
-            const proposal = message.id.slice(9);
-            const { author, body } = await Query(proposal);
-
-            if (author === (await this.pool._uploader())) {
-              const content = JSON.parse(body) as {
+            if (message.proposal.author === (await this.pool._uploader())) {
+              const content = JSON.parse(message.proposal.body) as {
                 transaction: string;
                 bundle?: string;
                 bytes: number;
                 pool: string;
               };
-              log.info(`Proposal: ${proposal}.`);
 
               if (content.pool === this.pool.address) {
+                log.info(`Proposal: ${message.proposal.id}.`);
                 let res: any;
 
                 try {
@@ -220,7 +222,7 @@ export default class KYVE {
                   log.info("Bytes match.");
 
                   subscriber.next({
-                    proposal,
+                    proposal: message.proposal.id,
                     id: content.transaction,
                     data: res.data,
                     tags: res.tags,
@@ -235,7 +237,7 @@ export default class KYVE {
                   );
 
                   await this.submit({
-                    proposal,
+                    proposal: message.proposal.id,
                     valid: false,
                   });
                 }
