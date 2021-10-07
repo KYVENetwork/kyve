@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.46](https://github.com/KYVENetwork/logic/compare/@kyve/query@0.0.0-alpha.45...@kyve/query@0.0.0-alpha.46) (2021-10-07)
+
+**Note:** Version bump only for package @kyve/query
+
+
+
+
+
 # [0.0.0-alpha.45](https://github.com/KYVENetwork/logic/compare/@kyve/query@0.0.0-alpha.44...@kyve/query@0.0.0-alpha.45) (2021-10-07)
 
 **Note:** Version bump only for package @kyve/query

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.37](https://github.com/KYVENetwork/logic/compare/@kyve/core@0.0.0-alpha.36...@kyve/core@0.0.0-alpha.37) (2021-10-07)
+
+
+### Bug Fixes
+
+* provide a gas price and limit to contract txs ([9287fe9](https://github.com/KYVENetwork/logic/commit/9287fe913f01156644aba79a53153fd717cf41b1))
+
+
+
+
+
 # [0.0.0-alpha.36](https://github.com/KYVENetwork/logic/compare/@kyve/core@0.0.0-alpha.35...@kyve/core@0.0.0-alpha.36) (2021-10-07)
 
 **Note:** Version bump only for package @kyve/core

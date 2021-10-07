@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.44](https://github.com/KYVENetwork/kyve/compare/@kyve/node@0.0.0-alpha.43...@kyve/node@0.0.0-alpha.44) (2021-10-07)
+
+
+### Bug Fixes
+
+* provide a gas price and limit to contract txs ([9287fe9](https://github.com/KYVENetwork/kyve/commit/9287fe913f01156644aba79a53153fd717cf41b1))
+
+
+
+
+
 # [0.0.0-alpha.43](https://github.com/KYVENetwork/kyve/compare/@kyve/node@0.0.0-alpha.42...@kyve/node@0.0.0-alpha.43) (2021-10-07)
 
 
