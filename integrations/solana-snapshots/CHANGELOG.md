@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.23](https://github.com/KYVENetwork/kyve/compare/@kyve/solana-snapshots@0.0.0-alpha.22...@kyve/solana-snapshots@0.0.0-alpha.23) (2021-10-07)
+
+**Note:** Version bump only for package @kyve/solana-snapshots
+
+
+
+
+
 # [0.0.0-alpha.22](https://github.com/KYVENetwork/kyve/compare/@kyve/solana-snapshots@0.0.0-alpha.21...@kyve/solana-snapshots@0.0.0-alpha.22) (2021-10-07)
 
 **Note:** Version bump only for package @kyve/solana-snapshots
