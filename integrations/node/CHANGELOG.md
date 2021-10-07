@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.0.0-alpha.43](https://github.com/KYVENetwork/kyve/compare/@kyve/node@0.0.0-alpha.42...@kyve/node@0.0.0-alpha.43) (2021-10-07)
+
+
+### Bug Fixes
+
+* added git to Dockerfile ([ed8afa3](https://github.com/KYVENetwork/kyve/commit/ed8afa303f729173880550f04f4ba85b6b140090))
+
+
+
+
+
 # [0.0.0-alpha.42](https://github.com/KYVENetwork/kyve/compare/@kyve/node@0.0.0-alpha.41...@kyve/node@0.0.0-alpha.42) (2021-10-06)
 
 **Note:** Version bump only for package @kyve/node

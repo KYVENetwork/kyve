@@ -1,7 +1,7 @@
 {
   "name": "@kyve/solana-snapshots",
   "description": "The official KYVE node for Solana snapshots",
-  "version": "0.0.0-alpha.20",
+  "version": "0.0.0-alpha.21",
   "author": "John Letey <john@kyve.network>, Fabian Riewe <fabian@kyve.network>",
   "repository": "https://github.com/KYVENetwork/kyve/tree/master/integrations/solana-snapshots",
   "license": "MIT",
@@ -19,8 +19,8 @@
   "main": "dist/index",
   "types": "dist/index",
   "dependencies": {
-    "@kyve/core": "0.0.0-alpha.35",
-    "@kyve/query": "0.0.0-alpha.44",
+    "@kyve/core": "0.0.0-alpha.36",
+    "@kyve/query": "0.0.0-alpha.45",
     "@solana/web3.js": "^1.21.0",
     "ardb": "KYVENetwork/ardb",
     "arweave": "^1.10.15",
