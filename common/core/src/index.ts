@@ -89,34 +89,49 @@ export default class KYVE {
       );
     } else if (this.stake.gt(currentStake)) {
       const diff = this.stake.sub(currentStake);
+      let gasPrice, gasLimit;
 
+      gasPrice = await wallet.provider.getGasPrice();
+      gasLimit = await this.token.estimateGas.approve(this.pool.address, diff);
       const approveTransaction = (await this.token.approve(
         this.pool.address,
-        diff
+        diff,
+        {
+          gasPrice,
+          gasLimit,
+        }
       )) as ContractTransaction;
       await approveTransaction.wait();
 
-      const transaction = (await this.pool.stake(diff)) as ContractTransaction;
+      gasPrice = await wallet.provider.getGasPrice();
+      gasLimit = await this.pool.estimateGas.stake(diff);
+      const transaction = (await this.pool.stake(diff, {
+        gasPrice,
+        gasLimit,
+      })) as ContractTransaction;
+
       log.info(
         `Staking ${diff.div(decimals).toNumber()} $KYVE in pool ${
           this.pool.address
         }. Transaction: ${transaction.hash}.`
       );
-
       await transaction.wait();
       log.info("Successfully staked tokens.");
     } else {
       const diff = currentStake.sub(this.stake);
 
-      const transaction = (await this.pool.unstake(
-        diff
-      )) as ContractTransaction;
+      const gasPrice = await wallet.provider.getGasPrice();
+      const gasLimit = await this.pool.estimateGas["unstake(uint256)"](diff);
+      const transaction = (await this.pool.unstake(diff, {
+        gasPrice,
+        gasLimit,
+      })) as ContractTransaction;
+
       log.info(
         `Unstaking ${diff.div(decimals).toNumber()} $KYVE in pool ${
           this.pool.address
         }. Transaction: ${transaction.hash}.`
       );
-
       await transaction.wait();
       log.info("Successfully unstaked tokens.");
     }
